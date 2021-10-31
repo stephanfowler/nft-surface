@@ -1,0 +1,14 @@
+.container {
+}
+  
+.header {
+  text-align: center;
+  box-shadow: rgb(0 0 0 / 10%) 0px 25px 20px -20px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.header a {
+  color: darkslategrey;
+  font-weight: bold;
+}

@@ -1,0 +1,91 @@
+.nftCard,
+.nftThumb {
+    border-bottom: 1px solid white;
+    margin-bottom: 2rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
+}
+
+.nftActions,
+.nftDetails {
+        padding: 0 1rem 1rem 1rem;
+}
+
+.nftActions div,
+.nftDetails div {
+        margin-bottom: 0.25rem;
+}
+
+.nftDetails {
+    font-size: smaller;
+}
+
+.nftActions .connectedAddress {
+    margin-bottom: 1rem;
+}
+
+.nftActions .connectedAddress,
+.nftActions .connectedAddress a {
+    color: gray;
+    font-size: smaller;
+}
+
+.nftOwner {
+    font-weight: bold;
+}
+
+.nftThumb {
+    margin-bottom: 3rem;
+}
+
+.nftThumbImage.portrait {
+    margin: 0 1rem;
+}
+
+.nftThumbImage.landscape {
+    margin: 0;
+}
+
+.nftName,
+.nftDescription {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.nftName {
+    margin-top: 0.5rem; 
+    margin-bottom: 0.2rem;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.nftThumb .nftName {
+    margin-bottom: 0.5rem;
+    font-size: inherit;
+    font-weight: normal;
+}
+
+.nftDescription {
+    margin-top: 0; 
+    margin-bottom: 0.5rem;
+    font-size:smaller;
+}
+
+.nftStatus {
+    font-weight: bold;
+}
+
+a.nftMarket {
+    font-weight:bold;
+}
+
+.minting,
+.minting a {
+    color: orangered;
+    font-weight: normal;
+}
+
+.mintingSuccess,
+.mintingSuccess a {
+    color: green;
+    font-weight: normal;
+}
