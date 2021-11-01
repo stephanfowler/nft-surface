@@ -40,84 +40,85 @@ export default function Nft({ nft, context }) {
   const orient = width > height ? 'landscape' : 'portrait';
   
   return (
-    <>
-      <div className={styles.nftCard}>
-        <div className={`${styles.nftImage} ${orient}`}>
-          <Image
-            src={process.env.catalogImages + "/" + nft.sourceImage}
-            width={width}
-            height={height}
-            placeholder = {nft.placeholderImage ? "blur" : "empty"}
-            blurDataURL = {nft.placeholderImage}
-            alt={nft.metadata.name}
-            priority
-            layout="responsive" />
-        </div>
-        <div className={styles.nftCardInfo}>
+    <div className={styles.nft}>
+
+      <div className={`${styles.nftImage} ${orient}`}>
+        <Image
+          src={process.env.catalogImages + "/" + nft.sourceImage}
+          width={width}
+          height={height}
+          placeholder = {nft.placeholderImage ? "blur" : "empty"}
+          blurDataURL = {nft.placeholderImage}
+          alt={nft.metadata.name}
+          priority
+          layout="responsive" />
+      </div>
+      
+      <div className={styles.nftStory}>
+  
+        <div className={styles.nftMetadata}>
           <div className={styles.nftName}>{nft.metadata.name}</div>
           <div className={styles.nftDescription}>{nft.metadata.description}</div>
           <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
           {nft.metadata.collection && 
             <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
           }
+          <div className={styles.nftDimensions}>{width}{" x "}{height}{" px"}</div>
         </div>
-      </div>
 
-      <div className={styles.nftActions}>
-        <Minter  nft={nft} context={context} status={status} setStatus={setStatus} />
-        {status === 'minted' &&
-          <div className={styles.nftTrade}>
-            {"Trade it on "} 
-            <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-            {" · "}
-            <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
-          </div>
-        }
-      </div>
+        <div className={styles.nftActions}>
+          <Minter  nft={nft} context={context} status={status} setStatus={setStatus} />
+          {status === 'minted' &&
+            <div className={styles.nftTrade}>
+              {"Trade it on "} 
+              <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
+              {" · "}
+              <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
+            </div>
+          }
+        </div>
 
-      <div className={styles.nftDetails}>
-        {(status === 'minted' || status === 'burnt') &&
+        <div className={styles.nftDetails}>
+          {(status === 'minted' || status === 'burnt') &&
+            <div>
+                {"Token ID : "}
+                <Link href={etherscanToken}>
+                    <a title="view token on etherscan">
+                        {tokenId}
+                    </a>
+                </Link>
+            </div>
+          }
           <div>
-              {"Token ID : "}
-              <Link href={etherscanToken}>
-                  <a title="view token on etherscan">
-                      {tokenId}
+              {"Contract : "}
+              <Link href={etherscanContract}>
+                  <a title="view contract on etherscan">
+                      <ShortAddress address={contractAddress} />
                   </a>
               </Link>
           </div>
-        }
-        <div>
-            {"Contract : "}
-            <Link href={etherscanContract}>
-                <a title="view contract on etherscan">
-                    <ShortAddress address={contractAddress} />
-                </a>
-            </Link>
+          <div>
+              {"Creator : "}
+              <Link href={etherscanCreator}>
+                  <a title="view creator on etherscan">
+                      <ShortAddress address={creatorAddress} />
+                  </a>
+              </Link>
+          </div>
+          <div>
+              {"IPFS immutable "}
+              <Link href={ipfsMetadata}>
+                  <a title="view image on IPFS">metadata</a>
+              </Link>
+              {" | "}
+              <Link href={ipfsImage}>
+                  <a title="view image on IPFS">image</a>
+              </Link>
+          </div>
+          <div>Token Standard : ERC-721</div>
+          <div>Blockchain : Ethereum</div>
         </div>
-        <div>
-            {"Creator : "}
-            <Link href={etherscanCreator}>
-                <a title="view creator on etherscan">
-                    <ShortAddress address={creatorAddress} />
-                </a>
-            </Link>
-        </div>
-        <div>
-            {"IPFS immutable "}
-            <Link href={ipfsMetadata}>
-                <a title="view image on IPFS">metadata</a>
-            </Link>
-            {" | "}
-            <Link href={ipfsImage}>
-                <a title="view image on IPFS">image</a>
-            </Link>
-        </div>
-        <div>
-          {`Image dimensions : ${width} x ${height}`}
-        </div>
-        <div>Token Standard : ERC-721</div>
-        <div>Blockchain : Ethereum</div>
       </div>
-    </>
+    </div>
   )
 }

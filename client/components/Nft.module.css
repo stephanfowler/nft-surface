@@ -1,14 +1,32 @@
-.nftCard,
+.nft {
+    display: grid;
+}
+
+@media only screen and (min-width: 550px) {
+    .nft {
+        grid-template-columns: 1fr 1fr;
+    }    
+}
+
+.nftImage,
 .nftThumb {
-    background: white;
     border-bottom: 1px solid white;
-    margin-bottom: 2rem;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
+}
+
+@media only screen and (min-width: 550px) {
+    .nftImage,
+    .nftThumb {
+        margin: 1rem;
+    }    
 }
 
 .nftThumb {
     background: #fff;
     padding: 1rem 0 0 0;
+}
+
+.nftStory {
+
 }
 
 .nftActions,
@@ -47,8 +65,14 @@
     margin: 0;
 }
 
-.nftCardInfo {
-    margin: 1rem;
+.nftMetadata {
+    margin: 0 0 2rem 0;
+    padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
+}
+
+.nftMetadata div {
+    margin: 0 0 .25rem 0;
 }
 
 .nftName {
@@ -63,12 +87,14 @@
 
 .nftDescription, 
 .nftEdition,
-.nftCollection {
+.nftCollection,
+.nftDimensions {
     font-size:smaller;
 }
 
 .nftEdition,
-.nftCollection {
+.nftCollection,
+.nftDimensions {
     color: grey;
 }
 
@@ -81,7 +107,7 @@
     background: #efe;
     border-radius: 4px;
     padding: 0.5rem;
-    margin: 0 -0.5rem;
+    margin: 1rem -0.5rem;
     border: 1px solid lightgreen;
     color: darkgreen;
 }

@@ -1,6 +1,7 @@
 .container {
+  /*background: #f8f8f8;*/
 }
-  
+
 .header {
   text-align: center;
   box-shadow: rgb(0 0 0 / 10%) 0px 25px 20px -20px;
@@ -12,3 +13,11 @@
   color: darkslategrey;
   font-weight: bold;
 }
+
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: smaller;
+}
+
+

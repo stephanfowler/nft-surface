@@ -1,7 +1,5 @@
 import Head from 'next/head'
-import Footer from '@components/Footer'
 import styles from './Layout.module.css'
-import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
 const name = 'Artist'
@@ -25,7 +23,11 @@ export default function Layout({ children, home }) {
         <Link href="/nft"><a>NFTs</a></Link>
       </header>
       <main>{children}</main>
-      <Footer />
+      <footer className={styles.footer}>
+        <Link href="/posts/provenance">
+          <a>NFT provenance</a>
+        </Link>
+      </footer>
     </div>
   )
 }
