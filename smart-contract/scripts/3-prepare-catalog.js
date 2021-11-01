@@ -192,8 +192,8 @@ async function main() {
           const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
           // TODO decide should we ALWAYS upload sourceImage? In case it has has changed.
-          //if (!nft.metadata.image) {
-          if (true) {
+          if (!nft.metadata.image) {
+          //if (true) {
             console.log("Uloading  : " + tokenId + " : " + nft.sourceImage);
 
             const imageFilename = catalogDirectory + "/images/" + nft.sourceImage;
