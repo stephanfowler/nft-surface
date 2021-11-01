@@ -26,10 +26,11 @@ main {
 
 a {
   color: black;
-  text-decoration-color: lightgrey;
+  text-decoration-color: grey;
   text-decoration-thickness: 0.05em;
   text-underline-offset: 1.5px;
   text-decoration-skip-ink: auto;
+  text-decoration-style: dotted;
 }
 
 a:hover {

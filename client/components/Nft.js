@@ -79,6 +79,8 @@ export default function Nft({ nft, context }) {
         </div>
 
         <div className={styles.nftDetails}>
+        <div>Blockchain : Ethereum</div>
+          <div>Token Standard : ERC721</div>
           {(status === 'minted' || status === 'burnt') &&
             <div>
                 {"Token ID : "}
@@ -107,16 +109,14 @@ export default function Nft({ nft, context }) {
           </div>
           <div>
               {"IPFS immutable "}
-              <Link href={ipfsMetadata}>
-                  <a title="view image on IPFS">metadata</a>
-              </Link>
-              {" | "}
               <Link href={ipfsImage}>
                   <a title="view image on IPFS">image</a>
               </Link>
+              {" | "}
+              <Link href={ipfsMetadata}>
+                  <a title="view image on IPFS">metadata</a>
+              </Link>
           </div>
-          <div>Token Standard : ERC-721</div>
-          <div>Blockchain : Ethereum</div>
         </div>
       </div>
     </div>
