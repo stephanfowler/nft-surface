@@ -2,8 +2,8 @@ https://testnets.opensea.io/assets/<contractAddress>/603
 
 module.exports = {
     env: {
-      catalogUrl:       'http://stephanfowler.com/nft-agent-assets/catalog_chainid_4.json',
-      catalogImages:    'http://stephanfowler.com/nft-agent-assets/images',
+      catalogUrl:       'http://stephanfowler.com/nft-agent-catalog/catalog_chainid_4.json',
+      catalogImages:    'http://stephanfowler.com/nft-agent-catalog/images',
       etherscanAddress: 'https://rinkeby.etherscan.io/address/<address>',
       etherscanToken:   'https://rinkeby.etherscan.io/token/<address>?a=<tokenId>',
       etherscanTx:      'https://rinkeby.etherscan.io/tx/<hash>',
