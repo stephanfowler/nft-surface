@@ -56,17 +56,20 @@ export default function Nft({ nft, context }) {
         <div className={styles.nftCardInfo}>
           <div className={styles.nftName}>{nft.metadata.name}</div>
           <div className={styles.nftDescription}>{nft.metadata.description}</div>
-          <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>        
+          <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
+          {nft.metadata.collection && 
+            <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
+          }
         </div>
       </div>
 
       <div className={styles.nftActions}>
         <Minter  nft={nft} context={context} status={status} setStatus={setStatus} />
         {status === 'minted' &&
-          <div className={styles.nftInfoMarketplaces}>
+          <div className={styles.nftTrade}>
             {"Trade it on "} 
             <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-            {" | "}
+            {" · "}
             <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
           </div>
         }

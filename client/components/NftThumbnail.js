@@ -30,7 +30,10 @@ export default function NftThumbnail({ nft, index }) {
         </div>
         <div className={styles.nftCardInfo}>
           <div className={styles.nftName}>{nft.metadata.name}</div>
-          <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>        
+          <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
+          {nft.metadata.collection && 
+            <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
+          }
         </div>
       </div>
     )

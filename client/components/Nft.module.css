@@ -1,18 +1,24 @@
 .nftCard,
 .nftThumb {
+    background: white;
     border-bottom: 1px solid white;
     margin-bottom: 2rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
 }
 
+.nftThumb {
+    background: #fff;
+    padding: 1rem 0 0 0;
+}
+
 .nftActions,
 .nftDetails {
-        padding: 0 1rem 1rem 1rem;
+    padding: 0 1rem 1rem 1rem;
 }
 
 .nftActions div,
 .nftDetails div {
-        margin-bottom: 0.25rem;
+    margin-bottom: 0.25rem;
 }
 
 .nftDetails {
@@ -33,10 +39,6 @@
     font-weight: bold;
 }
 
-.nftThumb {
-    margin-bottom: 3rem;
-}
-
 .nftThumbImage.portrait {
     margin: 0 1rem;
 }
@@ -46,18 +48,10 @@
 }
 
 .nftCardInfo {
-}
-
-.nftName,
-.nftDescription {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin: 1rem;
 }
 
 .nftName {
-    margin-top: 0.5rem; 
-    margin-bottom: 0.2rem;
-    margin-right: 3rem;
     font-size: larger;
     font-weight: bold;
 }
@@ -67,15 +61,14 @@
     font-weight: normal;
 }
 
-.nftDescription {
-    margin-top: 0; 
-    margin-bottom: 0.2rem;
+.nftDescription, 
+.nftEdition,
+.nftCollection {
     font-size:smaller;
 }
 
-.nftEdition {
-    margin: 0 1rem 1rem 1rem;
-    font-size: smaller;
+.nftEdition,
+.nftCollection {
     color: grey;
 }
 
@@ -84,7 +77,17 @@
     font-weight: bold;
 }
 
-a.nftMarket {
+.nftTrade {
+    background: #efe;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin: 0 -0.5rem;
+    border: 1px solid lightgreen;
+    color: darkgreen;
+}
+
+.nftTrade a {
+    color: darkgreen;
     font-weight:bold;
 }
 
