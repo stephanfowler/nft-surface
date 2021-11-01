@@ -157,7 +157,10 @@ async function main() {
   for (const nft of catalog.NFTs) {
     failedProperties = !validProperties(nft) || failedProperties;
 
-    if (isMinted(nft) || isBurnt(nft)) {
+    if (isMinted(nft)) {
+      // noop
+
+    } else if (isBurnt(nft)) {
       // noop
 
     } else {
@@ -188,10 +191,11 @@ async function main() {
           // For IPFS uploads, first make a readable filename
           const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
-          // If no image hash yet, upload sourceImage
-          // TODO decide if we should ALWAYS upload? In case sourceImage has changed.
-          //if (true) {
-          if (!nft.metadata.image) {
+          // TODO decide should we ALWAYS upload sourceImage? In case it has has changed.
+          //if (!nft.metadata.image) {
+          if (true) {
+            console.log("Uloading  : " + tokenId + " : " + nft.sourceImage);
+
             const imageFilename = catalogDirectory + "/images/" + nft.sourceImage;
             const ipfsImageOpts = { pinataMetadata: { name: ipfsFilename } };
             const fileStream = fs.createReadStream(imageFilename);
@@ -243,6 +247,8 @@ async function main() {
       }
     }
     catalogUpdated.NFTs.push(nft)
+
+    console.log("Processed : " + nft.tokenId + " : " + nft.status)
   }
 
   // Warn on duplicate tokenURIs. This may be accidental or intended (eg. multi-edition items)
