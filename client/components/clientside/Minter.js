@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 import { useEffect, useState } from "react";
 import { isTransactionMined, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
 
@@ -128,10 +130,17 @@ const Minter = ({ nft, context, status, setStatus }) => {
           <div>Sorry, this NFT has been burnt</div>
         )}
         {status === "withheld" && (
-          <div>This NFT is reserved. Please contact the artist to arrange a direct sale.</div>
+          <div>This NFT is reserved. Please contact the artist or gallery.</div>
         )}  
         {status === "claimable" && (
-          <div>This NFT is available for minting</div>
+          <>
+            <div>Available for minting</div>
+            <div className={styles.nftPrice}>
+              {"Price Ξ "} 
+              <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}</span>
+              {" ETH + gas"}
+            </div>
+          </>
         )}
         {status === "revoked" && (
           <div>Sorry, this NFT is no longer avaliable.</div>

@@ -45,6 +45,9 @@
     margin: 0;
 }
 
+.nftCardInfo {
+}
+
 .nftName,
 .nftDescription {
     margin-left: 1rem;
@@ -54,21 +57,28 @@
 .nftName {
     margin-top: 0.5rem; 
     margin-bottom: 0.2rem;
+    margin-right: 3rem;
     font-size: larger;
     font-weight: bold;
 }
 
 .nftThumb .nftName {
-    margin-bottom: 0.5rem;
     font-size: inherit;
     font-weight: normal;
 }
 
 .nftDescription {
     margin-top: 0; 
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
     font-size:smaller;
 }
+
+.nftEdition {
+    margin: 0 1rem 1rem 1rem;
+    font-size: smaller;
+    color: grey;
+}
+
 
 .nftStatus {
     font-weight: bold;
@@ -88,4 +98,14 @@ a.nftMarket {
 .mintingSuccess a {
     color: green;
     font-weight: normal;
+}
+
+.nftPrice {
+    font-weight: normal;
+    color: grey;
+}
+
+.nftPriceETH {
+    font-weight: bold;
+    color: black;
 }

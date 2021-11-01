@@ -53,8 +53,11 @@ export default function Nft({ nft, context }) {
             priority
             layout="responsive" />
         </div>
-        <div className={styles.nftName}>{nft.metadata.name}</div>
-        <div className={styles.nftDescription}>{nft.metadata.description}</div>
+        <div className={styles.nftCardInfo}>
+          <div className={styles.nftName}>{nft.metadata.name}</div>
+          <div className={styles.nftDescription}>{nft.metadata.description}</div>
+          <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>        
+        </div>
       </div>
 
       <div className={styles.nftActions}>
