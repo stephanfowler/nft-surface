@@ -57,18 +57,18 @@ export default function Nft({ nft, context }) {
       <div className={styles.nftStory}>
   
         <div className={styles.nftMetadata}>
-          <div className={styles.nftName}>{nft.metadata.name}</div>
+          <h1 className={styles.nftName}>{nft.metadata.name}</h1>
           <div className={styles.nftCreatorAndDate}>{nft.metadata.creator} {nft.metadata.date}</div>
           <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
+          <div className={styles.nftDimensions}>{width}{" x "}{height}{" px"}</div>
+          {nft.metadata.collection && 
+            <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
+          }
           <div className={styles.nftDescription}>{
             (nft.metadata.description + "").split("/n").map((para, index) => 
             <div key={index}>{para}</div>
           )
           }</div>
-          <div className={styles.nftDimensions}>{width}{" x "}{height}</div>
-          {nft.metadata.collection && 
-            <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
-          }
         </div>
 
         <div className={styles.nftActions}>

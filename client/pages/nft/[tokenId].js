@@ -28,12 +28,14 @@ export async function getStaticProps({ params }) {
 }
 
 export default function NFT({ nft, context }) {
+  // TODO: improve og:image. Maybe we need a web optimised image specified in the catalog.
   return (
     <Layout>
       <Head>
-        <title>{nft.metadata.name}{" : "}{siteTitle}</title>
+        <title key="title">{process.env.creatorName}{" | "}{nft.metadata.name}</title>
+        <meta property="og:image" content={process.env.catalogImages + "/" + nft.sourceImage} key="ogimage"/>
       </Head>
-      <Nft     nft={nft} context={context} />
+      <Nft nft={nft} context={context} />
     </Layout>
   )
 }

@@ -14,6 +14,12 @@
   font-weight: bold;
 }
 
+.pageContainer {
+  padding: 1rem;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
 .footer {
   text-align: center;
   padding: 2rem 1rem;
