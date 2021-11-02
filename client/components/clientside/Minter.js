@@ -130,13 +130,13 @@ const Minter = ({ nft, context, status, setStatus }) => {
           <div>Sorry, this NFT has been burnt</div>
         )}
         {status === "withheld" && (
-          <div>This NFT is reserved. Please contact the artist or gallery.</div>
+          <div>This NFT is reserved. Please contact the artist.</div>
         )}  
         {status === "claimable" && (
           <>
             <div>Available for minting</div>
             <div className={styles.nftPrice}>
-              {"Price Ξ "} 
+              {"Price Ξ "}
               <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}</span>
               {" ETH + gas"}
             </div>

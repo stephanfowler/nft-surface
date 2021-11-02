@@ -55,7 +55,7 @@ async function main() {
   const idsNewlyMinted = [];
   const idsNewlyBurnt = [];
   const idsUploadImage = [];
-  const idsUploadMetadata = [];
+  const idsUpdatedMetadata = [];
   const idsSigned = [];
   const idsWithheld = [];
 
@@ -194,7 +194,7 @@ async function main() {
           // TODO decide should we ALWAYS upload sourceImage? In case it has has changed.
           if (!nft.metadata.image) {
           //if (true) {
-            console.log("Uloading  : " + tokenId + " : " + nft.sourceImage);
+            console.log("Uploading : " + tokenId + " : " + nft.sourceImage);
 
             const imageFilename = catalogDirectory + "/images/" + nft.sourceImage;
             const ipfsImageOpts = { pinataMetadata: { name: ipfsFilename } };
@@ -216,9 +216,19 @@ async function main() {
           ipfsMetadata.creatorAddress = creatorAddress;
           ipfsMetadata.contractAddress = contractAddress;
           ipfsMetadata.tokenId = tokenId;
+          // add new metadata from IPFS
           pinnedMetadata = await pinata.pinJSONToIPFS(ipfsMetadata, ipfsMetadataOpts);
-          nft.tokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
-          idsUploadMetadata.push(tokenId);
+          const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
+          const oldTokenURI = nft.tokenURI + "";
+          if (newTokenURI !== oldTokenURI) {
+            idsUpdatedMetadata.push(tokenId);
+            console.log("Updated   : " + nft.tokenId + " metadata : " + newTokenURI)
+            nft.tokenURI = newTokenURI;
+            if (oldTokenURI) {
+              // remove old metadata from IPFS
+              await pinata.unpin(nft.tokenURI.replace("ipfs://", ""));
+            }
+          }
 
           // If specified, weiPrice must be a numeric string, including "0"
           const weiPrice = (( typeof nft.weiPrice === 'string' || nft.weiPrice instanceof String) 
@@ -279,7 +289,7 @@ async function main() {
     idsSigned,
     idsWithheld,
     idsUploadImage,
-    idsUploadMetadata
+    idsUpdatedMetadata
   };
 
   // Write the file back to disk (!)
