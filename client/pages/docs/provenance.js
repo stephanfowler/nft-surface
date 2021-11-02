@@ -12,7 +12,7 @@ export default function FirstPost() {
             <div className={styles.pageContainer}>
                 <h1>Ensuring correct NFT provenance</h1>
 
-                <p>The must publish their Ethereum address somewhere trusted, off-chain, such that the collector is confident that they know the artist's true address. This is arguably the weakest link, as everything else is transparently recorded on the blockchain and thus verifyable. The collector must therefore be confident that any statement purportedly made by the artist about their ETH address is not, in fact, being made by an impersonator.
+                <p>The artist must publish their Ethereum address somewhere trusted, off-chain, such that the collector is confident that they know the artist's true address. This is arguably the weakest link, as everything else is transparently recorded on the blockchain and thus verifyable. The collector must therefore be confident that any statement purportedly made by the artist about their ETH address is not, in fact, being made by an impersonator.
                 </p>
 
                 <p>The artist should be both (1) the <strong>creator</strong> of the smart contract and (2) the <strong>owner</strong> of the smart contract. Whereas the creator's ETH address is always immutably recorded in the blockchain, the "owner" of the contract must explicitly be implemented to be immutable. 
