@@ -39,8 +39,8 @@ class Home extends React.Component {
           </Head>
           <ResponsiveMasonry columnsCountBreakPoints={{350: 1, 550: 2, 900: 3}}>
             <Masonry>
-              {this.props.catalog.NFTs.map((nft, index) => 
-                <NftThumbnail nft={nft} key={nft.tokenId} index={index}/>
+              {this.props.catalog.NFTs.map((nft, index) =>
+                <NftThumbnail nft={nft} key={index} index={index}/>
               )}
             </Masonry>
           </ResponsiveMasonry>

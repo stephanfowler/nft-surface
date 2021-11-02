@@ -23,17 +23,15 @@ export default function NftThumbnail({ nft, index }) {
                 placeholder = {nft.placeholderImage ? "blur" : "empty"}
                 blurDataURL = {nft.placeholderImage}
                 alt={nft.metadata.name}
-                priority={index === 0}
+                priority={index < 0}
                 layout="responsive" />
             </a>
           </Link>
         </div>
         <div className={styles.nftMetadata}>
           <div className={styles.nftName}>{nft.metadata.name}</div>
+          <div className={styles.nftCreatorAndDate}>{nft.metadata.creator} {nft.metadata.date}</div>
           <div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
-          {nft.metadata.collection && 
-            <div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
-          }
         </div>
       </div>
     )

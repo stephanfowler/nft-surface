@@ -25,10 +25,6 @@
     padding: 1rem 0 0 0;
 }
 
-.nftStory {
-
-}
-
 .nftActions,
 .nftDetails {
     padding: 0 1rem 1rem 1rem;
@@ -71,7 +67,7 @@
     box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
 }
 
-.nftMetadata div {
+.nft .nftMetadata div {
     margin: 0 0 .25rem 0;
 }
 
@@ -82,9 +78,9 @@
 
 .nftThumb .nftName {
     font-size: inherit;
-    font-weight: normal;
 }
 
+.nftCreatorAndDate,
 .nftDescription, 
 .nftEdition,
 .nftCollection,
