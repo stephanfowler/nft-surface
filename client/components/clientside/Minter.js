@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
-
 import { useEffect, useState } from "react";
-import { isTransactionMined, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
+
+import { isTransactionMined, getWallet, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
 import ShortAddress from '@components/ShortAddress'
@@ -16,6 +16,7 @@ const Minter = ({ nft, context, status, setStatus }) => {
   const [alert, setAlert] = useState("");
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
 
@@ -23,6 +24,13 @@ const Minter = ({ nft, context, status, setStatus }) => {
   const chainId = context.signatureDomain.chainId;
 
   useEffect(() => {
+    async function fetchWallet() {
+      const wallet = await getWallet();
+      setWallet(wallet.address);
+      setAlert(wallet.error);
+    }
+    fetchWallet();
+
     async function getTokenStatus() {
       const catalogStatus = nft && nft.status;
       if (!nft) {
@@ -43,13 +51,6 @@ const Minter = ({ nft, context, status, setStatus }) => {
     }
     getTokenStatus();
 
-    async function fetchWallet() {
-      const walletRespone = await connectWallet(false);
-      if (walletRespone && walletRespone.address) setWallet(walletRespone.address);
-      if (walletRespone && walletRespone.error)   setAlert(walletRespone.error);  
-    }
-    fetchWallet();
-  
     async function addWalletListener() {
       if (window.ethereum) {
         window.ethereum.on("accountsChanged", (accounts) => {
@@ -58,21 +59,32 @@ const Minter = ({ nft, context, status, setStatus }) => {
         });
       }
     }
-    addWalletListener();  
+    addWalletListener();
+
+    return () => {
+      setStatus("");
+      setOwner("");
+      setWallet("");
+      setAlert("");
+    }
   }, [nft, tokenId]);
 
   const onConnectWalletClicked = async () => {
-    const walletRespone = await connectWallet(true);
-    setWallet(walletRespone.address);
-    setAlert(walletRespone.error);
+    setIsConnecting(true);
+    setAlert("");
+    const wallet = await connectWallet();
+    setWallet(wallet.address);
+    setAlert(wallet.error);
+    setIsConnecting(false);
   };
 
   const onClaimClicked = async () => {
+    setIsConnecting(true);
+    setAlert("");
     const { tx, error } = await claim(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("_minting")
-      //setAlert("Pending transaction: " + tx.hash)
       const txReceipt = await isTransactionMined(tx.hash)
       if (txReceipt) {
         setTxReceipt(txReceipt);
@@ -82,9 +94,9 @@ const Minter = ({ nft, context, status, setStatus }) => {
         setAlert("NOT Mined, transaction: " + tx.hash)
       }
     } else {
-      setAlert("idMintingFailed")
       console.log(error);
     }
+    setIsConnecting(false);
   };
 
   function etherscanAddressLink(address, linktext) {
@@ -134,9 +146,9 @@ const Minter = ({ nft, context, status, setStatus }) => {
         )}  
         {status === "claimable" && (
           <>
-            <div>Available for minting</div>
+            <div>This NFT is available for minting</div>
             <div className={styles.nftPrice}>
-              {"Price Ξ "}
+              {"Price : "}
               <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}</span>
               {" ETH + gas"}
             </div>
@@ -159,11 +171,11 @@ const Minter = ({ nft, context, status, setStatus }) => {
       {status === "claimable" && (
         <div id="walletActions">{
           walletAddress ? (
-            <button onClick={onClaimClicked}>
+            <button disabled={isConnecting} onClick={onClaimClicked}>
               Mint this NFT
             </button>) :
           window.ethereum ? (
-            <button onClick={onConnectWalletClicked}>
+            <button disabled={isConnecting} onClick={onConnectWalletClicked}>
               <span>To mint this NFT, first connect your wallet</span>
             </button>)
           : (
@@ -178,8 +190,7 @@ const Minter = ({ nft, context, status, setStatus }) => {
 
       {walletAddress && (
         <div className={styles.connectedAddress}>
-          Your wallet address is {" "} 
-          {etherscanAddressLink(walletAddress)}
+          Your wallet address is{" "}{etherscanAddressLink(walletAddress)}
         </div>
       )}
 

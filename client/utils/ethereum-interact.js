@@ -36,14 +36,17 @@ export const isTransactionMined = async(txHash) => {
   }
 ;}
 
-export const connectWallet = async (isRequest) => {
+export const connectWallet = async () => {
+  return await getWallet(true);
+}
+
+export const getWallet = async (isConnect) => {
   if (window.ethereum) {
-    try {      
-      const accounts = await window.ethereum.send(isRequest ? 'eth_requestAccounts' : 'eth_accounts');
-      const address = (accounts && accounts.result) ? accounts.result[0] : undefined;
-      return {address: address};
+    try {
+      const accounts = await window.ethereum.request({ method: isConnect ? 'eth_requestAccounts' : 'eth_accounts' });
+      return { address: accounts[0] };
     } catch (error) {
-      return {error: error.message};
+      return { error: error.message };
     }
   } else {
     return {};
@@ -75,7 +78,7 @@ export const claim = async (art, contractAddress, chainId) => {
   const contract = await getWriteableContract(contractAddress, chainId);
   try {
     const tx = await contract.claim(art.tokenId, art.tokenURI, art.signature, {value: art.weiPrice});
-    return { tx: tx };
+    return { tx };
   } catch (error) {
     return { error: error.message };
   }

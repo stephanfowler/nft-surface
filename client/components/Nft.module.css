@@ -45,7 +45,7 @@
 
 .nftActions .connectedAddress,
 .nftActions .connectedAddress a {
-    color: gray;
+    color:orange;
     font-size: smaller;
 }
 
@@ -115,7 +115,7 @@
 
 .minting,
 .minting a {
-    color: orangered;
+    color: orange;
     font-weight: normal;
 }
 

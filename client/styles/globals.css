@@ -54,16 +54,20 @@ button {
   margin: 0.5rem 0;
   padding: 0.6rem 1rem 0.5rem 1rem;
   border: 0px;
-  border-radius: 4px;
+  border-radius: 8px;
   color: white;
   background-color: darkblue;
-  align-items: center;
   font-size: large;
   text-align: center;
   font-weight: bold;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 button:hover {
-  background-color: rgb(240, 146, 6);
+  background-color: black;
 }
+
+button:disabled {
+  background-color: lightgray;
+}
+
