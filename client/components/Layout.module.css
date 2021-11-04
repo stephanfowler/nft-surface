@@ -8,19 +8,17 @@
   padding: 0.5rem;
   margin-bottom: 1.5rem;
   background: white;
-}
-
-.header,
-.header a {
   font-size: 1.5rem;
   font-weight: bolder;
   letter-spacing: -0.05rem;
-  text-decoration: none;
+}
+
+.header a {
   color: orange;
+  text-decoration: none;
 }
 
 .header a:hover {
-  text-decoration: none;
   color: black;
 }
 

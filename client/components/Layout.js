@@ -1,8 +1,11 @@
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
 
 export default function Layout({ children, home }) {
+  const router = useRouter()
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,9 +22,13 @@ export default function Layout({ children, home }) {
         <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet"></link>
       </Head>
       <header className={styles.header}>
-        <Link href="/"><a>{process.env.creatorName}</a></Link>
+        {router.pathname === "/" ? 
+          process.env.creatorName : 
+          <Link href="/"><a>{process.env.creatorName}</a></Link>}        
         {" · "}
-        <Link href="/nft"><a>NFTs</a></Link>
+        {router.pathname === "/nft" ? 
+          "NFTs" : 
+          <Link href="/nft"><a>NFTs</a></Link>}
       </header>
       <main>{children}</main>
       <footer className={styles.footer}>
