@@ -2,9 +2,9 @@ https://testnets.opensea.io/assets/<contractAddress>/603
 
 module.exports = {
     env: {
-      creatorName:      'Florence Fowler',
-      siteTitle:        'Florence Fowler NFT Catalog',
-      siteDescription:  'Works by Florence Fowler available for initial minting as NFTs or secondary trading on open NFT marketplaces',
+      creatorName:      'FLOF',
+      siteTitle:        'FLOF NFT Catalog',
+      siteDescription:  'NFT works by FLOF for minting or secondary trading on open NFT marketplaces',
       twitterHandle:    '@stephanfowler',
 
       catalogUrl:       'http://stephanfowler.com/nft-agent-catalog/catalog_chainid_4.json',

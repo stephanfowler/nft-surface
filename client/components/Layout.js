@@ -20,17 +20,15 @@ export default function Layout({ children, home }) {
       </Head>
       <header className={styles.header}>
         <Link href="/"><a>{process.env.creatorName}</a></Link>
-        {" | "}
+        {" · "}
         <Link href="/nft"><a>NFTs</a></Link>
       </header>
       <main>{children}</main>
-      {!home &&
-        <footer className={styles.footer}>
-          <Link href="/docs/provenance">
-            <a>NFT provenance</a>
-          </Link>
-        </footer>
-      }
+      <footer className={styles.footer}>
+        <Link href="/docs/provenance">
+          <a>NFT provenance</a>
+        </Link>
+      </footer>
     </div>
   )
 }

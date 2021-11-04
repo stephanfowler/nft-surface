@@ -5,14 +5,23 @@
 .header {
   text-align: center;
   box-shadow: rgb(0 0 0 / 10%) 0px 25px 20px -20px;
-  padding: 1rem;
+  padding: 0.5rem;
   margin-bottom: 1.5rem;
   background: white;
 }
 
+.header,
 .header a {
-  color: darkslategrey;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  letter-spacing: -0.05rem;
+  text-decoration: none;
+  color: orange;
+}
+
+.header a:hover {
+  text-decoration: none;
+  color: black;
 }
 
 .pageContainer {
@@ -27,6 +36,22 @@
   font-size: smaller;
 }
 
-.landingImageWrap {
-  z-index: -1;
+.landingHeroImage {
+}
+
+.landingHeroText {
+  z-index: 1;
+  font-size: 7rem;
+  font-weight: bolder;
+  line-height: 6rem;
+  letter-spacing: -0.4rem;
+  padding: 2rem;
+  text-shadow: 0px 15px 5px rgb(0 0 0 / 20%), 10px 20px 5px rgb(0 0 0 / 10%), -10px 20px 5px rgb(0 0 0 / 10%), 0px 9px rgb(0 0 0 / 85%);
+  text-decoration: none;
+  color: orange;
+}
+
+.landingHeroText:hover {
+  text-decoration: none;
+  color: white;
 }
