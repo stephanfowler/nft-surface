@@ -23,8 +23,7 @@ export default function Home() {
       <Link href="/nft">
         <a className={styles.landingHeroText}>
           {process.env.creatorName}
-          <br />
-          NFT
+          <br />NFT<br />ART
         </a>
       </Link>
     </Layout>
