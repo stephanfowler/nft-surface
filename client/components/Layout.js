@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import styles from './Layout.module.css'
+import styles from '@components/Layout.module.css'
 import Link from 'next/link'
 
 export default function Layout({ children, home }) {
@@ -24,11 +24,13 @@ export default function Layout({ children, home }) {
         <Link href="/nft"><a>NFTs</a></Link>
       </header>
       <main>{children}</main>
-      <footer className={styles.footer}>
-        <Link href="/docs/provenance">
-          <a>NFT provenance</a>
-        </Link>
-      </footer>
+      {!home &&
+        <footer className={styles.footer}>
+          <Link href="/docs/provenance">
+            <a>NFT provenance</a>
+          </Link>
+        </footer>
+      }
     </div>
   )
 }
