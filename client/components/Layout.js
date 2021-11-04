@@ -27,8 +27,8 @@ export default function Layout({ children, home }) {
           <Link href="/"><a>{process.env.creatorName}</a></Link>}        
         {" · "}
         {router.pathname === "/nft" ? 
-          "NFTs" : 
-          <Link href="/nft"><a>NFTs</a></Link>}
+          "NFT" : 
+          <Link href="/nft"><a>NFT</a></Link>}
       </header>
       <main>{children}</main>
       <footer className={styles.footer}>
