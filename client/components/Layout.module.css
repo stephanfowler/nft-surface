@@ -23,6 +23,11 @@
   color: black;
 }
 
+.alertIsTestnet {
+  margin-top: 1rem;
+  color:red;
+}
+
 .pageContainer {
   padding: 1rem;
   margin: 0 auto;

@@ -3,8 +3,9 @@ import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
 
-export default function Layout({ children, home, nft }) {
+export default function Layout({ children, home, nft, context }) {
   const router = useRouter()
+  const chainId = context && context.signatureDomain && context.signatureDomain.chainId;
 
   return (
     <div className={styles.container}>
@@ -41,6 +42,11 @@ export default function Layout({ children, home, nft }) {
           <Link href="/docs/provenance">
             <a>NFT provenance</a>
           </Link>
+          {chainId !== 1 &&
+            <div className={styles.alertIsTestnet}>
+              {"TESTNET "}{chainId}
+            </div>
+          }
         </footer>
       }
     </div>

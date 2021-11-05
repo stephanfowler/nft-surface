@@ -16,7 +16,7 @@ export async function getStaticProps() {
 class Home extends React.Component {
   render() {
       return (
-        <Layout>
+        <Layout context={this.props.catalog.context}>
           <Head>
             <title key="title">{process.env.creatorName} | Catalog</title>
           </Head>
