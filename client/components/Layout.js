@@ -28,10 +28,10 @@ export default function Layout({ children, home, nft, context }) {
           <Link href="/"><a>{process.env.creatorName}</a></Link>
           {" · "}
           {router.pathname === "/nft" ? 
-            "NFT CATALOG" : 
-            <Link href="/nft"><a>NFT CATALOG</a></Link>}
+            "CATALOG" : 
+            <Link href="/nft"><a>CATALOG</a></Link>}
           {router.pathname === "/nft/[tokenId]" && 
-            <span>{" · #"}{nft.tokenId}</span>}
+            <span>{" · NFT #"}{nft.tokenId}</span>}
         </header>
       }
 

@@ -7,7 +7,7 @@
   padding: 0.5rem 1rem;
   margin: 0 auto 1.5rem auto;
   background: white;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bolder;
   letter-spacing: -0.05rem;
   max-width: 1100px;
@@ -58,13 +58,13 @@
 }
 
 .landingHeroTextA {
-  font-size: 7rem;
+  font-size: 6rem;
   color: white;
 }
 
 .landingHeroTextB {
-  font-size: 5rem;
-  line-height: 4rem;
+  font-size: 4rem;
+  line-height: 3.2rem;
   color: orange;
 }
 
