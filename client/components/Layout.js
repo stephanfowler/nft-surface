@@ -20,7 +20,7 @@ export default function Layout({ children, home, nft, context }) {
         <meta property="og:title" content={process.env.siteTitle} key="ogtitle" />
         <meta property="og:description" content={process.env.siteDescription} key="ogdesc" />
         <meta property="og:site_name" content={process.env.creatorName} key="ogsitename" />
-        <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet"></link>
+        <link href="https://fonts.googleapis.com/css?family=Cabin:400,700&display=swap" rel="stylesheet"></link>
       </Head>
 
       {!home &&
