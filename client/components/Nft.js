@@ -86,16 +86,18 @@ export default function Nft({ nft, context }) {
         <div className={styles.nftDetails}>
         <div>Blockchain : Ethereum</div>
           <div>Token Standard : ERC721</div>
-          {(status === 'minted' || status === 'burnt') &&
-            <div>
-                {"Token ID : "}
-                <Link href={etherscanToken}>
-                    <a title="view token on etherscan">
-                        {tokenId}
-                    </a>
-                </Link>
-            </div>
-          }
+          <div>
+              {(status === 'minted' || status === 'burnt') ?
+                <>
+                  {"Token ID : "}
+                  <Link href={etherscanToken}>
+                      <a title="view token on etherscan">{tokenId}</a>
+                  </Link>
+                </>
+                :
+                <span>{"Proposed Token ID : "}{tokenId}</span>
+              }
+          </div>
           <div>
               {"Contract : "}
               <Link href={etherscanContract}>

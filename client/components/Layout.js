@@ -21,24 +21,28 @@ export default function Layout({ children, home, nft }) {
         <meta property="og:site_name" content={process.env.creatorName} key="ogsitename" />
         <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet"></link>
       </Head>
-      <header className={styles.header}>
-        {router.pathname === "/" ? 
-          process.env.creatorName : 
-          <Link href="/"><a>{process.env.creatorName}</a></Link>}        
-        {" · "}
-        {router.pathname === "/nft" ? 
-          "NFT ART" : 
-          <Link href="/nft"><a>NFT ART</a></Link>}
-        {router.pathname === "/nft/[tokenId]" && 
-          <span>{" · "}{nft.tokenId}</span>
-        }
-      </header>
+
+      {!home &&
+        <header className={styles.header}>
+          <Link href="/"><a>{process.env.creatorName}</a></Link>
+          {" · "}
+          {router.pathname === "/nft" ? 
+            "NFT CATALOG" : 
+            <Link href="/nft"><a>NFT CATALOG</a></Link>}
+          {router.pathname === "/nft/[tokenId]" && 
+            <span>{" · #"}{nft.tokenId}</span>}
+        </header>
+      }
+
       <main>{children}</main>
-      <footer className={styles.footer}>
-        <Link href="/docs/provenance">
-          <a>NFT provenance</a>
-        </Link>
-      </footer>
+
+      {!home &&
+        <footer className={styles.footer}>
+          <Link href="/docs/provenance">
+            <a>NFT provenance</a>
+          </Link>
+        </footer>
+      }
     </div>
   )
 }
