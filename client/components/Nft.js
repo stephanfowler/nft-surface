@@ -20,11 +20,11 @@ function getIpfsHref(template, ipfsURI) {
     return (template || "").replace("<ipfsHash>", ipfsHash);
 }
 
-export default function Nft({ nft, context }) {
+export default function Nft({ nft, chainId }) {
   const [status, setStatus] = useState(nft.status);
 
-  const contractAddress = context.contractAddress;
-  const creatorAddress = context.creatorAddress;
+  const contractAddress = nft.metadata.contractAddress;
+  const creatorAddress = nft.metadata.creatorAddress;
   const tokenId = nft.tokenId;
 
   const openseaAsset      = getAssetHref(process.env.openseaAsset, contractAddress, tokenId);
@@ -72,7 +72,7 @@ export default function Nft({ nft, context }) {
         </div>
 
         <div className={styles.nftActions}>
-          <Minter  nft={nft} context={context} status={status} setStatus={setStatus} />
+          <Minter  nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
           {status === 'minted' &&
             <div className={styles.nftTrade}>
               {"Trade it on "} 

@@ -3,7 +3,7 @@ export default function ShortAddress({ address, chars }) {
     const a = (address || "").toLowerCase();
     return (     
         <>
-            {a.substr(0, l+2)}{"…"}{a.substr(address.length - l)}
+            {a.substr(0, l+2)}{"…"}{a.substr(a.length - l)}
         </> 
     )
 }

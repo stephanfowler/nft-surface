@@ -3,9 +3,8 @@ import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
 
-export default function Layout({ children, home, nft, context }) {
+export default function Layout({ children, home, nft, chainId }) {
   const router = useRouter()
-  const chainId = context && context.signatureDomain && context.signatureDomain.chainId;
 
   return (
     <div className={styles.container}>

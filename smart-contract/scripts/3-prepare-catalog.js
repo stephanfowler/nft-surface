@@ -210,13 +210,12 @@ async function main() {
             console.log("Uploading : " + tokenId + " : " + nft.sourceImage);
 
             const imageFilePath = catalogDirectory + "/" + nft.sourceImage;
-            const ipfsImageOpts = { pinataMetadata: { name: ipfsFilename } };
             const fileStream = fs.createReadStream(imageFilePath);
-            pinnedImage = await pinata.pinFileToIPFS(fileStream, ipfsImageOpts);
+            pinnedImage = await pinata.pinFileToIPFS(fileStream, {pinataMetadata: {name: ipfsFilename}});
             nft.metadata.image = "ipfs://" + pinnedImage.IpfsHash;
 
-            const imageData = await processImage(imageFilePath); 
-            nft.metadata.width    = imageData.width; 
+            const imageData = await processImage(imageFilePath);
+            nft.metadata.width    = imageData.width;
             nft.metadata.height   = imageData.height;
             nft.placeholderImage  = imageData.blurredBase64;
             nft.webOptimizedImage = imageData.webOptimizedFilePath.replace(catalogDirectory + "/", "");
@@ -224,14 +223,11 @@ async function main() {
             idsUploadedImage.push(tokenId);
           }
 
+          nft.metadata.creatorAddress = creatorAddress;
+          nft.metadata.contractAddress = contractAddress;
+
           // Always (re)create the tokenURI by first uploading metadata JSON to IPFS
-          const ipfsMetadataOpts = { pinataMetadata: { name: ipfsFilename + ".json" } };
-          const ipfsMetadata = _.clone(nft.metadata);
-          ipfsMetadata.creatorAddress = creatorAddress;
-          ipfsMetadata.contractAddress = contractAddress;
-          ipfsMetadata.tokenId = tokenId;
-          // add new metadata from IPFS
-          pinnedMetadata = await pinata.pinJSONToIPFS(ipfsMetadata, ipfsMetadataOpts);
+          pinnedMetadata = await pinata.pinJSONToIPFS(nft.metadata, {pinataMetadata:{name:ipfsFilename + ".json" }});
           const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
           const oldTokenURI = nft.tokenURI + "";
           if (newTokenURI !== oldTokenURI) {
@@ -307,8 +303,6 @@ async function main() {
 
   // Write the file back to disk (!)
   catalogUpdated.context = {
-    creatorAddress,
-    contractAddress,
     signatureDomain,
     signatureTypes
   };

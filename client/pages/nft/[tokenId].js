@@ -21,21 +21,21 @@ export async function getStaticProps({ params }) {
   const nft = catalog.NFTs.find(nft => {
     return nft.tokenId.toString() === params.tokenId
   })
-  const context = catalog.context;
+  const chainId = catalog.context.signatureDomain.chainId;
   return {
-    props: { nft, context }
+    props: { nft, chainId }
   }
 }
 
-export default function NFT({ nft, context }) {
+export default function NFT({ nft, chainId }) {
   // TODO: improve og:image. Maybe we need a web optimised image specified in the catalog.
   return (
-    <Layout nft={nft} context={context}>
+    <Layout nft={nft} chainId={chainId}>
       <Head>
         <title key="title">{process.env.creatorName}{" | "}{nft.metadata.name}</title>
         <meta property="og:image" content={process.env.catalogBaseURL + "/" + nft.webOptimizedImage} key="ogimage"/>
       </Head>
-      <Nft nft={nft} context={context} />
+      <Nft nft={nft} chainId={chainId} />
     </Layout>
   )
 }

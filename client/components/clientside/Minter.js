@@ -8,20 +8,19 @@ import ShortAddress from '@components/ShortAddress'
 
 import styles from '../Nft.module.css'
 
-const Minter = ({ nft, context, status, setStatus }) => {
+const Minter = ({ nft, chainId, status, setStatus }) => {
   const tokenId = nft.tokenId;
 
-  const [owner, setOwner] = useState("");
-  const [walletAddress, setWallet] = useState("");
-  const [alert, setAlert] = useState("");
+  const [owner, setOwner] = useState();
+  const [walletAddress, setWallet] = useState();
+  const [alert, setAlert] = useState();
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [isConnecting, setIsConnecting] = useState();
 
   const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
 
-  const contractAddress = context.signatureDomain.verifyingContract;
-  const chainId = context.signatureDomain.chainId;
+  const contractAddress = nft.metadata.contractAddress;
 
   useEffect(() => {
     async function fetchWallet() {
@@ -54,7 +53,7 @@ const Minter = ({ nft, context, status, setStatus }) => {
     async function addWalletListener() {
       if (window.ethereum) {
         window.ethereum.on("accountsChanged", (accounts) => {
-          setWallet(accounts.length ? accounts[0] : "");
+          setWallet(accounts.length && accounts[0]);
           getTokenStatus();
         });
       }
@@ -62,16 +61,16 @@ const Minter = ({ nft, context, status, setStatus }) => {
     addWalletListener();
 
     return () => {
-      setStatus("");
-      setOwner("");
-      setWallet("");
-      setAlert("");
+      setStatus();
+      setOwner();
+      setWallet();
+      setAlert();
     }
   }, [nft, tokenId]);
 
   const onConnectWalletClicked = async () => {
     setIsConnecting(true);
-    setAlert("");
+    setAlert();
     const wallet = await connectWallet();
     setWallet(wallet.address);
     setAlert(wallet.error);
@@ -80,7 +79,7 @@ const Minter = ({ nft, context, status, setStatus }) => {
 
   const onClaimClicked = async () => {
     setIsConnecting(true);
-    setAlert("");
+    setAlert();
     const { tx, error } = await claim(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
