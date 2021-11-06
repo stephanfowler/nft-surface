@@ -17,7 +17,7 @@ export default function NftThumbnail({ nft, index }) {
           <Link href={`/nft/${nft.tokenId}`}>
             <a>
               <Image
-                src={process.env.catalogImages + "/" + nft.sourceImage}
+                src={process.env.catalogBaseURL + "/" + nft.webOptimizedImage}
                 width={width}
                 height={height}
                 placeholder = {nft.placeholderImage ? "blur" : "empty"}

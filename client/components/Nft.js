@@ -44,7 +44,7 @@ export default function Nft({ nft, context }) {
 
       <div className={`${styles.nftImage} ${orient}`}>
         <Image
-          src={process.env.catalogImages + "/" + nft.sourceImage}
+          src={process.env.catalogBaseURL + "/" + nft.webOptimizedImage}
           width={width}
           height={height}
           placeholder = {nft.placeholderImage ? "blur" : "empty"}

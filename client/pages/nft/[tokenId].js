@@ -33,7 +33,7 @@ export default function NFT({ nft, context }) {
     <Layout nft={nft} context={context}>
       <Head>
         <title key="title">{process.env.creatorName}{" | "}{nft.metadata.name}</title>
-        <meta property="og:image" content={process.env.catalogImages + "/" + nft.sourceImage} key="ogimage"/>
+        <meta property="og:image" content={process.env.catalogBaseURL + "/" + nft.webOptimizedImage} key="ogimage"/>
       </Head>
       <Nft nft={nft} context={context} />
     </Layout>

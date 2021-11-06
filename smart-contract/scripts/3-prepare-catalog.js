@@ -14,16 +14,18 @@ const pinata = pinataSDK(pinataApiKey, pinataApiSecret);
 
 const contractABI = require("../artifacts/contracts/NFTagent.sol/NFTagent.json");
 
-
 async function main() {
+  console.log("Connecting...");
+
   const [signer] = await ethers.getSigners();
   const provider = new ethers.providers.JsonRpcProvider(ethereumApiKey);
   const contract = new ethers.Contract(contractAddress, contractABI.abi, provider);
   const {chainId} = await ethers.provider.getNetwork();
 
+  console.log("chainId : " + chainId);
 
-  const catalogFilename = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
-  const catalog = require(catalogFilename);
+  const catalogFilePath       = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
+  const catalog = require(catalogFilePath);
 
   const tokenIds    = _.map(catalog.NFTs, 'tokenId');
 
@@ -54,7 +56,7 @@ async function main() {
 
   const idsNewlyMinted = [];
   const idsNewlyBurnt = [];
-  const idsUploadImage = [];
+  const idsUploadedImage = [];
   const idsUpdatedMetadata = [];
   const idsSigned = [];
   const idsWithheld = [];
@@ -128,9 +130,10 @@ async function main() {
     );
   }
 
-  async function getImageSizeAndPlaceholder(filename) {
+  async function processImage(filePath) {
+
     try {
-      const sharpImg = sharp(filename);
+      const sharpImg = sharp(filePath);
       const meta = await sharpImg.metadata();
       const width = meta.width; 
       const height = meta.height
@@ -143,10 +146,20 @@ async function main() {
         .then(
           buffer => `data:image/${meta.format};base64,${buffer.toString('base64')}`
         );
+      const webOptimizedFilePath = filePath.replace(/\.[^/.]+$/, "") + "_web.jpg";
+      const webOptimised = await sharpImg
+        .resize(1200, 1200, {
+          fit: sharp.fit.inside,
+          withoutEnlargement: true
+        })
+        .toFormat('jpeg', { progressive: true, quality: 75 })
+        .toFile(webOptimizedFilePath);
+
       return {
         width,
         height,
-        blurredBase64
+        blurredBase64,
+        webOptimizedFilePath
       }
     } catch (error) {
       console.log(`Error during image processing: ${error}`);
@@ -192,22 +205,23 @@ async function main() {
           const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
           // TODO decide should we ALWAYS upload sourceImage? In case it has has changed.
-          if (!nft.metadata.image) {
-          //if (true) {
+          //if (!nft.metadata.image) {
+          if (true) {
             console.log("Uploading : " + tokenId + " : " + nft.sourceImage);
 
-            const imageFilename = catalogDirectory + "/images/" + nft.sourceImage;
+            const imageFilePath = catalogDirectory + "/" + nft.sourceImage;
             const ipfsImageOpts = { pinataMetadata: { name: ipfsFilename } };
-            const fileStream = fs.createReadStream(imageFilename);
+            const fileStream = fs.createReadStream(imageFilePath);
             pinnedImage = await pinata.pinFileToIPFS(fileStream, ipfsImageOpts);
             nft.metadata.image = "ipfs://" + pinnedImage.IpfsHash;
 
-            const imageData = await getImageSizeAndPlaceholder(imageFilename); 
-            nft.metadata.width = imageData.width; 
-            nft.metadata.height = imageData.height;
-            nft.placeholderImage = imageData.blurredBase64;
+            const imageData = await processImage(imageFilePath); 
+            nft.metadata.width    = imageData.width; 
+            nft.metadata.height   = imageData.height;
+            nft.placeholderImage  = imageData.blurredBase64;
+            nft.webOptimizedImage = imageData.webOptimizedFilePath.replace(catalogDirectory + "/", "");
 
-            idsUploadImage.push(tokenId);
+            idsUploadedImage.push(tokenId);
           }
 
           // Always (re)create the tokenURI by first uploading metadata JSON to IPFS
@@ -222,7 +236,6 @@ async function main() {
           const oldTokenURI = nft.tokenURI + "";
           if (newTokenURI !== oldTokenURI) {
             idsUpdatedMetadata.push(tokenId);
-            console.log("Updated   : " + nft.tokenId + " metadata : " + newTokenURI)
             nft.tokenURI = newTokenURI;
             if (oldTokenURI) {
               // remove old metadata from IPFS
@@ -288,7 +301,7 @@ async function main() {
     idsNewlyBurnt,
     idsSigned,
     idsWithheld,
-    idsUploadImage,
+    idsUploadedImage,
     idsUpdatedMetadata
   };
 
@@ -299,11 +312,12 @@ async function main() {
     signatureDomain,
     signatureTypes
   };
-  fs.writeFileSync(catalogFilename, JSON.stringify(catalogUpdated, null, 4));
+  fs.writeFileSync(catalogFilePath, JSON.stringify(catalogUpdated, null, 4));
   
   console.log(signatureDomain);
   console.log(stats);  
 }
+
 
 main()
   .then(() => process.exit(0))

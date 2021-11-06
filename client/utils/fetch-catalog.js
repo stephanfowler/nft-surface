@@ -1,4 +1,4 @@
-const catalogURL = process.env.catalogUrl;
+const catalogURL = process.env.catalogBaseURL + "/" + process.env.catalogFilename;
 
 let catalogMemo;
 
