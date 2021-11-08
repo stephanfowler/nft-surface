@@ -72,16 +72,17 @@ export default function Nft({ nft, chainId }) {
         </div>
 
         <div className={styles.nftActions}>
-          <Minter  nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
-          {status === 'minted' &&
-            <div className={styles.nftTrade}>
-              {"View this NFT on "} 
-              <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-              {" or "}
-              <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
-            </div>
-          }
+          <Minter nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
         </div>
+
+        {status === 'minted' &&
+          <div className={styles.nftTrade}>
+            {"View this NFT on "} 
+            <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
+            {" or "}
+            <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
+          </div>
+        }
 
         <div className={styles.nftDetails}>
         <div>Blockchain : Ethereum</div>

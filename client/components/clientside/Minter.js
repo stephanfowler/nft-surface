@@ -12,6 +12,7 @@ import styles from '@components/Nft.module.css'
 const Minter = ({ nft, chainId, status, setStatus }) => {
   const tokenId = nft.tokenId;
 
+  const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
   const [walletAddress, setWallet] = useState();
   const [alert, setAlert] = useState();
@@ -52,6 +53,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
             setStatus("revoked") 
         }
       }
+      setStatusUpdated(true);
     }
     updateTokenStatus();
 
@@ -112,21 +114,21 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   function etherscanAddressLink(address, linktext) {
     return (
       <Link href={(process.env.etherscanAddress || "").replace("<address>", address)}>
-        <a>{linktext || <ShortAddress address={address} />}</a>
+        <a target="_blank">{linktext || <ShortAddress address={address} />}</a>
       </Link>)
   }
 
   function etherscanTxLink(hash) {
     return (
       <Link href={(process.env.etherscanTx || "").replace("<hash>", hash)}>
-        <a><ShortAddress address={hash} /></a>
+        <a target="_blank"><ShortAddress address={hash} /></a>
       </Link>)
   }
 
   function etherscanBlockLink(number) {
     return (
       <Link href={(process.env.etherscanBlock || "").replace("<number>", number)}>
-        <a>{number}</a>
+        <a target="_blank">{number}</a>
       </Link>)
   }
 
@@ -139,87 +141,82 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
           {"Please switch your wallet to "}{networkName(chainId)}
         </div>
     :
-    <div className={styles.minter}>
-      <div className={styles.nftStatus}>
+    <div className={statusUpdated ? styles.minter_updated : styles.minter }>
 
-        {status === "minted" && owner && (
-          <div className={styles.nftOwner}>This NFT is owned by {" "}
-            {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
-          </div>
-        )}
+      {status === "minted" && owner && (
+        <div className={styles.nftOwner}>
+          This NFT is owned by {" "}
+          {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
+        </div>
+      )}
 
-        {status === "mint_pending" && (
-          <>
-            <div className={styles.mintingPending}>
-              This NFT is being minted for you, please be patient!
-              Pending transaction is : {etherscanTxLink(tx.hash)}
-            </div>
-          </>
-        )}
+      {status === "minted" && !owner && (
+        <div className={styles.waiting}>
+          Confirming NFT ownership …
+        </div>
+      )}
 
-        {tx && txReceipt && (
-          <div className={styles.mintingSucceeded}>
-            <span>{"Minting succeeded, with transaction "}{etherscanTxLink(tx.hash)}</span>
-            <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
-          </div>
-        )}
+      {status === "mint_pending" && (
+        <div className={styles.mintingPending}>
+          This NFT is being minted for you, please be patient!
+          Pending transaction is : {etherscanTxLink(tx.hash)}
+        </div>
+      )}
 
-        {status === "claimable" && (
-          <div className={styles.waiting}>
-            Checking the status of this NFT…
-          </div>
-        )}
+      {tx && txReceipt && (
+        <div className={styles.mintingSucceeded}>
+          <span>{"Minting succeeded, with transaction "}{etherscanTxLink(tx.hash)}</span>
+          <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
+        </div>
+      )}
 
-        {status === "claimable_confirmed" && (
+      {status === "claimable" && (
+        <div className={styles.waiting}>
+          Confirming NFT availability …
+        </div>
+      )}
+
+      {status === "claimable_confirmed" && (
+        <>
           <div>
             <div>This NFT is available for minting</div>
             <img  className={styles.ethereumLogo} src="/ethereum.svg" />
             <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}{" ETH"}</span>
             <span className={styles.nftPriceGas}>{" + gas fee"}</span>
           </div>
-        )}
-
-        {status === "withheld" && (
-          <div>This NFT is reserved. Please contact the artist.</div>
-        )}  
-
-        {status === "burnt" && (
-          <div>Sorry, this NFT has been burnt</div>
-        )}
-
-        {status === "revoked" && (
-          <div>Sorry, this NFT is no longer avaliable.</div>
-        )}
-      </div>
-
-      {status === "claimable_confirmed" && (
-        <div id="walletActions">{
-          walletAddress ? (
-            <button disabled={isConnecting} onClick={onClaimClicked}>
-              Mint this NFT
-            </button>)
-          :
-          window.ethereum ? (
-            <button disabled={isConnecting} onClick={onConnectWalletClicked}>
-              <span>To mint this NFT, connect your Ethereum wallet</span>
-            </button>)
-          : (
-            <div className={styles.walletInstallInstructions}>
-              <div>
-                To mint this NFT you'll need an Ethereum wallet.
+          <div id="walletActions">{
+            walletAddress ? (
+              <button disabled={isConnecting} onClick={onClaimClicked}>
+                Mint this NFT
+              </button>)
+            : window.ethereum ? (
+              <button disabled={isConnecting} onClick={onConnectWalletClicked}>
+                <span>To mint this NFT, connect your Ethereum wallet</span>
+              </button>)
+            : (
+              <div className={styles.walletInstallInstructions}>
+                <div>To mint this NFT you'll need an Ethereum wallet.</div>
+                <div>On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app's broswer to view this website.</div>
+                <div>On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.</div>
               </div>
-              <div>
-                On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app's broswer to view this website.
-              </div>
-              <div>
-                On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </>
       )}
 
-      {<div id="alert">{alert}</div>}
+      {status === "withheld" && (
+        <div>This NFT is reserved. Please contact the artist.</div>
+      )}  
+
+      {status === "burnt" && (
+        <div>Sorry, this NFT has been burnt</div>
+      )}
+
+      {status === "revoked" && (
+        <div>Sorry, this NFT is no longer avaliable.</div>
+      )}
+
+      <div id="alert">{alert}</div>
 
       <div className={styles.connection}>
         { walletAddress ?

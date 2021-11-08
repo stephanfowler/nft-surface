@@ -26,12 +26,13 @@
 }
 
 .nftActions {
-    min-height: 8rem;
-    padding: 0 1rem 1rem 1rem;
+    padding: 0 1rem;
+    min-height: 2rem;
 }
 
 .nftDetails {
-    padding: 0 1rem 1rem 1rem;
+    font-size: smaller;
+    padding: 1rem;
 }
 
 .nftActions div,
@@ -39,22 +40,13 @@
     margin-bottom: 0.25rem;
 }
 
-.nftDetails {
-    font-size: smaller;
-}
-
-
 .nftActions .connection {
-    color:darkgreen;
+    color:orange;
     font-size: smaller;
 }
 
 .nftActions .connection a {
-    color:darkgreen;
-}
-
-.nftOwner {
-    font-weight: bold;
+    color:orange;
 }
 
 .nftThumbImage.portrait {
@@ -98,9 +90,17 @@
     color: slategray;
 }
 
+.minter {
+    max-height: 1.5rem;
+    overflow: hidden;
+    background: white;
+}
 
-.nftStatus {
-    font-weight: bold;
+.minter_updated {
+    background: white;
+    overflow: hidden;
+    max-height: 20rem;
+    transition: max-height 0.23s ease-in;   
 }
 
 .walletInstallInstructions,
@@ -108,33 +108,37 @@
     background: #efe;
     border-radius: 4px;
     padding: 0.5rem;
-    margin: 1rem -0.5rem;
     border: 1px solid lightgreen;
     color: darkgreen;
 }
 
 .walletInstallInstructions a,
 .nftTrade a {
-    color: darkgreen;
     font-weight:bold;
+    color: darkgreen;
 }
 
 .walletInstallInstructions {
     font-size: smaller;
+    margin: 1rem 0 !important;
+}
+
+.nftTrade {
+    margin: 0 0.5rem 2rem 0.5rem;
 }
 
 .mintingPending,
 .mintingPending a {
     color: orange;
     font-weight: normal;
-    font-style: oblique;
+    padding: 1rem 0;
 }
 
 .mintingSucceeded,
 .mintingSucceeded a {
     color: darkgreen;
     font-weight: normal;
-    font-style: oblique;
+    padding: 1rem 0;
 }
 
 .nftPriceETH {
@@ -155,7 +159,6 @@
 }
 
 .waiting {
-    font-size: smaller;
     font-weight: normal;
     color: slategray;
 }

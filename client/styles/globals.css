@@ -21,6 +21,7 @@ main {
   flex-direction: column;
   max-width: 1100px;
   margin: 0 auto;
+  padding: 0 0 2rem 0;
   box-shadow: rgb(0 0 0 / 10%) 0px 25px 20px -20px;
 }
 
@@ -54,7 +55,7 @@ button {
   border: 0px;
   border-radius: 8px;
   color: white;
-  background-color: darkgreen;
+  background-color: orange;
   font-size: large;
   text-align: center;
   font-weight: bold;
