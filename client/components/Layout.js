@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
+import { networkName } from "@utils/ethereum-interact.js";
 
 export default function Layout({ children, home, nft, chainId }) {
   const router = useRouter()
@@ -38,14 +39,12 @@ export default function Layout({ children, home, nft, chainId }) {
 
       {!home &&
         <footer className={styles.footer}>
+          {chainId !== 1 &&
+            <span className={styles.alertIsTestnet}>{networkName(chainId)}{" / "}</span>
+          }
           <Link href="/docs/provenance">
             <a>NFT provenance</a>
           </Link>
-          {chainId !== 1 &&
-            <div className={styles.alertIsTestnet}>
-              {"TESTNET "}{chainId}
-            </div>
-          }
         </footer>
       }
     </div>

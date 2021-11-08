@@ -25,7 +25,11 @@
     padding: 1rem 0 0 0;
 }
 
-.nftActions,
+.nftActions {
+    min-height: 8rem;
+    padding: 0 1rem 1rem 1rem;
+}
+
 .nftDetails {
     padding: 0 1rem 1rem 1rem;
 }
@@ -119,17 +123,18 @@
     font-size: smaller;
 }
 
-
-.minting,
-.minting a {
+.mintingPending,
+.mintingPending a {
     color: orange;
     font-weight: normal;
+    font-style: oblique;
 }
 
-.mintingSuccess,
-.mintingSuccess a {
-    color: green;
+.mintingSucceeded,
+.mintingSucceeded a {
+    color: darkgreen;
     font-weight: normal;
+    font-style: oblique;
 }
 
 .nftPriceETH {
@@ -150,5 +155,7 @@
 }
 
 .waiting {
+    font-size: smaller;
+    font-weight: normal;
     color: slategray;
 }

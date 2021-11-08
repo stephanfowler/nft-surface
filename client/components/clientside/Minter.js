@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
-import { isTransactionMined, getWallet, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
+import { networkName, isTransactionMined, getWallet, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -18,44 +18,51 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
   const [isConnecting, setIsConnecting] = useState();
+  const [chainIdMismatch, setChainIdMismatch] = useState();
 
   const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
-
   const contractAddress = nft.metadata.contractAddress;
 
   useEffect(() => {
     async function fetchWallet() {
       const wallet = await getWallet();
       setWallet(wallet.address);
+      setChainIdMismatch(wallet.chainId && wallet.chainId !== chainId);
       setAlert(wallet.error);
     }
     fetchWallet();
 
-    async function getTokenStatus() {
-      const catalogStatus = nft && nft.status;
-      if (!nft) {
-        setStatus(undefined)
-      } else if (catalogStatus === "burnt" || catalogStatus === "withheld" ) {
-        setStatus(catalogStatus);
-      } else {
+    async function updateTokenStatus() {
+      if (status === "minted") {
+        const owner = await ownerOf(tokenId, contractAddress, chainId);
+        if (owner) {
+          setOwner(owner)
+        } else {
+          setStatus("revoked")
+        }
+      } 
+      if (status === "claimable") {
         const owner = await ownerOf(tokenId, contractAddress, chainId);
         if (owner) {
           setOwner(owner);
           setStatus("minted")
         } else {
-          await claimable(nft, contractAddress, chainId) ? 
-            setStatus("claimable") : 
-            setStatus("revoked");
+          await claimable(nft, contractAddress, chainId) ?
+            setStatus("claimable_confirmed") :
+            setStatus("revoked") 
         }
       }
     }
-    getTokenStatus();
+    updateTokenStatus();
 
     async function addWalletListener() {
       if (window.ethereum) {
-        window.ethereum.on("accountsChanged", (accounts) => {
-          setWallet(accounts.length && accounts[0]);
-          getTokenStatus();
+        window.ethereum.on("accountsChanged", () => {
+          fetchWallet();
+          updateTokenStatus();
+        });
+        window.ethereum.on("chainChanged", () => {
+          window.location.reload();
         });
       }
     }
@@ -75,6 +82,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     setAlert();
     const wallet = await connectWallet();
     setWallet(wallet.address);
+    setChainIdMismatch(wallet.chainId && wallet.chainId !== chainId);
     setAlert(wallet.error );
     setIsConnecting(false);
   };
@@ -86,7 +94,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     const { tx, error } = await claim(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
-      setStatus("_minting")
+      setStatus("mint_pending")
       const txReceipt = await isTransactionMined(tx.hash)
       if (txReceipt) {
         setTxReceipt(txReceipt);
@@ -123,59 +131,74 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   }
 
   return (
-    nft ?
+    !nft ?
+      <div>No NFT is listed with tokenID {tokenId}</div>
+    : 
+    chainIdMismatch ?
+        <div className={styles.walletInstallInstructions}>
+          {"Please switch your wallet to "}{networkName(chainId)}
+        </div>
+    :
     <div className={styles.minter}>
-
       <div className={styles.nftStatus}>
+
         {status === "minted" && owner && (
           <div className={styles.nftOwner}>This NFT is owned by {" "}
             {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
           </div>
         )}
-        {status === "minted" && !owner && (
-          <div className={styles.waiting}>
-            Querying the Ethereum blockchain…
-          </div>
-        )}
-        {tx && txReceipt && (
-          <div className={styles.mintingSuccess}>
-            <span>{"Minting succeeded with transaction "}{etherscanTxLink(tx.hash)}</span>
-            <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
-          </div>
-        )}
-        {status === "burnt" && (
-          <div>Sorry, this NFT has been burnt</div>
-        )}
-        {status === "withheld" && (
-          <div>This NFT is reserved. Please contact the artist.</div>
-        )}  
-        {status === "claimable" && (
+
+        {status === "mint_pending" && (
           <>
-            <div>This NFT is available for minting</div>
-            <div>
-              <img  className={styles.ethereumLogo} src="/ethereum.svg" />
-              <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}{" ETH"}</span>
-              <span className={styles.nftPriceGas}>{" + gas fee"}</span>
+            <div className={styles.mintingPending}>
+              This NFT is being minted for you, please be patient!
+              Pending transaction is : {etherscanTxLink(tx.hash)}
             </div>
           </>
         )}
+
+        {tx && txReceipt && (
+          <div className={styles.mintingSucceeded}>
+            <span>{"Minting succeeded, with transaction "}{etherscanTxLink(tx.hash)}</span>
+            <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
+          </div>
+        )}
+
+        {status === "claimable" && (
+          <div className={styles.waiting}>
+            Checking the status of this NFT…
+          </div>
+        )}
+
+        {status === "claimable_confirmed" && (
+          <div>
+            <div>This NFT is available for minting</div>
+            <img  className={styles.ethereumLogo} src="/ethereum.svg" />
+            <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}{" ETH"}</span>
+            <span className={styles.nftPriceGas}>{" + gas fee"}</span>
+          </div>
+        )}
+
+        {status === "withheld" && (
+          <div>This NFT is reserved. Please contact the artist.</div>
+        )}  
+
+        {status === "burnt" && (
+          <div>Sorry, this NFT has been burnt</div>
+        )}
+
         {status === "revoked" && (
           <div>Sorry, this NFT is no longer avaliable.</div>
         )}
-        {status === "_minting" && (
-          <>
-            <div className={styles.minting}>This NFT is being minted for you. Please be patient!</div>
-            <div className={styles.minting}>Pending transaction: {etherscanTxLink(tx.hash)}</div>
-          </>
-        )}
       </div>
 
-      {status === "claimable" && (
+      {status === "claimable_confirmed" && (
         <div id="walletActions">{
           walletAddress ? (
             <button disabled={isConnecting} onClick={onClaimClicked}>
               Mint this NFT
-            </button>) :
+            </button>)
+          :
           window.ethereum ? (
             <button disabled={isConnecting} onClick={onConnectWalletClicked}>
               <span>To mint this NFT, connect your Ethereum wallet</span>
@@ -210,8 +233,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         }
        </div>
     </div>
-    :
-    <div>No NFT is listed with tokenID {tokenId}</div>
   );
 };
 

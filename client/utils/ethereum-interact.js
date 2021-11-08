@@ -8,7 +8,7 @@ async function checkChainId(provider, chainIdCheck) {
   if (chainId === chainIdCheck) {
     return provider;
   } else {
-    throw 'Provider chainId does not match catalog chainId. You may need to prepare the catalog again for this network, eg. with --network mainnet';
+    throw 'Provider chainId does not match catalog chainId';
   }
 } 
 
@@ -28,6 +28,16 @@ async function getWriteableContract(contractAddress, chainId) {
   return new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());  
 }
 
+export function networkName(chainId) {
+  const names = {
+    "1":	"Ethereum Mainnet",
+    "3":	"Ropsten Test Network",
+    "4":	"Rinkeby Test Network",
+    "5":	"Goerli Test Network"
+  }
+  return names[chainId + ""];
+}
+
 export const isTransactionMined = async(txHash) => {
   const provider = getReadableProvider();
   const txReceipt = await provider.waitForTransaction(txHash);
@@ -44,7 +54,11 @@ export const getWallet = async (isConnect) => {
   if (window.ethereum) {
     try {
       const accounts = await window.ethereum.request({ method: isConnect ? 'eth_requestAccounts' : 'eth_accounts' });
-      return { address: accounts[0] };
+      const network = await new ethers.providers.Web3Provider(window.ethereum).getNetwork();
+      return {
+        address: accounts[0],
+        chainId: network.chainId
+      };
     } catch (error) {
       return { error: error.message };
     }

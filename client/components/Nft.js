@@ -87,16 +87,14 @@ export default function Nft({ nft, chainId }) {
         <div>Blockchain : Ethereum</div>
           <div>Token Standard : ERC721</div>
           <div>
-              {(status === 'minted' || status === 'burnt') ?
-                <>
-                  {"Token ID : "}
-                  <Link href={etherscanToken}>
-                      <a title="view token on etherscan">{tokenId}</a>
-                  </Link>
-                </>
-                :
-                <span>{"Proposed Token ID : "}{tokenId}</span>
-              }
+            {"Token ID : "}
+            {(status === 'minted' || status === 'burnt') ?
+              <Link href={etherscanToken}>
+                  <a title="view token on etherscan">{tokenId}</a>
+              </Link>
+              :
+              <span>{tokenId}{" (proposed)"}</span>
+            }
           </div>
           <div>
               {"Contract : "}
