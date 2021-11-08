@@ -3,7 +3,7 @@ import Layout from '@components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@components/Layout.module.css'
-import frontImage from '../public/frontpage/02.jpg'
+import frontImage from '@public/frontpage/02.jpg'
 
 export default function Home() {
   return (

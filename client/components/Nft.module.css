@@ -39,14 +39,14 @@
     font-size: smaller;
 }
 
-.nftActions .connectedAddress {
-    margin-bottom: 1rem;
+
+.nftActions .connection {
+    color:darkgreen;
+    font-size: smaller;
 }
 
-.nftActions .connectedAddress,
-.nftActions .connectedAddress a {
-    color:orange;
-    font-size: smaller;
+.nftActions .connection a {
+    color:darkgreen;
 }
 
 .nftOwner {
@@ -91,7 +91,7 @@
 .nftEdition,
 .nftCollection,
 .nftDimensions {
-    color: grey;
+    color: slategray;
 }
 
 
@@ -99,6 +99,7 @@
     font-weight: bold;
 }
 
+.walletInstallInstructions,
 .nftTrade {
     background: #efe;
     border-radius: 4px;
@@ -108,10 +109,16 @@
     color: darkgreen;
 }
 
+.walletInstallInstructions a,
 .nftTrade a {
     color: darkgreen;
     font-weight:bold;
 }
+
+.walletInstallInstructions {
+    font-size: smaller;
+}
+
 
 .minting,
 .minting a {
@@ -125,12 +132,23 @@
     font-weight: normal;
 }
 
-.nftPrice {
-    font-weight: normal;
-    color: grey;
-}
-
 .nftPriceETH {
+    font-size: larger;
     font-weight: bold;
     color: black;
+}
+
+.nftPriceGas {
+    font-weight: normal;
+    font-size: smaller;
+}
+
+.ethereumLogo {
+    display: inline;
+    height: 1rem;
+    margin: 0 .4rem 0 0;
+}
+
+.waiting {
+    color: slategray;
 }

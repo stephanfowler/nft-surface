@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { isTransactionMined, getWallet, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
+import Image from 'next/image'
 import ShortAddress from '@components/ShortAddress'
 
-import styles from '../Nft.module.css'
+import styles from '@components/Nft.module.css'
 
 const Minter = ({ nft, chainId, status, setStatus }) => {
   const tokenId = nft.tokenId;
@@ -68,16 +69,18 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     }
   }, [nft, tokenId]);
 
-  const onConnectWalletClicked = async () => {
+  const onConnectWalletClicked = async (e) => {
+    e.preventDefault();
     setIsConnecting(true);
     setAlert();
     const wallet = await connectWallet();
     setWallet(wallet.address);
-    setAlert(wallet.error);
+    setAlert(wallet.error );
     setIsConnecting(false);
   };
 
-  const onClaimClicked = async () => {
+  const onClaimClicked = async (e) => {
+    e.preventDefault();
     setIsConnecting(true);
     setAlert();
     const { tx, error } = await claim(nft, contractAddress, chainId);
@@ -124,18 +127,21 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     <div className={styles.minter}>
 
       <div className={styles.nftStatus}>
-        {status === "minted" && (
-          <>
-            <div className={styles.nftOwner}>This NFT is owned by {" "}
-              {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
-            </div>
-            {tx && txReceipt && ( 
-              <div className={styles.mintingSuccess}>
-                <span>{"Minting succeeded with transaction "}{etherscanTxLink(tx.hash)}</span>
-                <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
-              </div>
-            )}
-          </>
+        {status === "minted" && owner && (
+          <div className={styles.nftOwner}>This NFT is owned by {" "}
+            {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
+          </div>
+        )}
+        {status === "minted" && !owner && (
+          <div className={styles.waiting}>
+            Querying the Ethereum blockchain…
+          </div>
+        )}
+        {tx && txReceipt && (
+          <div className={styles.mintingSuccess}>
+            <span>{"Minting succeeded with transaction "}{etherscanTxLink(tx.hash)}</span>
+            <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
+          </div>
         )}
         {status === "burnt" && (
           <div>Sorry, this NFT has been burnt</div>
@@ -146,10 +152,10 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         {status === "claimable" && (
           <>
             <div>This NFT is available for minting</div>
-            <div className={styles.nftPrice}>
-              {"Price : "}
-              <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}</span>
-              {" ETH + gas"}
+            <div>
+              <img  className={styles.ethereumLogo} src="/ethereum.svg" />
+              <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}{" ETH"}</span>
+              <span className={styles.nftPriceGas}>{" + gas fee"}</span>
             </div>
           </>
         )}
@@ -161,12 +167,9 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
             <div className={styles.minting}>This NFT is being minted for you. Please be patient!</div>
             <div className={styles.minting}>Pending transaction: {etherscanTxLink(tx.hash)}</div>
           </>
-        )}  
-        {status === "_querying" && (
-          <div className="waiting">Querying the blockchain...</div>
-        )}  
+        )}
       </div>
-      
+
       {status === "claimable" && (
         <div id="walletActions">{
           walletAddress ? (
@@ -175,11 +178,19 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
             </button>) :
           window.ethereum ? (
             <button disabled={isConnecting} onClick={onConnectWalletClicked}>
-              <span>To mint this NFT, first connect your wallet</span>
+              <span>To mint this NFT, connect your Ethereum wallet</span>
             </button>)
           : (
-            <div>
-              To mint this NFT you need an Ethereum wallet browser extension, for example <a href={`https://metamask.io/`}>Metamask</a>
+            <div className={styles.walletInstallInstructions}>
+              <div>
+                To mint this NFT you'll need an Ethereum wallet.
+              </div>
+              <div>
+                On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app's broswer to view this website.
+              </div>
+              <div>
+                On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
+              </div>
             </div>
           )}
         </div>
@@ -187,12 +198,17 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 
       {<div id="alert">{alert}</div>}
 
-      {walletAddress && (
-        <div className={styles.connectedAddress}>
-          Your wallet address is{" "}{etherscanAddressLink(walletAddress)}
-        </div>
-      )}
-
+      <div className={styles.connection}>
+        { walletAddress ?
+          (<div>
+            Your wallet address is{" "}{etherscanAddressLink(walletAddress)}
+          </div>)
+        : isConnecting ?
+          <div>Connecting...</div>
+        : status === "minted" && window.ethereum &&
+          <a href="" onClick={onConnectWalletClicked}>Connect your Ethereum wallet</a>
+        }
+       </div>
     </div>
     :
     <div>No NFT is listed with tokenID {tokenId}</div>

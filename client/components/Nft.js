@@ -75,9 +75,9 @@ export default function Nft({ nft, chainId }) {
           <Minter  nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
           {status === 'minted' &&
             <div className={styles.nftTrade}>
-              {"Trade it on "} 
+              {"View this NFT on "} 
               <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-              {" · "}
+              {" or "}
               <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
             </div>
           }
