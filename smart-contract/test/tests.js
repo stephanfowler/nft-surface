@@ -46,6 +46,51 @@ beforeEach(async function() {
 // expect(await  ... for read functions succeeding
 // await expect( ... for read functions failing, and all write functions
 
+
+it('role assignments', async function () {
+  // [0] owner
+  expect(await this.contract.connect(this.accounts[4]).owner())
+  .to.equal(this.accounts[0].address);
+
+  // [4] hasRole [1]
+  expect(await this.contract.connect(this.accounts[4]).hasRole(DEFAULT_ADMIN_ROLE, this.accounts[1].address))
+  .to.equal(true);
+
+  // [4] hasRole [2]
+  expect(await this.contract.connect(this.accounts[4]).hasRole(AGENT_ROLE, this.accounts[2].address))
+  .to.equal(true);
+
+  // [4] hasRole [3]
+  expect(await this.contract.connect(this.accounts[4]).hasRole(TREASURER_ROLE, this.accounts[3].address))
+  .to.equal(true);
+});
+
+it('receiving and withdrawing', async function () {
+  // [5] send ETH
+  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 100}))
+  .to.emit(this.contract, 'Receipt')
+  .withArgs(this.accounts[5].address, 100);
+
+  // [4] attempt withdraw
+  await expect(this.contract.connect(this.accounts[4]).withdraw(this.accounts[4].address, 100))
+  .to.be.revertedWith('unauthorized to withdraw');
+
+  // [3] attempt withdraw, excessive amount
+  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 101))
+  .to.be.revertedWith('amount exceeds balance');
+
+  // [3] withdraw
+  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 50))
+  .to.emit(this.contract, 'Withdrawal')
+  .withArgs(this.accounts[3].address, 50);
+
+  // [3] withdraw for [0]
+  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[0].address, 50))
+  .to.emit(this.contract, 'Withdrawal')
+  .withArgs(this.accounts[0].address, 50);
+});
+
+
 it('vacant, mintAuth & burning', async function () {
   // [4] vacant
   expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
@@ -99,50 +144,6 @@ it('vacant, floor', async function () {
   await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
   .to.be.revertedWith('tokenId below floor');
 });  
-
-
-it('role assignments', async function () {
-  // [0] owner
-  expect(await this.contract.connect(this.accounts[4]).owner())
-  .to.equal(this.accounts[0].address);
-
-  // [4] hasRole [1]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(DEFAULT_ADMIN_ROLE, this.accounts[1].address))
-  .to.equal(true);
-
-  // [4] hasRole [2]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(AGENT_ROLE, this.accounts[2].address))
-  .to.equal(true);
-
-  // [4] hasRole [3]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(TREASURER_ROLE, this.accounts[3].address))
-  .to.equal(true);
-});
-
-it('receiving and withdrawing', async function () {
-  // [5] send ETH
-  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 100}))
-  .to.emit(this.contract, 'Receipt')
-  .withArgs(this.accounts[5].address, 100);
-
-  // [4] attempt withdraw
-  await expect(this.contract.connect(this.accounts[4]).withdraw(this.accounts[4].address, 100))
-  .to.be.revertedWith('unauthorized to withdraw');
-
-  // [3] attempt withdraw, excessive amount
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 101))
-  .to.be.revertedWith('amount exceeds balance');
-
-  // [3] withdraw
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 50))
-  .to.emit(this.contract, 'Withdrawal')
-  .withArgs(this.accounts[3].address, 50);
-
-  // [3] withdraw for [0]
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[0].address, 50))
-  .to.emit(this.contract, 'Withdrawal')
-  .withArgs(this.accounts[0].address, 50);
-});
 
 
 it('mintAuth, burning', async function () {
