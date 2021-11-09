@@ -144,13 +144,13 @@ it('receiving and withdrawing', async function () {
 });
 
 
-it('vacant, mintAuth & burning', async function () {
+it('vacant, mintAuthorized & burning', async function () {
   // [4] vacant
   expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
   .to.equal(true);
 
-  // [2] mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[2].address, tokenId, tokenURI))
+  // [2] mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[2].address, tokenId, tokenURI))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[2].address, tokenId);
 
@@ -204,22 +204,22 @@ it('vacant, revokeId', async function () {
 });
 
 
-it('mintAuth, burning', async function () {
-  // [4] attempt mintAuth
-  await expect(this.contract.connect(this.accounts[4]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+it('mintAuthorized, burning', async function () {
+  // [4] attempt mintAuthorized
+  await expect(this.contract.connect(this.accounts[4]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.be.revertedWith('unauthorized to mint');
 
-  // [2] attempt mintAuth, no tokeURI
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, ""))
+  // [2] attempt mintAuthorized, no tokeURI
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, ""))
   .to.be.revertedWith('tokenURI cannot be empty');
 
-  // [2] mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [2] mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
-  // [2] attempt another mintAuth, same tokenId 
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [2] attempt another mintAuthorized, same tokenId 
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId already minted');
 
   // [2] attempt burn
@@ -235,8 +235,8 @@ it('mintAuth, burning', async function () {
   await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
   .to.be.revertedWith('ERC721: operator query for nonexistent token');
 
-  // [2] attempt another mintAuth for [4]
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [2] attempt another mintAuthorized for [4]
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId revoked or burnt');
 });
 
@@ -253,8 +253,8 @@ it('total supply', async function () {
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
-  // [2] mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId + 1, tokenURI))
+  // [2] mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId + 1, tokenURI))
   .to.emit(this.contract, 'Transfer')
 
   expect(await this.contract.connect(this.accounts[4]).totalSupply())
@@ -445,8 +445,8 @@ it('setIdFloor', async function () {
   await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
   .to.be.revertedWith('must exceed current floor');
 
-  // [2] attempt mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[2].address, tokenId, tokenURI))
+  // [2] attempt mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[2].address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId below floor');
 
   // [2] sign
@@ -471,8 +471,8 @@ it('agent role, revoked', async function () {
   .to.emit(this.contract, 'RoleRevoked')
   .withArgs(AGENT_ROLE, this.accounts[2].address, this.accounts[2].address);
 
-  // [2] attempt mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [2] attempt mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.be.revertedWith('unauthorized to mint');
   
   // [5] attempt mintable
@@ -484,8 +484,8 @@ it('agent role, revoked', async function () {
   .to.emit(this.contract, 'RoleGranted')
   .withArgs(AGENT_ROLE, this.accounts[4].address, this.accounts[1].address);
 
-  // [4] mintAuth
-  await expect(this.contract.connect(this.accounts[4]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [4] mintAuthorized
+  await expect(this.contract.connect(this.accounts[4]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 });
@@ -524,8 +524,8 @@ it('tokenURI', async function () {
   expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
   .to.equal("");
 
-  // [2] mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[4].address, tokenId, tokenURI))
+  // [2] mintAuthorized
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 

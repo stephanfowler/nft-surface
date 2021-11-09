@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplitter {
-
     event IdRevoked(uint256 tokenId);
     event IdFloorSet(uint256 idFloor);
 
@@ -36,7 +35,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         _setupRole(AGENT_ROLE, agent);
     }
     
-    function mintAuth(address recipient, uint256 id, string memory uri) public {
+    function mintAuthorized(address recipient, uint256 id, string memory uri) external {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to mint");
         require(vacant(id));
         _mint(recipient, id, uri);
