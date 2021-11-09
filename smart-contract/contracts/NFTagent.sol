@@ -31,20 +31,27 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         emit Receipt(_msgSender(), msg.value);
     }
 
-    function mint(address recipient, uint256 id, string memory uri) public {
+    function mintAuth(address recipient, uint256 id, string memory uri) public {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to mint");
         require(vacant(id));
         _mint(recipient, id, uri);
     }
 
-    function claim(uint256 id, string memory uri, bytes calldata signature) external payable {
-        require(claimable(msg.value, id, uri, signature));
+    function mint(uint256 id, string memory uri, bytes calldata signature) external payable {
+        require(mintable(msg.value, id, uri, signature));
         _mint(_msgSender(), id, uri);
     }
 
-    function claimable(uint256 weiPrice, uint256 id, string memory uri, bytes calldata signature) public view returns (bool) {
+    function mintable(uint256 weiPrice, uint256 id, string memory uri, bytes calldata signature) public view returns (bool) {
         require(vacant(id));
         require(hasRole(AGENT_ROLE, ECDSA.recover(_hash(weiPrice, id, uri), signature)), 'signature invalid or signer unauthorized');
+        return true;
+    }
+
+    function vacant(uint256 id) public view returns(bool) {
+        require(!_exists(id), "tokenId already minted");
+        require(id >= idFloor, "tokenId below floor");
+        require(!revokedIds[id], "tokenId revoked or burnt");
         return true;
     }
 
@@ -74,13 +81,6 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         (bool success, ) = recipient.call{ value : amount }("");
         require(success, "transfer failed");
         emit Withdrawal(recipient, amount);
-    }
-
-    function vacant(uint256 id) public view returns(bool) {
-        require(!_exists(id), "tokenId already minted");
-        require(id >= idFloor, "tokenId below floor");
-        require(!revokedIds[id], "tokenId revoked or burnt");
-        return true;
     }
 
     function _mint(address recipient, uint256 id, string memory uri) internal {
