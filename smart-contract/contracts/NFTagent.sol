@@ -13,9 +13,10 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
     bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
     bytes32 public constant TREASURER_ROLE = keccak256("TREASURER_ROLE");
 
-    address public immutable owner;
     uint256 public totalSupply = 0;
     uint256 public idFloor = 0;
+
+    address public immutable owner;
     
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
