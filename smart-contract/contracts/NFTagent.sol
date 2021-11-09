@@ -59,7 +59,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         return true;
     }
 
-    function revokeId(uint256 id) public {
+    function revokeId(uint256 id) external {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke id");
         require(vacant(id));
         revokedIds[id] = true;
