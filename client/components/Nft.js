@@ -77,7 +77,7 @@ export default function Nft({ nft, chainId }) {
 
         {status === 'minted' &&
           <div className={styles.nftTrade}>
-            {"View this NFT on "} 
+            {"Trade it on "} 
             <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
             {" or "}
             <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
