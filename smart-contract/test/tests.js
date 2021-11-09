@@ -46,6 +46,61 @@ beforeEach(async function() {
 // expect(await  ... for read functions succeeding
 // await expect( ... for read functions failing, and all write functions
 
+it('Vacancy, minting & burning', async function () {
+  // [4] vacant
+  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.equal(true);
+
+  // [2] mint
+  await expect(this.contract.connect(this.accounts[2]).mint(this.accounts[2].address, tokenId, tokenURI))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[2].address, tokenId);
+
+  // [4] attempt vacant
+  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.be.revertedWith('tokenId already minted');
+
+  // [2] burn
+  await expect(this.contract.connect(this.accounts[2]).burn(tokenId))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(this.accounts[2].address, ethers.constants.AddressZero, tokenId);
+
+  // [4] attempt vacant
+  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.be.revertedWith('tokenId revoked or burnt');
+});  
+
+
+it('Vacancy, revoking', async function () {
+  // [4] vacant
+  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.equal(true);
+
+  // [2] revoke
+  await expect(this.contract.connect(this.accounts[2]).revoke(tokenId))
+  .to.be.empty;
+
+  // [4] attempt vacant
+  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.be.revertedWith('tokenId revoked or burnt');
+});  
+
+
+it('Vacancy, floor', async function () {
+  // [4] vacant
+  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.equal(true);
+
+  // [2] set floor
+  await expect(this.contract.connect(this.accounts[2]).setFloor(1000))
+  .to.be.empty;
+
+  // [4] attempt vacant
+  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.be.revertedWith('tokenId below floor');
+});  
+
+
 it('Role assignments', async function () {
   // [0] owner
   expect(await this.contract.connect(this.accounts[4]).owner())
@@ -108,7 +163,7 @@ it('Minting, burning', async function () {
   await expect(this.contract.connect(this.accounts[2]).mint(this.accounts[4].address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId already minted');
 
-  // [2] attemt burn
+  // [2] attempt burn
   await expect(this.contract.connect(this.accounts[2]).burn(tokenId))
   .to.be.revertedWith('caller is not owner nor approved');
 
@@ -336,7 +391,7 @@ it('Revoking an non-existant Id', async function () {
   await expect(this.contract.connect(this.accounts[5]).revoke(tokenId))
   .to.be.revertedWith('unauthorized to revoke id');  
 
-  // [2] revokes
+  // [2] revoke
   await expect(this.contract.connect(this.accounts[2]).revoke(tokenId))
   .to.be.empty;
 

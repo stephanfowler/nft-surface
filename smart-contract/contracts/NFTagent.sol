@@ -14,8 +14,8 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
     bytes32 public constant TREASURER_ROLE = keccak256("TREASURER_ROLE");
 
     address public immutable owner;
-    uint256 public totalSupply;
-    uint256 public idFloor;
+    uint256 public totalSupply = 0;
+    uint256 public idFloor = 0;
     
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
@@ -33,7 +33,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
 
     function mint(address recipient, uint256 id, string memory uri) public {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to mint");
-        require(_available(id));
+        require(vacant(id));
         _mint(recipient, id, uri);
     }
 
@@ -43,7 +43,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
     }
 
     function claimable(uint256 weiPrice, uint256 id, string memory uri, bytes calldata signature) public view returns (bool) {
-        require(_available(id));
+        require(vacant(id));
         require(hasRole(AGENT_ROLE, ECDSA.recover(_hash(weiPrice, id, uri), signature)), 'signature invalid or signer unauthorized');
         return true;
     }
@@ -56,7 +56,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
 
     function revoke(uint256 id) public {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke id");
-        require(_available(id));
+        require(vacant(id));
         revokedIds[id] = true;
     }
 
@@ -76,7 +76,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         emit Withdrawal(recipient, amount);
     }
 
-    function _available(uint256 id) internal view returns(bool) {
+    function vacant(uint256 id) public view returns(bool) {
         require(!_exists(id), "tokenId already minted");
         require(id >= idFloor, "tokenId below floor");
         require(!revokedIds[id], "tokenId revoked or burnt");
