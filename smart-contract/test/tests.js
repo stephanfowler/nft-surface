@@ -8,7 +8,6 @@ const tokenURI = "ipfs://123456789";
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`
-const TREASURER_ROLE     = `0x${keccak256('TREASURER_ROLE').toString('hex')}`
 
 beforeEach(async function() {
   /*
@@ -16,14 +15,22 @@ beforeEach(async function() {
   [0] owner (deployer)
   [1] admin
   [2] agent
-  [3] treasurer
   */
  
   this.accounts = await ethers.getSigners();
   ({ chainId: this.chainId } = await ethers.provider.getNetwork());
 
   const NFTagent = await ethers.getContractFactory('NFTagent');
-  this.contract = await NFTagent.deploy(this.accounts[1].address, this.accounts[2].address, this.accounts[3].address);
+
+  this.contract = await NFTagent.deploy(
+    "Test",
+    "TST",
+    this.accounts[1].address,
+    this.accounts[2].address,
+    [this.accounts[0].address, this.accounts[1].address],
+    [85,15]
+  );
+
   await this.contract.deployed();
 
   this.sigDomain = {
@@ -59,35 +66,78 @@ it('role assignments', async function () {
   // [4] hasRole [2]
   expect(await this.contract.connect(this.accounts[4]).hasRole(AGENT_ROLE, this.accounts[2].address))
   .to.equal(true);
-
-  // [4] hasRole [3]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(TREASURER_ROLE, this.accounts[3].address))
-  .to.equal(true);
 });
 
 it('receiving and withdrawing', async function () {
-  // [5] send ETH
+  const startingBalance0 = await this.accounts[0].getBalance();
+  const startingBalance1 = await this.accounts[1].getBalance();
+
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] mint for 1000
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+
+  // [5] send 9000
+  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 9000}))
+  .to.emit(this.contract, 'PaymentReceived')
+  .withArgs(this.accounts[5].address, 9000);
+
+  // totalReceived is now 10000 = 1000 + 9000 (ie from mint + send)
+  // [4] attempt release to [4]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[4].address))
+  .to.be.revertedWith('PaymentSplitter: account has no shares');
+
+  // [4] release to [0]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
+  .to.emit(this.contract, 'PaymentReleased')
+  .withArgs(this.accounts[0].address, 8500); // 85/100 * 10000
+
+  // [4] attempt repeat release to [0]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
+  .to.be.revertedWith('PaymentSplitter: account is not due payment');
+
+  // [5] send 100 more
   await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 100}))
-  .to.emit(this.contract, 'Receipt')
+  .to.emit(this.contract, 'PaymentReceived')
   .withArgs(this.accounts[5].address, 100);
 
-  // [4] attempt withdraw
-  await expect(this.contract.connect(this.accounts[4]).withdraw(this.accounts[4].address, 100))
-  .to.be.revertedWith('unauthorized to withdraw');
+  // [4] release to [0]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
+  .to.emit(this.contract, 'PaymentReleased')
+  .withArgs(this.accounts[0].address, 85); // 85/100 * 100
 
-  // [3] attempt withdraw, excessive amount
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 101))
-  .to.be.revertedWith('amount exceeds balance');
+  // [4] release to [1]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
+  .to.emit(this.contract, 'PaymentReleased')
+  .withArgs(this.accounts[1].address, 1515); // 15/100 * (10000 + 100)
 
-  // [3] withdraw
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[3].address, 50))
-  .to.emit(this.contract, 'Withdrawal')
-  .withArgs(this.accounts[3].address, 50);
+  // [4] attempt repeat release to [1]
+  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
+  .to.be.revertedWith('PaymentSplitter: account is not due payment');
 
-  // [3] withdraw for [0]
-  await expect(this.contract.connect(this.accounts[3]).withdraw(this.accounts[0].address, 50))
-  .to.emit(this.contract, 'Withdrawal')
-  .withArgs(this.accounts[0].address, 50);
+  // [4] released to [0]
+  expect(await this.contract.connect(this.accounts[4]).released(this.accounts[0].address))
+  .to.equal(8585);
+
+  // [4] released to [1]
+  expect(await this.contract.connect(this.accounts[4]).released(this.accounts[1].address))
+  .to.equal(1515);
+
+  // [4] totalReleased
+  expect(await this.contract.connect(this.accounts[4]).totalReleased())
+  .to.equal(10100);
+
+  const closingBalance0 = await this.accounts[0].getBalance()
+  const closingBalance1 = await this.accounts[1].getBalance()
+
+  expect(closingBalance0.sub(startingBalance0))
+  .to.equal(8585);
+
+  expect(closingBalance1.sub(startingBalance1))
+  .to.equal(1515);
 });
 
 
@@ -472,4 +522,13 @@ it('tokenURI', async function () {
   // [4] tokenUri
   expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
   .to.equal(tokenURI);
+
+  // [4] burn
+  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(this.accounts[4].address, ethers.constants.AddressZero, tokenId);
+
+  // [4] tokenUri
+  expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
+  .to.equal("");
 });
