@@ -1,5 +1,5 @@
 const { ethers } = require('hardhat');
-const { expect } = require('chai');
+const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
 const weiPrice = 1000;
@@ -32,6 +32,7 @@ beforeEach(async function() {
   );
 
   await this.contract.deployed();
+  //console.log(this.contract.address);
 
   this.sigDomain = {
     name: 'NFTagent',
@@ -52,6 +53,8 @@ beforeEach(async function() {
 // nb, use...
 // expect(await  ... for read functions succeeding
 // await expect( ... for read functions failing, and all write functions
+
+
 
 
 it('role assignments', async function () {
@@ -166,34 +169,39 @@ it('vacant, mintAuth & burning', async function () {
 });  
 
 
-it('vacant, revoke', async function () {
-  // [4] vacant
-  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
-  .to.equal(true);
-
-  // [2] revoke
-  await expect(this.contract.connect(this.accounts[2]).revoke(tokenId))
-  .to.be.empty;
-
-  // [4] attempt vacant
-  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
-  .to.be.revertedWith('tokenId revoked or burnt');
-});  
-
-
 it('vacant, floor', async function () {
   // [4] vacant
   expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
   .to.equal(true);
 
   // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
-  .to.be.empty;
+  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
+  .to.emit(this.contract, 'IdFloorSet')
+  .withArgs(1000);
+
+  expect(await this.contract.connect(this.accounts[2]).idFloor())
+  .to.equal(1000)
 
   // [4] attempt vacant
   await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
   .to.be.revertedWith('tokenId below floor');
-});  
+});
+
+
+it('vacant, revokeId', async function () {
+  // [4] vacant
+  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.equal(true);
+
+  // [2] revokeId
+  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
+  .to.emit(this.contract, 'IdRevoked')
+  .withArgs(tokenId);
+
+  // [4] attempt vacant
+  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  .to.be.revertedWith('tokenId revoked or burnt');
+});
 
 
 it('mintAuth, burning', async function () {
@@ -373,7 +381,7 @@ it('mint, various ETH values', async function () {
 });
 
 
-it('revoke an existing Id', async function () {
+it('revokeId an existing Id', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
@@ -382,17 +390,17 @@ it('revoke an existing Id', async function () {
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
-  // [5] attempt revoke
-  await expect(this.contract.connect(this.accounts[5]).revoke(tokenId))
+  // [5] attempt revokeId
+  await expect(this.contract.connect(this.accounts[5]).revokeId(tokenId))
   .to.be.revertedWith('unauthorized to revoke id');  
 
-  // [2] attempt revoke
-  await expect(this.contract.connect(this.accounts[2]).revoke(tokenId))
+  // [2] attempt revokeId
+  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
   .to.be.revertedWith('tokenId already minted');  
 });
 
 
-it('revoke an non-existant Id', async function () {
+it('revokeId an non-existant Id', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
@@ -400,13 +408,14 @@ it('revoke an non-existant Id', async function () {
   expect(await this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.equal(true);
 
-  // [5] attempt revoke
-  await expect(this.contract.connect(this.accounts[5]).revoke(tokenId))
+  // [5] attempt revokeId
+  await expect(this.contract.connect(this.accounts[5]).revokeId(tokenId))
   .to.be.revertedWith('unauthorized to revoke id');  
 
-  // [2] revoke
-  await expect(this.contract.connect(this.accounts[2]).revoke(tokenId))
-  .to.be.empty;
+  // [2] revokeId
+  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
+  .to.emit(this.contract, 'IdRevoked')
+  .withArgs(tokenId);
 
   // [4] attempt mintable
   await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
@@ -414,26 +423,27 @@ it('revoke an non-existant Id', async function () {
 });
 
 
-it('revokeBelow', async function () {
+it('setIdFloor', async function () {
   // [5] attempt set floor
-  await expect(this.contract.connect(this.accounts[5]).revokeBelow(1000))
-  .to.be.revertedWith('unauthorized to revoke below');
+  await expect(this.contract.connect(this.accounts[5]).setIdFloor(1000))
+  .to.be.revertedWith('unauthorized to set idFloor');
 
   // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
-  .to.be.empty;
-
-  // [2] attempt set floor, lower
-  await expect(this.contract.connect(this.accounts[2]).revokeBelow(999))
-  .to.be.revertedWith('must exceed current floor');
-
-  // [2] attempt set floor, identical
-  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
-  .to.be.revertedWith('must exceed current floor');
+  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
+  .to.emit(this.contract, 'IdFloorSet')
+  .withArgs(1000);
 
   // [4] floor
   expect(await this.contract.connect(this.accounts[4]).idFloor())
   .to.equal(1000);
+
+  // [2] attempt set floor, lower
+  await expect(this.contract.connect(this.accounts[2]).setIdFloor(999))
+  .to.be.revertedWith('must exceed current floor');
+
+  // [2] attempt set floor, identical
+  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
+  .to.be.revertedWith('must exceed current floor');
 
   // [2] attempt mintAuth
   await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[2].address, tokenId, tokenURI))
@@ -531,4 +541,5 @@ it('tokenURI', async function () {
   // [4] tokenUri
   expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
   .to.equal("");
+
 });

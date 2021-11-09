@@ -5,14 +5,12 @@ async function main() {
   Generate a signature
   */
 
-  // EDIT THESE 
   const address = process.env.CONTRACT_ADDRESS;
 
-  const tokenId  = 6;
+  const tokenId  = 456;
   const weiPrice = '10000000000000000';
   const tokenURI = "ipfs://Qmf5jGkhrstazDfRLPVeJb4YsRRq8YikHhxELHVMVrFpCq";
 
-  // DON'T EDIT BELOW!
   const [defaultAcc] = await ethers.getSigners();
   const NFTagent = await ethers.getContractFactory('NFTagent');
   const contract = await NFTagent.attach(address);
@@ -47,11 +45,11 @@ async function main() {
     signature
   });
 
-  const claimableTest = await contract.claimable(weiPrice, tokenId, tokenURI, signature);
+  const mintableTest = await contract.mintable(weiPrice, tokenId, tokenURI, signature);
 
   console.log('\nTests:')
   console.log({
-    claimableTest
+    mintableTest
   });
 }
 

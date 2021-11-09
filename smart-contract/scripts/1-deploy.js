@@ -6,12 +6,18 @@ async function main() {
   [0] owner (deployer)
   [0] admin
   [0] agent
-  [0] treasurer
   */
 
   const [deployer] = await ethers.getSigners();
   const NFTagent = await ethers.getContractFactory('NFTagent');
-  const contract = await NFTagent.deploy(deployer.address, deployer.address, deployer.address);
+  const contract = await NFTagent.deploy(
+    "FLOX",             // name
+    "ART",              // symbol
+    deployer.address,   // admin role address
+    deployer.address,   // agent role address
+    [deployer.address], // PaymentSplitter addresses
+    [100]               // PaymentSplitter shares
+  );
   await contract.deployed();
   
   /*
@@ -45,13 +51,13 @@ async function main() {
     { weiPrice, tokenId, tokenURI },
   );
 
-  const claimableTest = await contract.claimable(weiPrice, tokenId, tokenURI, signature);
+  const mintableTest = await contract.mintable(weiPrice, tokenId, tokenURI, signature);
 
   console.log('Contract deployed:')
   console.log({
     address,
     chainId,
-    claimableTest
+    mintableTest
   });
 }
 

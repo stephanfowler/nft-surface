@@ -8,6 +8,9 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplitter {
 
+    event IdRevoked(uint256 tokenId);
+    event IdFloorSet(uint256 idFloor);
+
     bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
     address public immutable owner;
     uint256 public totalSupply = 0;
@@ -57,16 +60,18 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         return true;
     }
 
-    function revoke(uint256 id) public {
+    function revokeId(uint256 id) public {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke id");
         require(vacant(id));
         revokedIds[id] = true;
+        IdRevoked(id);
     }
 
-    function revokeBelow(uint256 floor) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke below");
+    function setIdFloor(uint256 floor) external {
+        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to set idFloor");
         require(floor > idFloor, "must exceed current floor");
         idFloor = floor;
+        IdFloorSet(idFloor);
     }
 
     function tokenURI(uint256 id) public view override returns (string memory) {
