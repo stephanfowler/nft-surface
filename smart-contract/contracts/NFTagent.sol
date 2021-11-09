@@ -38,6 +38,11 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         _mint(recipient, id, uri);
     }
 
+    function mint(uint256 id, string memory uri, address recipient, uint256 expiry, bytes calldata signature) external payable {
+        require(mintable(msg.value, id, uri, signature));
+        _mint(_msgSender(), id, uri);
+    }
+
     function mint(uint256 id, string memory uri, bytes calldata signature) external payable {
         require(mintable(msg.value, id, uri, signature));
         _mint(_msgSender(), id, uri);
