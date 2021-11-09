@@ -92,7 +92,7 @@ it('vacant, floor', async function () {
   .to.equal(true);
 
   // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).setFloor(1000))
+  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
   .to.be.empty;
 
   // [4] attempt vacant
@@ -214,44 +214,6 @@ it('total supply', async function () {
 
   expect(await this.contract.connect(this.accounts[4]).totalSupply())
   .to.equal(0);
-});
-
-
-it('tokenId floor', async function () {
-  // [5] attempt set floor
-  await expect(this.contract.connect(this.accounts[5]).setFloor(1000))
-  .to.be.revertedWith('unauthorized to set floor');
-
-  // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).setFloor(1000))
-  .to.be.empty;
-
-  // [2] attempt set floor, lower
-  await expect(this.contract.connect(this.accounts[2]).setFloor(999))
-  .to.be.revertedWith('must exceed current floor');
-
-  // [2] attempt set floor, identical
-  await expect(this.contract.connect(this.accounts[2]).setFloor(1000))
-  .to.be.revertedWith('must exceed current floor');
-
-  // [4] floor
-  expect(await this.contract.connect(this.accounts[4]).idFloor())
-  .to.equal(1000);
-
-  // [2] attempt mintAuth
-  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[2].address, tokenId, tokenURI))
-  .to.be.revertedWith('tokenId below floor');
-
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
-
-  // [4] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
-  .to.be.revertedWith('tokenId below floor');
-
-  // [4] attempt mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.be.revertedWith('tokenId below floor');  
 });
 
 
@@ -398,6 +360,44 @@ it('revoke an non-existant Id', async function () {
   // [4] attempt mintable
   await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('tokenId revoked or burnt');  
+});
+
+
+it('revokeBelow', async function () {
+  // [5] attempt set floor
+  await expect(this.contract.connect(this.accounts[5]).revokeBelow(1000))
+  .to.be.revertedWith('unauthorized to revoke below');
+
+  // [2] set floor
+  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
+  .to.be.empty;
+
+  // [2] attempt set floor, lower
+  await expect(this.contract.connect(this.accounts[2]).revokeBelow(999))
+  .to.be.revertedWith('must exceed current floor');
+
+  // [2] attempt set floor, identical
+  await expect(this.contract.connect(this.accounts[2]).revokeBelow(1000))
+  .to.be.revertedWith('must exceed current floor');
+
+  // [4] floor
+  expect(await this.contract.connect(this.accounts[4]).idFloor())
+  .to.equal(1000);
+
+  // [2] attempt mintAuth
+  await expect(this.contract.connect(this.accounts[2]).mintAuth(this.accounts[2].address, tokenId, tokenURI))
+  .to.be.revertedWith('tokenId below floor');
+
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] attempt mintable
+  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  .to.be.revertedWith('tokenId below floor');
+
+  // [4] attempt mint
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.be.revertedWith('tokenId below floor');  
 });
 
 

@@ -13,10 +13,9 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
     bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
     bytes32 public constant TREASURER_ROLE = keccak256("TREASURER_ROLE");
 
+    address public immutable owner;
     uint256 public totalSupply = 0;
     uint256 public idFloor = 0;
-
-    address public immutable owner;
     
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
@@ -38,11 +37,6 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         _mint(recipient, id, uri);
     }
 
-    function mint(uint256 id, string memory uri, address recipient, uint256 expiry, bytes calldata signature) external payable {
-        require(mintable(msg.value, id, uri, signature));
-        _mint(_msgSender(), id, uri);
-    }
-
     function mint(uint256 id, string memory uri, bytes calldata signature) external payable {
         require(mintable(msg.value, id, uri, signature));
         _mint(_msgSender(), id, uri);
@@ -61,16 +55,16 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl {
         return true;
     }
 
-    function setFloor(uint256 floor) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to set floor");
-        require(floor > idFloor, "must exceed current floor");
-        idFloor = floor;
-    }
-
     function revoke(uint256 id) public {
         require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke id");
         require(vacant(id));
         revokedIds[id] = true;
+    }
+
+    function revokeBelow(uint256 floor) external {
+        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke below");
+        require(floor > idFloor, "must exceed current floor");
+        idFloor = floor;
     }
 
     function tokenURI(uint256 id) public view override returns (string memory) {
