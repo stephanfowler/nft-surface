@@ -35,6 +35,14 @@
     padding: 1rem;
 }
 
+.nftDetailsHeader {
+    font-size: smaller;
+    color: darkgray;
+    border-top: 1px solid lightgray;
+    display: inline-block;
+    padding: 0.25rem 2rem 0 0;
+}
+
 .nftActions div,
 .nftDetails div {
     margin-bottom: 0.25rem;
