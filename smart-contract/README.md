@@ -18,8 +18,7 @@ npx hardhat test
 
 Deploy
 ```
-npx hardhat run --network rinkeby scripts/1-deploy.js
-npx hardhat verify --network rinkeby <contract address> <admin address> <agent address> <treasurer address> 
+npx hardhat run --network rinkeby scripts/1-deploy.js 
 ```
 
 Signature test
@@ -27,9 +26,9 @@ Signature test
 npx hardhat run --network rinkeby scripts/2-signature.js
 ```
 
-Image resizing from full res, ie. derive `web.jpg` & `webthumb.jpg` from `full.jpg` with imagemagick
+Verify on Etherscan
 ```
-convert big.jpg -strip -interlace Plane -quality 85% -thumbnail "800x>" -write mid.jpg -resize "300x>" sml.jpg
+npx hardhat verify --network rinkeby --constructor-args arguments.js DEPLOYED_CONTRACT_ADDRESS
 ```
 
 Catalog preparation
@@ -37,7 +36,9 @@ Catalog preparation
 npx hardhat run --network rinkeby scripts/3-prepare-catalog.js
 ```
 
-See example new catalog item below; these are in display order as a JSON array in `catalog_chainid_<the chainid of the target network>.json` which lives in `./public/catalog` in the frontend app. All `sourceImage` paths must be relative to `./public/catalog/images`. 
+See example new catalog item below; these are in display order as a JSON array in `catalog_chainid_<chainid of the network>.json`.
+
+All `sourceImage` paths must be relative to `images` directory. 
 
 ```
 {

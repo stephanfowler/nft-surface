@@ -1,6 +1,9 @@
 const creatorAddress   = process.env.CREATOR_ADDRESS;
 const contractAddress  = process.env.CONTRACT_ADDRESS;
-//const ethereumApiKey   = process.env.RINKEBY_API_URL;
+
+const mainnetApiURL   = process.env.MAINNET_API_URL;
+const rinkebyApiURL   = process.env.RINKEBY_API_URL;
+
 const pinataApiKey     = process.env.PINATA_API_KEY;
 const pinataApiSecret  = process.env.PINATA_API_SECRET;
 const catalogDirectory = process.env.CATALOG_DIRECTORY;
@@ -18,8 +21,14 @@ async function main() {
   console.log("Connecting...");
 
   const [signer] = await ethers.getSigners();
-  //const provider = new ethers.providers.JsonRpcProvider(ethereumApiKey);
-  const provider = new ethers.providers.JsonRpcProvider();
+  
+  // IMPORTANT: the right provider
+  // TODO: understand why this isn';'t just done for us by the hardhat --network cli argument?
+
+  //const provider = new ethers.providers.JsonRpcProvider(mainnetApiURL); // Mainnet
+  const provider = new ethers.providers.JsonRpcProvider(rinkebyApiURL); // Rinkeby
+  //const provider = new ethers.providers.JsonRpcProvider(); // Localhost
+  
   const contract = new ethers.Contract(contractAddress, contractABI.abi, provider);
   const {chainId} = await ethers.provider.getNetwork();
 
@@ -169,6 +178,7 @@ async function main() {
 
   // Iterate over NFTs
   for (const nft of catalog.NFTs) {
+
     failedProperties = !validProperties(nft) || failedProperties;
 
     if (isMinted(nft)) {
