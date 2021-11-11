@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
-import { networkName, isTransactionMined, getWallet, connectWallet, ownerOf, claimable, claim } from "@utils/ethereum-interact.js";
+import { networkName, isTransactionMined, getWallet, connectWallet, ownerOf, mintable, mint } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -39,18 +39,18 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         if (owner) {
           setOwner(owner)
         } else {
-          setStatus("revoked")
+          setStatus("burntOrRevoked")
         }
       } 
-      if (status === "claimable") {
+      if (status === "mintable") {
         const owner = await ownerOf(tokenId, contractAddress, chainId);
         if (owner) {
           setOwner(owner);
           setStatus("minted")
         } else {
-          await claimable(nft, contractAddress, chainId) ?
+          await mintable(nft, contractAddress, chainId) ?
             setStatus("claimable_confirmed") :
-            setStatus("revoked") 
+            setStatus("burntOrRevoked") 
         }
       }
       setStatusUpdated(true);
@@ -93,7 +93,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     e.preventDefault();
     setIsConnecting(true);
     setAlert();
-    const { tx, error } = await claim(nft, contractAddress, chainId);
+    const { tx, error } = await mint(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("mint_pending")
@@ -170,7 +170,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         </div>
       )}
 
-      {status === "claimable" && (
+      {status === "mintable" && (
         <div className={styles.waiting}>
           Confirming NFT availability …
         </div>
@@ -210,12 +210,8 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         <div>This NFT is reserved. Please contact the artist.</div>
       )}  
 
-      {status === "burnt" && (
-        <div>Sorry, this NFT has been burnt</div>
-      )}
-
-      {status === "revoked" && (
-        <div>Sorry, this NFT is no longer avaliable.</div>
+      {status === "burntOrRevoked" && (
+        <div>Sorry, this NFT has been burnt or revoked.</div>
       )}
 
       <div id="alert">{alert}</div>

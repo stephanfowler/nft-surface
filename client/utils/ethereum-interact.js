@@ -30,10 +30,12 @@ async function getWriteableContract(contractAddress, chainId) {
 
 export function networkName(chainId) {
   const names = {
-    "1":	"Ethereum Mainnet",
-    "3":	"Ropsten Test Network",
-    "4":	"Rinkeby Test Network",
-    "5":	"Goerli Test Network"
+    "1":     "Ethereum Mainnet",
+    "3":     "Ropsten Test Network",
+    "4":     "Rinkeby Test Network",
+    "5":     "Goerli Test Network",
+    "1337":  "Localhost 8545",
+    "31337": "Localhost 8545"
   }
   return names[chainId + ""];
 }
@@ -78,20 +80,21 @@ export const ownerOf = async (tokenId, contractAddress, chainId) => {
   }
 };
 
-export const claimable = async (art, contractAddress, chainId) => {
+export const mintable = async (art, contractAddress, chainId) => {
   const contract = await getReadableContract(contractAddress, chainId);
   try {
-    await contract.claimable(art.weiPrice, art.tokenId, art.tokenURI, art.signature);
+    await contract.mintable(art.weiPrice, art.tokenId, art.tokenURI, art.signature);
     return true;
   } catch (error) {
+    console.log(error); //
     return false;
   }
 };
 
-export const claim = async (art, contractAddress, chainId) => {
+export const mint = async (art, contractAddress, chainId) => {
   const contract = await getWriteableContract(contractAddress, chainId);
   try {
-    const tx = await contract.claim(art.tokenId, art.tokenURI, art.signature, {value: art.weiPrice});
+    const tx = await contract.mint(art.tokenId, art.tokenURI, art.signature, {value: art.weiPrice});
     return { tx };
   } catch (error) {
     return { error: error.message };

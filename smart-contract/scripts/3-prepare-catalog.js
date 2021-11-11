@@ -1,6 +1,6 @@
 const creatorAddress   = process.env.CREATOR_ADDRESS;
 const contractAddress  = process.env.CONTRACT_ADDRESS;
-const ethereumApiKey   = process.env.RINKEBY_API_URL;
+//const ethereumApiKey   = process.env.RINKEBY_API_URL;
 const pinataApiKey     = process.env.PINATA_API_KEY;
 const pinataApiSecret  = process.env.PINATA_API_SECRET;
 const catalogDirectory = process.env.CATALOG_DIRECTORY;
@@ -18,25 +18,26 @@ async function main() {
   console.log("Connecting...");
 
   const [signer] = await ethers.getSigners();
-  const provider = new ethers.providers.JsonRpcProvider(ethereumApiKey);
+  //const provider = new ethers.providers.JsonRpcProvider(ethereumApiKey);
+  const provider = new ethers.providers.JsonRpcProvider();
   const contract = new ethers.Contract(contractAddress, contractABI.abi, provider);
   const {chainId} = await ethers.provider.getNetwork();
 
   console.log("chainId : " + chainId);
 
-  const catalogFilePath       = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
+  const catalogFilePath = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
   const catalog = require(catalogFilePath);
 
-  const tokenIds    = _.map(catalog.NFTs, 'tokenId');
+  const tokenIds = _.map(catalog.NFTs, 'tokenId');
 
-  const missingIds  = _.includes(tokenIds, undefined);
+  const missingIds = _.includes(tokenIds, undefined);
   if (missingIds) {
     console.log("ERROR: some items are missing a tokenId.");
     console.log(tokenIds);
     return;
   }
 
-  const duplicateIds  = (_.filter(tokenIds, (val, i, iteratee) => _.includes(iteratee, val, i + 1)));
+  const duplicateIds = (_.filter(tokenIds, (val, i, iteratee) => _.includes(iteratee, val, i + 1)));
   if (duplicateIds.length) {
     console.log("ERROR: duplicates found for tokenIds: " + duplicateIds);
     console.log(tokenIds);
@@ -55,7 +56,7 @@ async function main() {
   let failedSignatures = false;
 
   const idsNewlyMinted = [];
-  const idsNewlyBurnt = [];
+  const idsNewlyBurntOrRevoked = [];
   const idsUploadedImage = [];
   const idsUpdatedMetadata = [];
   const idsSigned = [];
@@ -90,20 +91,20 @@ async function main() {
     return nft.status == "minted";
   }
   
-  function isBurnt(nft) {
-    return nft.status == "burnt";
-  }
-  
   function setMinted(nft) {
     delete nft.signature;
     nft.status = "minted";
     idsNewlyMinted.push(nft.tokenId)
   }
   
-  function setBurnt(nft) {
+  function isBurntOrRevoked(nft) {
+    return nft.status == "burntOrRevoked";
+  }
+  
+  function setBurntOrRevoked(nft) {
     delete nft.signature;
-    nft.status = "burnt";
-    idsNewlyBurnt.push(nft.tokenId);
+    nft.status = "burntOrRevoked";
+    idsNewlyBurntOrRevoked.push(nft.tokenId);
   }
   
   function setWithheld(nft) {
@@ -113,7 +114,7 @@ async function main() {
   }
   
   function setSigned(nft) {
-    nft.status = "claimable";
+    nft.status = "mintable";
     idsSigned.push(nft.tokenId);
   }
   
@@ -173,24 +174,19 @@ async function main() {
     if (isMinted(nft)) {
       // noop
 
-    } else if (isBurnt(nft)) {
+    } else if (isBurntOrRevoked(nft)) {
       // noop
 
     } else {
       const tokenId = nft.tokenId;
 
-      let isBurnt = false;
-      // Use a malformed claimable call to establish if the fail is due to token unavailability
-      // Yes it's ugly.
       try {
-        await contract.claimable("0", tokenId, "", "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+        await contract.vacant(tokenId);
       } catch (error) {
-        isBurnt = (error.reason == "tokenId revoked or burnt");
+        setBurntOrRevoked(nft);
       }
 
-      if (isBurnt) {
-        setBurnt(nft);
-      } else {
+      if (!isBurntOrRevoked(nft)) {
         // Fetch tokenURI from contract, to check if newly minted
         const mintedTokenURI = await contract.tokenURI(tokenId);
 
@@ -226,6 +222,9 @@ async function main() {
           nft.metadata.creatorAddress = creatorAddress;
           nft.metadata.contractAddress = contractAddress;
 
+          // Temporarily add tokenId, to get it into the IPFS version
+          nft.metadata.tokenId = tokenId; 
+
           // Always (re)create the tokenURI by first uploading metadata JSON to IPFS
           pinnedMetadata = await pinata.pinJSONToIPFS(nft.metadata, {pinataMetadata:{name:ipfsFilename + ".json" }});
           const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
@@ -239,11 +238,14 @@ async function main() {
             }
           }
 
+          // Now remove temporarily-added tokenId, as we already have it in the parent level
+          delete nft.metadata.tokenId; 
+
           // If specified, weiPrice must be a numeric string, including "0"
           const weiPrice = (( typeof nft.weiPrice === 'string' || nft.weiPrice instanceof String) 
               && /^\d+$/.test(nft.weiPrice)) ? nft.weiPrice : undefined;
 
-          // Presence of weiPrice implies item is claimable for lazy-minting            
+          // Presence of weiPrice implies item is (lazy) mintable            
           if (weiPrice) {
             // (Re)create the signature
             const tokenURI = nft.tokenURI;
@@ -252,13 +254,13 @@ async function main() {
 
             // Test signature / claimability
             try {
-              const claimableTest = await contract.claimable(weiPrice, tokenId, tokenURI, signature);
+              const mintableTest = await contract.mintable(weiPrice, tokenId, tokenURI, signature);
               setSigned(nft);
             } catch (error) {
               failedSignatures = true;
             }
           } else {
-            // lack of weiPrice implies item is not claimable, so is on display only.
+            // lack of weiPrice implies item is not mintable, so is on display only.
             // nb. the computed tokenURI means it can now be manually minted by an authorised user
             setWithheld(nft);
           }
@@ -294,7 +296,7 @@ async function main() {
 
   const stats = {
     idsNewlyMinted,
-    idsNewlyBurnt,
+    idsNewlyBurntOrRevoked,
     idsSigned,
     idsWithheld,
     idsUploadedImage,

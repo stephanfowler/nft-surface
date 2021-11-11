@@ -87,7 +87,7 @@ export default function Nft({ nft, chainId }) {
         <div className={styles.nftDetails}>
         <div className={styles.nftDetailsHeader}>NFT details</div>
         <div>Blockchain : Ethereum</div>
-          <div>Token Standard : ERC721</div>
+          <div>Token Standard : ERC 721</div>
           <div>
             {"Token ID : "}
             {(status === 'minted' || status === 'burnt') ?

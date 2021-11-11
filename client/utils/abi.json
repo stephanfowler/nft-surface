@@ -41,7 +41,7 @@
         "type": "bytes"
       }
     ],
-    "name": "claimable",
+    "name": "mintable",
     "outputs": [
       {
         "internalType": "bool",
@@ -70,7 +70,7 @@
         "type": "bytes"
       }
     ],
-    "name": "claim",
+    "name": "mint",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"

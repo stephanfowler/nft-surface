@@ -7,8 +7,8 @@ module.exports = {
       siteDescription:  'NFT works by FLOF for minting or secondary trading on open NFT marketplaces',
       twitterHandle:    '@stephanfowler',
 
-      catalogBaseURL:   'http://stephanfowler.com/nft-agent-catalog',
-      catalogFilename:  'catalog_chainid_4.json',
+      catalogBaseURL:   'http://stephanfowler.com/nft-agent-catalog/example',
+      catalogFilename:  'catalog_chainid_31337.json',
 
       etherscanAddress: 'https://rinkeby.etherscan.io/address/<address>',
       etherscanToken:   'https://rinkeby.etherscan.io/token/<address>?a=<tokenId>',

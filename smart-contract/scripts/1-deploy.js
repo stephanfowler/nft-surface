@@ -11,8 +11,8 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   const NFTagent = await ethers.getContractFactory('NFTagent');
   const contract = await NFTagent.deploy(
-    "FLOX",             // name
-    "ART",              // symbol
+    "Testy McTestface", // name
+    "TEST",             // symbol
     deployer.address,   // admin role address
     deployer.address,   // agent role address
     [deployer.address], // PaymentSplitter addresses
