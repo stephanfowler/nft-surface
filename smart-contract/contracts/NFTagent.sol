@@ -2,22 +2,21 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 /**
  *  @title NFT Smart Contract
  *  @author Stephan Fowler
- *  @notice ERC721 contract for stand-alone NFT collections with separable "agent" role, payment splitting, and lazy-minting capability
+ *  @notice ERC721 contract for stand-alone NFT collections with lazy-minting capability
  *  @dev Enables lazy-minting by any user via precomputed signatures
  */
-contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplitter {
+contract NFTagent is ERC721, ERC721Burnable, EIP712 {
 
     event IdRevoked(uint256 tokenId);
     event IdFloorSet(uint256 idFloor);
+    event Receipt(uint256 value);
+    event Withdrawal(uint256 value);
 
-    bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
     address public immutable owner;
     uint256 public totalSupply = 0;
     uint256 public idFloor = 0;
@@ -29,28 +28,29 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @dev Constructor immutably sets "owner" to the message sender; be sure to deploy contract using the account of the creator/artist/brand/etc. 
      *  @param name ERC721 token name
      *  @param symbol ERC721 token symbol
-     *  @param admin The administrator address can reassign roles
-     *  @param agent The agent address is authorised for all minting, signing, and revoking operations
-     *  @param payees Array of PaymentSplitter payee addresses
-     *  @param shares Array of PaymentSplitter shares
      */
     constructor(
         string memory name,
-        string memory symbol,
-        address admin,
-        address agent,
-        address[] memory payees,
-        uint256[] memory shares
+        string memory symbol
     ) 
         ERC721(name, symbol) 
         EIP712("NFTagent", "1.0.0")
-        PaymentSplitter(payees, shares)
     {
         owner = _msgSender();
-        _setupRole(DEFAULT_ADMIN_ROLE, admin);
-        _setupRole(AGENT_ROLE, agent);
     }
-    
+
+    receive() external payable {
+        emit Receipt(msg.value);
+    }
+
+    function withdraw() external {
+        require(_msgSender() == owner, "unauthorized to withdraw");
+        uint256 balance = address(this).balance;
+        (bool success, ) = _msgSender().call{ value : balance }("");
+        require(success, "transfer failed");
+        emit Withdrawal(balance);
+    }
+
     /**
      *  @notice Minting by the agent only
      *  @param recipient The recipient of the NFT
@@ -58,7 +58,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @param uri The intended token URI
      */
     function mintAuthorized(address recipient, uint256 id, string memory uri) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to mint");
+        require(_msgSender() == owner, "unauthorized to mint");
         require(vacant(id));
         _mint(recipient, id, uri);
     }
@@ -85,7 +85,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      */
     function mintable(uint256 weiPrice, uint256 id, string memory uri, bytes calldata signature) public view returns (bool) {
         require(vacant(id));
-        require(hasRole(AGENT_ROLE, ECDSA.recover(_hash(weiPrice, id, uri), signature)), 'signature invalid or signer unauthorized');
+        require(owner == ECDSA.recover(_hash(weiPrice, id, uri), signature), 'signature invalid or signer unauthorized');
         return true;
     }
 
@@ -106,7 +106,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @param id The token Id that can no longer be minted
      */
     function revokeId(uint256 id) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to revoke id");
+        require(_msgSender() == owner, "unauthorized to revoke id");
         require(vacant(id));
         revokedIds[id] = true;
         IdRevoked(id);
@@ -117,7 +117,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @param floor The floor for token Ids minted from now onward
      */
     function setIdFloor(uint256 floor) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to set idFloor");
+        require(_msgSender() == owner, "unauthorized to set idFloor");
         require(floor > idFloor, "must exceed current floor");
         idFloor = floor;
         IdFloorSet(idFloor);
@@ -134,7 +134,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
     /**
      *  @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 

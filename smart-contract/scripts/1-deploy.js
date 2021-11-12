@@ -12,11 +12,7 @@ async function main() {
   const NFTagent = await ethers.getContractFactory('NFTagent');
   const contract = await NFTagent.deploy(
     "Testy McTestface", // name
-    "TEST",             // symbol
-    deployer.address,   // admin role address
-    deployer.address,   // agent role address
-    [deployer.address], // PaymentSplitter addresses
-    [100]               // PaymentSplitter shares
+    "TEST"             // symbol
   );
   await contract.deployed();
   
