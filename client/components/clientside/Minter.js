@@ -181,7 +181,12 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
           <div>
             <div>This NFT is available for minting</div>
             <img  className={styles.ethereumLogo} src="/ethereum.svg" />
-            <span className={styles.nftPriceETH}>{ethers.utils.formatEther(nft.weiPrice)}{" ETH"}</span>
+            <span className={styles.nftPriceETH}>
+              {nft.weiPrice === "0" ?
+                "FREE" :
+                `${ethers.utils.formatEther(nft.weiPrice)} ETH`
+              }
+            </span>
             <span className={styles.nftPriceGas}>{" + gas fee"}</span>
           </div>
           <div id="walletActions">{
