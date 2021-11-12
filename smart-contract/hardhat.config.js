@@ -4,7 +4,7 @@ require('@nomiclabs/hardhat-ethers');
 require("@nomiclabs/hardhat-etherscan");
 require('@openzeppelin/hardhat-upgrades');
 
-const { RINKEBY_API_URL, PRIVATE_KEY, ETHERSCAN_API_KEY } = process.env;
+const { OWNER_PRIVATE_KEY, RINKEBY_API_URL, ETHERSCAN_API_KEY } = process.env;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -28,7 +28,7 @@ module.exports = {
      hardhat: {},
      rinkeby: {
         url: RINKEBY_API_URL,
-        accounts: [`0x${PRIVATE_KEY}`]
+        accounts: [`0x${OWNER_PRIVATE_KEY}`]
      }
   },  
   etherscan: {

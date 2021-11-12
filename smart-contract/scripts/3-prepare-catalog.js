@@ -1,9 +1,5 @@
-const creatorAddress   = process.env.CREATOR_ADDRESS;
+const ownerAddress     = process.env.OWNER_ADDRESS;
 const contractAddress  = process.env.CONTRACT_ADDRESS;
-
-const mainnetApiURL   = process.env.MAINNET_API_URL;
-const rinkebyApiURL   = process.env.RINKEBY_API_URL;
-
 const pinataApiKey     = process.env.PINATA_API_KEY;
 const pinataApiSecret  = process.env.PINATA_API_SECRET;
 const catalogDirectory = process.env.CATALOG_DIRECTORY;
@@ -14,26 +10,41 @@ const _ = require('lodash');
 const fs = require('fs');
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(pinataApiKey, pinataApiSecret);
-
 const contractABI = require("../artifacts/contracts/NFTagent.sol/NFTagent.json");
+
+const keccak256 = require('keccak256');
+const AGENT_ROLE = `0x${keccak256('AGENT_ROLE').toString('hex')}`
 
 async function main() {
   console.log("Connecting...");
-
   const [signer] = await ethers.getSigners();
-  
-  // IMPORTANT: the right provider
-  // TODO: understand why this isn';'t just done for us by the hardhat --network cli argument?
+  const contract = new ethers.Contract(contractAddress, contractABI.abi, signer)
+  const {chainId, name} = await ethers.provider.getNetwork();
 
-  //const provider = new ethers.providers.JsonRpcProvider(mainnetApiURL); // Mainnet
-  //const provider = new ethers.providers.JsonRpcProvider(rinkebyApiURL); // Rinkeby
-  const provider = new ethers.providers.JsonRpcProvider(); // Localhost
-  
-  const contract = new ethers.Contract(contractAddress, contractABI.abi, provider);
-  const {chainId} = await ethers.provider.getNetwork();
+  // Confirm we have the right contract, and "agent" role
+  try {
+    await contract.deployed();
+    console.log("Contract " + contractAddress + " found on network " + chainId + " (" + name + ")")
+    const hasAgentRole = await contract.hasRole(AGENT_ROLE, signer.address);
+    if (hasAgentRole) {
+        console.log("Agent role confirmed for account " + signer.address);
+    } else {
+        console.log("Error: Agent role has NOT been given to account " + signer.address);
+        return;
+    }
+  } catch(e) {
+      e.reason = e.reason || "";
+      if (e.reason.includes("contract not deployed")) {
+          console.log("Error: Contract " + contractAddress + " was NOT found on network " + chainId + " (" + name + ")")
+      } else if (e.reason.includes("cannot estimate gas")) {
+          console.log("Error: NOT behaving as expected. Wrong combination of contract + network?")
+      } else {
+          console.log(e);
+      }
+      return;
+  }
 
-  console.log("chainId : " + chainId);
-
+  //
   const catalogFilePath = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
   const catalog = require(catalogFilePath);
 
@@ -229,7 +240,7 @@ async function main() {
             idsUploadedImage.push(tokenId);
           }
 
-          nft.metadata.creatorAddress = creatorAddress;
+          nft.metadata.creatorAddress = ownerAddress;
           nft.metadata.contractAddress = contractAddress;
 
           // Temporarily add tokenId, to get it into the IPFS version
