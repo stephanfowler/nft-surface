@@ -8,8 +8,10 @@ const { ethers }  = require('hardhat');
 const sharp = require("sharp");
 const _ = require('lodash');
 const fs = require('fs');
+
 const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK(pinataApiKey, pinataApiSecret);
+
 const contractABI = require("../artifacts/contracts/NFTagent.sol/NFTagent.json");
 
 const keccak256 = require('keccak256');
@@ -17,6 +19,7 @@ const AGENT_ROLE = `0x${keccak256('AGENT_ROLE').toString('hex')}`
 
 async function main() {
   console.log("Connecting...");
+
   const [signer] = await ethers.getSigners();
   const contract = new ethers.Contract(contractAddress, contractABI.abi, signer)
   const {chainId, name} = await ethers.provider.getNetwork();
@@ -44,9 +47,8 @@ async function main() {
       return;
   }
 
-  //
   const catalogFilePath = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
-  const catalog = require(catalogFilePath);
+  const catalog = require(catalogFilePath); // this will obvs error if not found
 
   const tokenIds = _.map(catalog.NFTs, 'tokenId');
 
@@ -79,7 +81,7 @@ async function main() {
   const idsNewlyBurntOrRevoked = [];
   const idsUploadedImage = [];
   const idsUpdatedMetadata = [];
-  const idsSigned = [];
+  const idsMintable = [];
   const idsWithheld = [];
 
   const signatureDomain = {
@@ -133,9 +135,9 @@ async function main() {
     idsWithheld.push(nft.tokenId);
   }
   
-  function setSigned(nft) {
+  function setMintable(nft) {
     nft.status = "mintable";
-    idsSigned.push(nft.tokenId);
+    idsMintable.push(nft.tokenId);
   }
   
   function pad(num, size) {
@@ -152,7 +154,6 @@ async function main() {
   }
 
   async function processImage(filePath) {
-
     try {
       const sharpImg = sharp(filePath);
       const meta = await sharpImg.metadata();
@@ -212,8 +213,7 @@ async function main() {
         const mintedTokenURI = await contract.tokenURI(tokenId);
 
         if (mintedTokenURI) {
-          // It's minted! (because the NFT's tokenId maps to a tokenURI)
-          // Add minted tokenURI in case existing value is wrong or missing
+          // Update the minted tokenURI in case existing value is wrong or missing
           nft.tokenURI = mintedTokenURI;
           setMinted(nft);
 
@@ -221,9 +221,8 @@ async function main() {
           // For IPFS uploads, first make a readable filename
           const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
-          // TODO decide should we ALWAYS upload sourceImage? In case it has has changed.
+          // upload image to IPFS, generate web optimised and placeholder images
           if (!nft.metadata.image) {
-          //if (true) {
             console.log("Uploading : " + tokenId + " : " + nft.sourceImage);
 
             const imageFilePath = catalogDirectory + "/" + nft.sourceImage;
@@ -243,10 +242,10 @@ async function main() {
           nft.metadata.creatorAddress = ownerAddress;
           nft.metadata.contractAddress = contractAddress;
 
-          // Temporarily add tokenId, to get it into the IPFS version
+          // Temporarily add tokenId, so it gets into the IPFS metadata
           nft.metadata.tokenId = tokenId; 
 
-          // Always (re)create the tokenURI by first uploading metadata JSON to IPFS
+          // Always (re)create the tokenURI, by uploading metadata JSON to IPFS
           pinnedMetadata = await pinata.pinJSONToIPFS(nft.metadata, {pinataMetadata:{name:ipfsFilename + ".json" }});
           const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
           const oldTokenURI = nft.tokenURI + "";
@@ -262,27 +261,27 @@ async function main() {
           // Now remove temporarily-added tokenId, as we already have it in the parent level
           delete nft.metadata.tokenId; 
 
-          // If specified, weiPrice must be a numeric string, including "0"
+          // If specified, weiPrice must be a numeric string, including the string "0"
           const weiPrice = (( typeof nft.weiPrice === 'string' || nft.weiPrice instanceof String) 
               && /^\d+$/.test(nft.weiPrice)) ? nft.weiPrice : undefined;
 
-          // Presence of weiPrice implies item is (lazy) mintable            
+          // Presence of weiPrice implies item is (lazy) mintable, so needs a signature
           if (weiPrice) {
             // (Re)create the signature
             const tokenURI = nft.tokenURI;
             const signature = await sign(weiPrice, tokenId, tokenURI);
             nft.signature = signature;
 
-            // Test signature / claimability
+            // Test signature / mintableness 
             try {
               const mintableTest = await contract.mintable(weiPrice, tokenId, tokenURI, signature);
-              setSigned(nft);
+              setMintable(nft);
             } catch (error) {
               failedSignatures = true;
             }
           } else {
             // lack of weiPrice implies item is not mintable, so is on display only.
-            // nb. the computed tokenURI means it can now be manually minted by an authorised user
+            // nb. the computed tokenURI however means it can now be manually minted by the agent
             setWithheld(nft);
           }
         }
@@ -293,7 +292,7 @@ async function main() {
     console.log("Processed : " + nft.tokenId + " : " + nft.status)
   }
 
-  // Warn on duplicate tokenURIs. This may be accidental or intended (eg. multi-edition items)
+  // Warn on duplicate tokenURIs. This may be accidental or intended (tho kinda weird)
   const tokenURIs = _.map(catalogUpdated.NFTs, 'tokenURI');
   const duplicateURIs  = (_.filter(tokenURIs, (val, i, iteratee) => _.includes(iteratee, val, i + 1)));
   if (duplicateURIs.length) {
@@ -303,38 +302,38 @@ async function main() {
 
   // Abort on failed properties
   if (failedProperties) {
-    console.log("ERROR: some items had missing properites. Read the docs. ");
+    console.log("ERROR: some items had missing properites. Read the docs.");
     return;
   }
 
   // Abort on failed signatures
   if (failedSignatures) {
-    console.log("ERROR: sigatures failed.... check config, including .env ?");
+    console.log("ERROR: sigatures failed for unknown reason. Check your .env values?");
     return;
   }
 
   // OK all's good
 
-  const stats = {
-    idsNewlyMinted,
-    idsNewlyBurntOrRevoked,
-    idsSigned,
-    idsWithheld,
-    idsUploadedImage,
-    idsUpdatedMetadata
-  };
-
-  // Write the file back to disk (!)
+  // Add the context
+  // The client relies on this to know which network (chainId) the catalog is built for.
   catalogUpdated.context = {
     signatureDomain,
     signatureTypes
   };
+
+  // Update the catalog file
   fs.writeFileSync(catalogFilePath, JSON.stringify(catalogUpdated, null, 4));
   
-  console.log(signatureDomain);
-  console.log(stats);  
+  // Log some useful stuff
+  console.log({
+    idsNewlyMinted,
+    idsNewlyBurntOrRevoked,
+    idsMintable,
+    idsWithheld,
+    idsUploadedImage,
+    idsUpdatedMetadata
+  });
 }
-
 
 main()
   .then(() => process.exit(0))
