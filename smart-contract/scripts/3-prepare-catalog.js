@@ -26,8 +26,8 @@ async function main() {
   // TODO: understand why this isn';'t just done for us by the hardhat --network cli argument?
 
   //const provider = new ethers.providers.JsonRpcProvider(mainnetApiURL); // Mainnet
-  const provider = new ethers.providers.JsonRpcProvider(rinkebyApiURL); // Rinkeby
-  //const provider = new ethers.providers.JsonRpcProvider(); // Localhost
+  //const provider = new ethers.providers.JsonRpcProvider(rinkebyApiURL); // Rinkeby
+  const provider = new ethers.providers.JsonRpcProvider(); // Localhost
   
   const contract = new ethers.Contract(contractAddress, contractABI.abi, provider);
   const {chainId} = await ethers.provider.getNetwork();
