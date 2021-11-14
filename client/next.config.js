@@ -2,13 +2,13 @@ https://testnets.opensea.io/assets/<contractAddress>/603
 
 module.exports = {
     env: {
+      catalogBase:      process.env.catalogBase,
+      catalogFilename:  process.env.catalogFilename,
+
       creatorName:      'FLOF',
       siteTitle:        'FLOF NFT Catalog',
       siteDescription:  'NFT works by FLOF for minting or secondary trading on open NFT marketplaces',
       twitterHandle:    '@stephanfowler',
-
-      catalogBaseURL:   process.env.catalogBaseURL,
-      catalogFilename:  process.env.catalogFilename,
 
       etherscanAddress: 'https://rinkeby.etherscan.io/address/<address>',
       etherscanToken:   'https://rinkeby.etherscan.io/token/<address>?a=<tokenId>',

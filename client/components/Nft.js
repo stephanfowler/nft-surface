@@ -44,7 +44,7 @@ export default function Nft({ nft, chainId }) {
 
       <div className={`${styles.nftImage} ${orient}`}>
         <Image
-          src={process.env.catalogBaseURL + "/" + nft.webOptimizedImage}
+          src={process.env.catalogBase + "/" + nft.webOptimizedImage}
           width={width}
           height={height}
           placeholder = {nft.placeholderImage ? "blur" : "empty"}

@@ -8,7 +8,7 @@ async function checkChainId(provider, chainIdCheck) {
   if (chainId === chainIdCheck) {
     return provider;
   } else {
-    throw 'Provider chainId does not match catalog chainId';
+    throw 'Provider chainId != catalog chainId. ' + chainId + '!=' + chainIdCheck;
   }
 } 
 
