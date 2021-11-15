@@ -21,4 +21,5 @@ module.exports = {
     images: {
       domains: ['stephanfowler.com'],
     },
+    target: 'serverless'
   }
