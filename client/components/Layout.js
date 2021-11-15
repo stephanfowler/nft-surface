@@ -41,23 +41,21 @@ export default function Layout({ children, home, nft, chainId }) {
 
       <main>{children}</main>
 
-      {!home &&
-        <footer className={styles.footer}>
-          {chainId !== 1 &&
-            <>
-              <span className={styles.alertIsTestnet}>{networkName(chainId)}</span>
-              {" / "}
-            </>
-          }
-          <Link href="/docs/provenance">
-            <a>NFT provenance</a>
-          </Link>
-          {" / "}
-          <Link href="https://github.com/stephanfowler/nft-agent">
-            <a>GitHub</a>
-          </Link>
-        </footer>
-      }
+      <footer className={home? styles.footerHome : styles.footer}>
+        {chainId > 1 &&
+          <>
+            <span className={styles.alertIsTestnet}>{networkName(chainId)}</span>
+            {" / "}
+          </>
+        }
+        <Link href="/docs/provenance">
+          <a>NFT provenance</a>
+        </Link>
+        {" / "}
+        <Link href="https://github.com/stephanfowler/nft-agent">
+          <a>GitHub</a>
+        </Link>
+      </footer>
     </div>
   )
 }

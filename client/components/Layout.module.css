@@ -34,11 +34,22 @@
   max-width: 800px;
 }
 
-.footer {
+.footer, 
+.footerHome {
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 1rem;
   font-size: smaller;
+}
+
+.footerHome {
+  background: rgb(254 254 254 / 80%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
 }
 
 .landingHeroImage {
