@@ -10,7 +10,7 @@
 
 ## Description
 
-Deploys an NFT smart contract (ERC721 standard) and an SEO-optimised site to showcase and offer minting of NFTs.
+Deploys an NFT smart contract (ERC721 standard) and an SEO-optimised responsive site to showcase and mint NFTs.
 
 * Adheres to NFT provenance best-practices
 * Lazy minting (add NFTs to catalog without pre-minting them)
