@@ -2,7 +2,7 @@ const ownerAddress     = process.env.OWNER_ADDRESS;
 const contractAddress  = process.env.CONTRACT_ADDRESS;
 const pinataApiKey     = process.env.PINATA_API_KEY;
 const pinataApiSecret  = process.env.PINATA_API_SECRET;
-const catalogDirectory = process.env.CATALOG_DIRECTORY;
+const catalogDirectory = process.env.CATALOG_DIRECTORY || __dirname + "/../../client/public/catalog";
 
 const { ethers }  = require('hardhat');
 const sharp = require("sharp");
@@ -48,7 +48,7 @@ async function main() {
   }
 
   const catalogFilePath = catalogDirectory + "/catalog_chainid_" + chainId + ".json";
-  const catalog = require(catalogFilePath); // this will obvs error if not found
+  const catalog = require(catalogFilePath);
 
   const tokenIds = _.map(catalog.NFTs, 'tokenId');
 
