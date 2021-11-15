@@ -12,16 +12,16 @@
 
 Deploys an NFT smart contract (ERC721 standard) and an SEO-optimised site to showcase and offer minting of NFTs.
 
-* Adheres to strict NFT provenance best-practices
+* Adheres to NFT provenance best-practices
 * Lazy minting (add NFTs to catalog without pre-minting them)
-* Assignable roles for managing the catalog
+* Re-assignable agent role for managing the catalog
 * Configurable revenue shares for multiple accounts
 
-See an [example test deployment](https://nft-agent.vercel.app/).
+See an [example test deployment](https://nft-agent.vercel.app/) on an Ethereum testnet (set your wallet to "Rinkeby Test Network").
 
 ## Deployment notes
 
-The [smart contract](/nft-agent/blob/main/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
+The [smart contract](/stephanfowler//nft-agent/blob/main/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
 
 * "Andy Warhol",          // ERC721 name
 * "WRHL",                 // ERC721 symbol
@@ -32,7 +32,7 @@ The [smart contract](/nft-agent/blob/main/smart-contract/contracts/NFTagent.sol)
 
 The frontend site is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
 
-See the separate READMEs for [smart-contact](/nft-agent/blob/main/smart-contract/) and [client](/nft-agent/blob/main/client/).
+See the separate READMEs for [smart-contact](/stephanfowler/nft-agent/blob/main/smart-contract/) and [client](/stephanfowler/nft-agent/blob/main/client/).
 
 ## Status
 
