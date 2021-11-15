@@ -73,3 +73,21 @@
   color: white;
   text-decoration: none;
 }
+
+.landingAddress {
+  z-index: 1;
+  margin: 3rem 2rem;
+  padding: 0.5rem;
+  background: rgb(254, 254, 254, 60%);
+  color: black;
+  font-size: smaller;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.landingAddress:hover {
+  color: white;
+  background: orange;
+}
+

@@ -28,6 +28,11 @@ export default function Home() {
           NFT<br />CATALOG
         </a>
       </Link>
+      <Link href="https://rinkeby.etherscan.io/address/0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844">
+        <span className={styles.landingAddress}>
+          FLOF ethereum address : <a>0x72dA...1844</a>
+        </span>
+      </Link>
     </Layout>
   )
 }
