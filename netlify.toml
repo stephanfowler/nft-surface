@@ -1,4 +1,0 @@
-[build]
-  command = "next build && next export"
-  base = "client"
-  publish = "client/out"
