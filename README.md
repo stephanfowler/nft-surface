@@ -34,7 +34,7 @@ The [smart contract](/stephanfowler//nft-agent/blob/main/smart-contract/contract
 
 The frontend site is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
 
-See the separate READMEs for [smart-contact](/stephanfowler/nft-agent/blob/main/smart-contract/) and [client](/stephanfowler/nft-agent/blob/main/client/).
+See the separate READMEs for [smart-contact](/smart-contract/) and [client](/client/).
 
 ## Status
 
