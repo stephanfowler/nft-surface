@@ -21,7 +21,7 @@ See an [example test deployment](https://nft-agent.vercel.app/) on an Ethereum t
 
 ## Deployment notes
 
-The [smart contract](/stephanfowler//nft-agent/blob/main/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
+The [smart contract](/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
 
 ```
 * "Andy Warhol"          // ERC721 name
@@ -34,9 +34,9 @@ The [smart contract](/stephanfowler//nft-agent/blob/main/smart-contract/contract
 
 The frontend site is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
 
-See the separate READMEs for [smart-contact](/smart-contract/) and [client](/client/).
+See READMEs for the separate [smart-contact](/smart-contract/) and [client](/client/) projects.
 
 ## Status
 
-Smart-contact has test coverage.
-Client tested extensively on Rinkeby.
+Smart-contact has extensive [test coverage](/smart-contract/test/tests.js).
+Client has been tested extensively against Rinkeby.

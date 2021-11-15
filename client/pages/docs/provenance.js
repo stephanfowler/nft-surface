@@ -7,30 +7,37 @@ export default function FirstPost() {
     return (
         <Layout>
             <Head>
-                <title>Ensuring correct NFT provenance</title>
+                <title>NFT Provenance and Authenticity</title>
             </Head>
             <div className={styles.pageContainer}>
-                <h1>Ensuring correct NFT provenance</h1>
+                <h1>NFT Provenance and Authenticity</h1>
 
-                <p>The artist must publish their Ethereum address somewhere trusted, off-chain, such that the collector is confident that they know the artist's true address. This is arguably the weakest link, as everything else is transparently recorded on the blockchain and thus verifyable. The collector must therefore be confident that any statement purportedly made by the artist about their ETH address is not, in fact, being made by an impersonator.
+                <p>The NFTs minted by this site's Ethereum smart contract adhere to the following best-practices for the establisment of correct NFT provenance and authenticity.
                 </p>
 
-                <p>The artist should be both (1) the <strong>creator</strong> of the smart contract and (2) the <strong>owner</strong> of the smart contract. Whereas the creator's ETH address is always immutably recorded in the blockchain, the "owner" of the contract must explicitly be implemented to be immutable. 
-                </p>
+                <ol>
+                <li><strong>Originator</strong> : the artist / maker / brand / etc should publish their Ethereum address in a trusted off-chain location (eg. a widely-accepted social media account, website, etc), such that a collector can be confident they know the originator's true address. This is arguably the weakest link for NFT provenance, as everything else in the "provenance chain" (ie. every point made below) is transparently recorded on the blockchain and is thus deterministic and verifiable. More generally, the collector must be confident that any statement purportedly made by the artist about their Ethereum address is not, in fact, being made by an impersonator.
+                </li>
 
-                <p>To ensure their immutability, the NFT's metadata and images MUST be stored on IPFS. This means that the "tokenURI" of the NFT must be an IPFS URI referencing the NFT's metadata, and the image URI within that metadata must itself be a IPFS URI.</p>
+                <li><strong>Contract ownership</strong> : the originator should ideally be both the <em>creator</em> (or deployer) of the smart contract and its <em>owner</em> (as declared by the contract itself). Whereas the creator's Ethereum address is always immutably recorded in the blockchain, the owner of the contract must be explicitly implemented so as to be an immutable value. 
+                </li>
 
-                <p>The NFT's metadata should be comprehensive and should include the token ID, contract address, and artist's Ethereum address (which must equal both the contract creator and contract owner, as described above). These values can all be checked and compared by referring to Etherscan.</p>
+                <li><strong>Token immutability</strong> : to ensure their immutability (inability to ever be changed) the NFT's metadata and the NFT's image must each be stored on IPFS (or more generally, any form of public content-addressable storage that identifies a content item by its cryptographically secure hash). This ensures that the NFT's "token URI" references the NFT's immutable metadata, and that the image URI within the metadata itself references an immutable object.</li>
 
-                <p>The smart contract's code MUST have been verified by Etherscan so that it is readable by suitably qualified persons. It should itself be written such as to be clear about it's intent and be documented appropriately.
-                </p>
+                <li><strong>Metadata</strong> : the NFT's metadata should be comprehensive and should include (in addition to the obligatory name, description and image properties) the token ID, contract address, and the originator's Ethereum address (which should be checked to ensure it is equal both the contract creator and contract owner). This prevents reuse of the same metadata object by another (perhaps impersonating) NFT. These values can all be viewed and cross-compared by referring to the NFT's metatdata and a blockchain-explorer view of the contract.</li>
 
-                <p>"Proxy" contracts are to be avoided. Their underlying logic can be changed unfavourably; a well-behaved ERC721 could later become a malicious one, by changing its underlying "implementation contract". The implementation contract could also be directly interacted with by an malicious party; it has it's own distinct storage which in normal circumstances is unused but could potentially be exploited to mint a parallel set of illegitimate NFTs. It has the same creator as the proxy, and could apprear impeccable in it's provenance characteristics if confused for its proxy.
-                </p>
+                <li><strong>Transparency</strong> : links to everything relevant to establishing provenance should always be provided alongside an NFT. At minimum this should include a blockchain-explorer link to the token (and thus its ID), another to the contract (and thus its creator, source code, API, transactions, etc), the IPFS metadata, and the IPFS image.</li>
 
-                <p>Group contracts (as generally deploted by marketplaces) shoud ideally be avoided, as they pollute a clear provenance chain from artist, to artist's contract, to token, to subsequent ownership. Whereas the artist forever remains the creator of their art, the marketplace where they may have minted it should ideally not forever be recorded as the NFT's provenance. 
-                </p>
+                <li><strong>Contract code</strong> : the smart contract's source code must have been verified on Etherscan so that it is readable and auditable by suitably qualified persons. It should itself be structured and written such as to be clear about it's intent, and be annotated according to Solidity documentation best-practices.
+                </li>
 
+                <li><strong>Contract immutability</strong> : proxy contracts should be avoided as their behaviour can be changed at will, perhaps unfavourably to the collector. A well-behaved ERC721 proxy could later become a malicious one if its underlying implementation contract is replaced with one that no longer honours expected ERC721 behaviours. Additionally, the implementation contract has it's own distinct storage which in normal circumstances is redundant but could potentially be exploited to mint a parallel set of NFTs. Implementation contracts are likely to have the same creator as the proxy and could thus be exlpoited to hold NFTs that may appear impeccable in their provenance characteristics.
+                </li>
+
+                <li><strong>Shared contracts</strong> : as generally deployed by marketplaces, contracts that group together originators under one contract should ideally be avoided as they arguably pollute a clear provenance chain starting from the originator, to the originator's contract, to a token on that contract, to an ownership history, to the current owner. Whereas the NFT's originator should forever be unambiguously identified as being such, the marketplace where they may have minted the NFT should ideally not forever be recorded as the NFT's genesis. 
+                </li>
+
+                </ol>
             </div>
         </Layout>
     )
