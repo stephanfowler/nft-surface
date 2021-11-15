@@ -23,12 +23,14 @@ See an [example test deployment](https://nft-agent.vercel.app/) on an Ethereum t
 
 The [smart contract](/stephanfowler//nft-agent/blob/main/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
 
-* "Andy Warhol",          // ERC721 name
-* "WRHL",                 // ERC721 symbol
-* "0x1E89…",              // admin role address
-* "0x1E89…",              // agent role address
-* ["0x8Cb6", "0x72dA…"],  // PaymentSplitter payees array
-* [85, 15]                // PaymentSplitter shares array
+```
+* "Andy Warhol"          // ERC721 name
+* "WRHL"                 // ERC721 symbol
+* "0x1E89…"              // admin role address
+* "0x1E89…"              // agent role address
+* ["0x8Cb6", "0x72dA…"]  // PaymentSplitter payees array
+* [85, 15]               // PaymentSplitter shares array
+```
 
 The frontend site is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
 
@@ -36,4 +38,5 @@ See the separate READMEs for [smart-contact](/stephanfowler/nft-agent/blob/main/
 
 ## Status
 
-Tested extensively on Rinkeby.
+Smart-contact has test coverage.
+Client tested extensively on Rinkeby.
