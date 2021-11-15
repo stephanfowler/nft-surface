@@ -202,7 +202,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
               <div className={styles.walletInstallInstructions}>
                 <div>To mint NFTs you need an Ethereum wallet.</div>
                 <div>
-                  On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app's broswer to view this website.
+                  On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website.
                   On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
                 </div>
               </div>
