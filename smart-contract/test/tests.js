@@ -2,9 +2,11 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
-const weiPrice = 1000;
+const weiPrice = '1000';
 const tokenId = 123;
 const tokenURI = "ipfs://123456789";
+const salePrice = '1000000000000000000'; // = 1 ETH
+const royaltyBasisPoints = 499; // = 4.99%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`
@@ -32,7 +34,8 @@ beforeEach(async function() {
   );
 
   await this.contract.deployed();
-  //console.log(this.contract.address);
+
+  this.provider = ethers.provider;
 
   this.sigDomain = {
     name: 'NFTagent',
@@ -55,6 +58,139 @@ beforeEach(async function() {
 // await expect( ... for read functions failing, and all write functions
 
 
+it('setPrice, buy', async function () {
+  const startingBalance4 = await this.accounts[4].getBalance();
+
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] mint 
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+
+  // [3] attempt setPrice
+  await expect(this.contract.connect(this.accounts[3]).setPrice(tokenId, salePrice))
+  .to.be.revertedWith('caller is not token owner');
+
+  // [3] attempt buy
+  await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('token not for sale');
+
+  // [4] setPrice
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
+  .to.emit(this.contract, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // [4] attempt buy, is already owner
+  await expect(this.contract.connect(this.accounts[4]).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('caller is token owner');
+
+  // [3] attempt buy, insufficient value
+  await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: ethers.BigNumber.from(salePrice).sub(1)}))
+  .to.be.revertedWith('insufficient ETH sent');
+
+  const startingBalance3 = await this.accounts[3].getBalance();
+
+  // [3] buy
+  await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: salePrice}))
+  .to.emit(this.contract, 'Bought')
+  .withArgs(tokenId, this.accounts[3].address);
+
+  const closingBalance3 = await this.accounts[3].getBalance()
+  const closingBalance4 = await this.accounts[4].getBalance();
+
+  // [4] attempt setPrice
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
+  .to.be.revertedWith('caller is not token owner');
+
+  // [3] ownerOf
+  expect(await this.contract.connect(this.accounts[3]).ownerOf(tokenId))
+  .to.equal(this.accounts[3].address);
+
+  // [2] attempt buy
+  await expect(this.contract.connect(this.accounts[4]).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('token not for sale');
+
+  // gas fee make the closing balances inexact, so need to rely on gt/lt 
+  expect(closingBalance3.lt(startingBalance3.sub(salePrice)))
+  .to.equal(true);
+
+  expect(closingBalance4.gt(startingBalance4) 
+      && closingBalance4.lt(startingBalance4.add(salePrice)))
+  .to.equal(true);
+});
+
+
+it('setRoyalty', async function () {
+  // [4] attempt setRoyalty
+  await expect(this.contract.connect(this.accounts[4]).setRoyalty(royaltyBasisPoints))
+  .to.be.revertedWith('unauthorized to set royalty');
+
+  // [2] attemt setRoyalty, too high
+  await expect(this.contract.connect(this.accounts[2]).setRoyalty(10001))
+  .to.be.revertedWith('cannot exceed 10000 basis points');
+
+  // [2] setRoyalty
+  await expect(this.contract.connect(this.accounts[2]).setRoyalty(royaltyBasisPoints))
+  .to.emit(this.contract, 'RoyaltySet')
+  .withArgs(royaltyBasisPoints);
+
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] mint 
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+
+  // [4] setPrice
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
+  .to.emit(this.contract, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // [3] buy
+  await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: salePrice}))
+  .to.emit(this.contract, 'Bought')
+  .withArgs(tokenId, this.accounts[3].address);
+
+  const balance = await this.provider.getBalance(this.contract.address);
+  let ethBalance = ethers.utils.formatEther(balance);
+  ethBalance = Math.round(ethBalance * 1e4) / 1e4;
+
+  let expectedRoyalty = ethers.utils.formatEther(salePrice);
+  expectedRoyalty = Math.round(expectedRoyalty * 1e6 * royaltyBasisPoints) / (1e10);
+
+  expect(ethBalance)
+  .to.equal(expectedRoyalty);
+});
+
+
+it('un-setPrice', async function () {
+  const startingBalance4 = await this.accounts[4].getBalance();
+
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] mint 
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+
+  // [4] setPrice
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
+  .to.emit(this.contract, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // [4] setPrice to 0 (remove from sale)
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, 0))
+  .to.emit(this.contract, 'PriceSet')
+  .withArgs(tokenId, 0);
+
+  // [3] attempt buy
+  await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: 123456}))
+  .to.be.revertedWith('token not for sale');
+});
 
 
 it('role assignments', async function () {
@@ -78,7 +214,7 @@ it('receiving and withdrawing', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint for 1000
+  // [4] mint 
   await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
@@ -89,6 +225,7 @@ it('receiving and withdrawing', async function () {
   .withArgs(this.accounts[5].address, 9000);
 
   // totalReceived is now 10000 = 1000 + 9000 (ie from mint + send)
+
   // [4] attempt release to [4]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[4].address))
   .to.be.revertedWith('PaymentSplitter: account has no shares');
@@ -541,5 +678,4 @@ it('tokenURI', async function () {
   // [4] tokenUri
   expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
   .to.equal("");
-
 });

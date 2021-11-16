@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 /**
@@ -19,11 +20,13 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
 
     bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
     address public immutable owner;
-    uint256 public totalSupply = 0;
-    uint256 public idFloor = 0;
+    uint256 public totalSupply;
+    uint256 public idFloor;
+    uint16  public royaltyBasisPoints; // eg. 250 = 2.5% 
     
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
+    mapping(uint256 => uint256) private prices;
 
     /**
      *  @dev Constructor immutably sets "owner" to the message sender; be sure to deploy contract using the account of the creator/artist/brand/etc. 
@@ -51,6 +54,10 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         _setupRole(AGENT_ROLE, agent);
     }
     
+    event RoyaltySet(uint16 basisPoints);
+    event PriceSet(uint256 id, uint256 price);
+    event Bought(uint256 id, address buyer);
+
     /**
      *  @notice Minting by the agent only
      *  @param recipient The recipient of the NFT
@@ -99,6 +106,30 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         require(id >= idFloor, "tokenId below floor");
         require(!revokedIds[id], "tokenId revoked or burnt");
         return true;
+    }
+
+    function setRoyalty(uint16 basisPoints) external {
+        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to set royalty");
+        require(basisPoints <= 10000, "cannot exceed 10000 basis points");
+        royaltyBasisPoints = basisPoints;
+        emit RoyaltySet(basisPoints);
+    }
+
+    function setPrice(uint256 id, uint256 price) external {
+        require(_msgSender() == ownerOf(id), "caller is not token owner");
+        prices[id] = price;
+        emit PriceSet(id, price);
+    }
+
+    function buy(uint256 id) external payable {
+        require(_msgSender() != ownerOf(id), "caller is token owner");
+        require(prices[id] > 0, "token not for sale");
+        require(msg.value >= prices[id], "insufficient ETH sent");
+        address seller = ownerOf(id);
+        delete prices[id];
+        _safeTransfer(seller, _msgSender(), id, "");
+        Address.sendValue(payable(seller), (10000 - royaltyBasisPoints) * (msg.value / 10000));
+        emit Bought(id, _msgSender());
     }
 
     /**
