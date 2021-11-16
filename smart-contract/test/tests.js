@@ -2,10 +2,11 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
-const weiPrice = '1000';
-const tokenId = 123;
-const tokenURI = "ipfs://123456789";
-const salePrice = '1000000000000000000'; // = 1 ETH
+const weiPrice  = '1000000000000000000'; // = 1 ETH
+const tokenId   = 123;
+const tokenURI  = "ipfs://123456789";
+
+const salePrice = '2000000000000000000'; // = 2 ETH
 const royaltyBasisPoints = 499; // = 4.99%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -234,11 +235,13 @@ it('receiving and withdrawing', async function () {
   const startingBalance0 = await this.accounts[0].getBalance();
   const startingBalance1 = await this.accounts[1].getBalance();
 
+  const weiPrice1000 = 1000; // because easier math
+
   // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice1000, tokenURI});
 
   // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice1000}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
