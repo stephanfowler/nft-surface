@@ -2,11 +2,11 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
-const weiPrice  = '1000000000000000000'; // = 1 ETH
-const tokenId   = 123;
-const tokenURI  = "ipfs://123456789";
+const weiPrice = ethers.utils.parseEther("1");
+const tokenId = 123;
+const tokenURI = "ipfs://123456789";
 
-const salePrice = '2000000000000000000'; // = 2 ETH
+const salePrice = ethers.utils.parseEther("2");
 const royaltyBasisPoints = 499; // = 4.99%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -137,11 +137,8 @@ it('setRoyalty', async function () {
   .to.emit(this.contract, 'RoyaltySet')
   .withArgs(royaltyBasisPoints);
 
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
-
-  // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  // [2] mintAuthorized for [4]
+  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
@@ -235,22 +232,20 @@ it('receiving and withdrawing', async function () {
   const startingBalance0 = await this.accounts[0].getBalance();
   const startingBalance1 = await this.accounts[1].getBalance();
 
-  const weiPrice1000 = 1000; // because easier math
-
   // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice1000, tokenURI});
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
   // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice1000}))
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
 
-  // [5] send 9000
-  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 9000}))
+  // [5] send 9 ETH
+  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: ethers.utils.parseEther("9")}))
   .to.emit(this.contract, 'PaymentReceived')
-  .withArgs(this.accounts[5].address, 9000);
+  .withArgs(this.accounts[5].address, ethers.utils.parseEther("9"));
 
-  // totalReceived is now 10000 = 1000 + 9000 (ie from mint + send)
+  // totalReceived is now 10 ETH (ie from mint + send)
 
   // [4] attempt release to [4]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[4].address))
@@ -259,26 +254,26 @@ it('receiving and withdrawing', async function () {
   // [4] release to [0]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
   .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[0].address, 8500); // 85/100 * 10000
+  .withArgs(this.accounts[0].address, ethers.utils.parseEther("8.5")); // 85/100 * 10 ETH
 
   // [4] attempt repeat release to [0]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
   .to.be.revertedWith('PaymentSplitter: account is not due payment');
 
-  // [5] send 100 more
-  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 100}))
+  // [5] send 1 ETH more
+  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: ethers.utils.parseEther("1.0")}))
   .to.emit(this.contract, 'PaymentReceived')
-  .withArgs(this.accounts[5].address, 100);
+  .withArgs(this.accounts[5].address, ethers.utils.parseEther("1"));
 
   // [4] release to [0]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
   .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[0].address, 85); // 85/100 * 100
+  .withArgs(this.accounts[0].address, ethers.utils.parseEther("0.85")); // 85/100 * 1 ETH
 
   // [4] release to [1]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
   .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[1].address, 1515); // 15/100 * (10000 + 100)
+  .withArgs(this.accounts[1].address, ethers.utils.parseEther("1.65")); // 15/100 * 11 ETH
 
   // [4] attempt repeat release to [1]
   await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
@@ -286,24 +281,24 @@ it('receiving and withdrawing', async function () {
 
   // [4] released to [0]
   expect(await this.contract.connect(this.accounts[4]).released(this.accounts[0].address))
-  .to.equal(8585);
+  .to.equal(ethers.utils.parseEther("9.35")); // 85/100 * 11 ETH
 
   // [4] released to [1]
   expect(await this.contract.connect(this.accounts[4]).released(this.accounts[1].address))
-  .to.equal(1515);
+  .to.equal(ethers.utils.parseEther("1.65"));
 
   // [4] totalReleased
   expect(await this.contract.connect(this.accounts[4]).totalReleased())
-  .to.equal(10100);
+  .to.equal(ethers.utils.parseEther("11"));
 
   const closingBalance0 = await this.accounts[0].getBalance()
   const closingBalance1 = await this.accounts[1].getBalance()
 
   expect(closingBalance0.sub(startingBalance0))
-  .to.equal(8585);
+  .to.equal(ethers.utils.parseEther("9.35"));
 
   expect(closingBalance1.sub(startingBalance1))
-  .to.equal(1515);
+  .to.equal(ethers.utils.parseEther("1.65"));
 });
 
 
