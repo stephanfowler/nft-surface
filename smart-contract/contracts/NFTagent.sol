@@ -207,4 +207,13 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         revokedIds[id] = true;
         totalSupply -= 1;
     }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721) {
+        super._beforeTokenTransfer(from, to, tokenId);
+        delete prices[tokenId];
+    }
 }

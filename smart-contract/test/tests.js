@@ -64,7 +64,7 @@ it('setPrice, buy', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint 
+  // [4] mint
   await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
@@ -112,11 +112,11 @@ it('setPrice, buy', async function () {
   await expect(this.contract.connect(this.accounts[4]).buy(tokenId, {value: salePrice}))
   .to.be.revertedWith('token not for sale');
 
-  // gas fee make the closing balances inexact, so need to rely on gt/lt 
+  // gas fee make the closing balances inexact, so need to rely on gt/lt
   expect(closingBalance3.lt(startingBalance3.sub(salePrice)))
   .to.equal(true);
 
-  expect(closingBalance4.gt(startingBalance4) 
+  expect(closingBalance4.gt(startingBalance4)
       && closingBalance4.lt(startingBalance4.add(salePrice)))
   .to.equal(true);
 });
@@ -139,7 +139,7 @@ it('setRoyalty', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint 
+  // [4] mint
   await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
@@ -167,12 +167,10 @@ it('setRoyalty', async function () {
 
 
 it('un-setPrice', async function () {
-  const startingBalance4 = await this.accounts[4].getBalance();
-
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint 
+  // [4] mint
   await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
@@ -189,6 +187,31 @@ it('un-setPrice', async function () {
 
   // [3] attempt buy
   await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: 123456}))
+  .to.be.revertedWith('token not for sale');
+});
+
+
+it('setPrice, transfer', async function () {
+  // [2] sign
+  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // [4] mint
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+
+  // [4] setPrice
+  await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
+  .to.emit(this.contract, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // [4] transferFrom
+  await expect(this.contract.connect(this.accounts[4]).transferFrom(this.accounts[4].address, this.accounts[3].address, tokenId))
+  .to.emit(this.contract, 'Transfer')
+  .withArgs(this.accounts[4].address, this.accounts[3].address, tokenId);
+
+  // [4] attempt buy
+  await expect(this.contract.connect(this.accounts[4]).buy(tokenId, {value: salePrice}))
   .to.be.revertedWith('token not for sale');
 });
 
@@ -214,7 +237,7 @@ it('receiving and withdrawing', async function () {
   // [2] sign
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint 
+  // [4] mint
   await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(this.contract, 'Transfer')
   .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
@@ -446,7 +469,7 @@ it('signature verification, good and bad inputs', async function () {
   .to.equal(true);
 
   // [4] attempt mintable, with incorreet weiPrice
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice + 1, tokenId , tokenURI, signature))
+  await expect(this.contract.connect(this.accounts[4]).mintable(ethers.BigNumber.from(weiPrice).add(1), tokenId , tokenURI, signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
   
   // [4] attempt mintable, with incorreet tokenId
@@ -504,11 +527,11 @@ it('mint, various ETH values', async function () {
   const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
 
   // [4] attempt mint, insufficient ETH
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice - 1}))
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: ethers.BigNumber.from(weiPrice).sub(1)}))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
   // [4] attempt mint, excessive ETH
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice + 1}))
+  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: ethers.BigNumber.from(weiPrice).add(1)}))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
   // [4] mint
