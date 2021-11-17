@@ -37,7 +37,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @param agent The agent address is authorised for all minting, signing, and revoking operations
      *  @param payees Array of PaymentSplitter payee addresses
      *  @param shares Array of PaymentSplitter shares
-     *  @param royaltyBasisPoints_ Percentage basis-points for royalty on secondary sales, eg 499 == 4.99%
+     *  @param royaltyBasisPoints_ Percentage basis-points for royalty on secondary sales, eg 495 == 4.95%
      */
     constructor(
         string memory name,

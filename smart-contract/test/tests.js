@@ -6,7 +6,7 @@ const weiPrice = ethers.utils.parseEther("1");
 const tokenId = 12345;
 const tokenURI = "ipfs://123456789";
 const salePrice = ethers.utils.parseEther("2");
-const royaltyBasisPoints = 1499; // = 14.99%
+const royaltyBasisPoints = 495; // = 4.95%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`

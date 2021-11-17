@@ -40,6 +40,9 @@ export default function FirstPost() {
                 <li><strong>Shared contracts</strong> : as generally deployed by marketplaces, contracts that group together originators under one contract should ideally be avoided as they arguably pollute a clear provenance chain starting from the originator, to the originator's contract, to a token on that contract, to an ownership history, to the current owner. Whereas the NFT's originator should forever be unambiguously identified as being such, the marketplace where they may have minted the NFT should ideally not forever be recorded as the NFT's genesis. 
                 </li>
 
+                <li><strong>Self destruction</strong> : for obvious reasons, a collector should be wary of owning tokens in a contract that has a self-destruct capability, even if that capability is well intended and is managed by a trusted operator.   
+                </li>
+
                 </ol>
             </div>
         </Layout>
