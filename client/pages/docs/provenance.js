@@ -22,6 +22,9 @@ export default function FirstPost() {
                 <li><strong>Contract ownership</strong> : the originator should ideally be both the <em>creator</em> (or deployer) of the smart contract and its <em>owner</em> (as declared by the contract itself). Whereas the creator's Ethereum address is always immutably recorded in the blockchain, the owner of the contract must be explicitly implemented so as to be an immutable value. 
                 </li>
 
+                <li><strong>Royalty</strong> : any royalty applied to secondary sales via the contract must be an immutable rate, and should obviously be public. The immutability is to prevent the rate being raised after NFTs have been minted or sold, as this could impact their resale value (and in the very worst case could appropriate all sale proceeds).
+                </li>
+
                 <li><strong>Token immutability</strong> : to ensure their immutability (inability to ever be changed) the NFT's metadata and the NFT's image must each be stored on IPFS (or more generally, any form of public content-addressable storage that identifies a content item by its cryptographically secure hash). This ensures that the NFT's "token URI" references the NFT's immutable metadata, and that the image URI within the metadata itself references an immutable object.</li>
 
                 <li><strong>Metadata</strong> : the NFT's metadata should be comprehensive and should include (in addition to the obligatory name, description and image properties) the token ID, contract address, and the originator's Ethereum address (which should be checked to ensure it is equal both the contract creator and contract owner). This prevents reuse of the same metadata object by another (perhaps impersonating) NFT. These values can all be viewed and cross-compared by referring to the NFT's metatdata and a blockchain-explorer view of the contract.</li>

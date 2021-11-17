@@ -14,16 +14,17 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
  *  @dev Enables lazy-minting by any user via precomputed signatures
  */
 contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplitter {
-
     event IdRevoked(uint256 tokenId);
     event IdFloorSet(uint256 idFloor);
 
     bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
+
+    // See NFT Provenance notes regarding why these are immutable
     address public immutable owner;
+    uint16  public immutable royaltyBasisPoints;
+
     uint256 public totalSupply;
     uint256 public idFloor;
-    uint16  public royaltyBasisPoints; // eg. 250 = 2.5% 
-    
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
     mapping(uint256 => uint256) private prices;
@@ -36,6 +37,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
      *  @param agent The agent address is authorised for all minting, signing, and revoking operations
      *  @param payees Array of PaymentSplitter payee addresses
      *  @param shares Array of PaymentSplitter shares
+     *  @param royaltyBasisPoints_ Percentage basis-points for royalty on secondary sales, eg 499 == 4.99%
      */
     constructor(
         string memory name,
@@ -43,18 +45,19 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         address admin,
         address agent,
         address[] memory payees,
-        uint256[] memory shares
+        uint256[] memory shares,
+        uint16 royaltyBasisPoints_
     ) 
         ERC721(name, symbol) 
         EIP712("NFTagent", "1.0.0")
         PaymentSplitter(payees, shares)
     {
         owner = _msgSender();
+        royaltyBasisPoints = royaltyBasisPoints_;
         _setupRole(DEFAULT_ADMIN_ROLE, admin);
         _setupRole(AGENT_ROLE, agent);
     }
     
-    event RoyaltySet(uint16 basisPoints);
     event PriceSet(uint256 id, uint256 price);
     event Bought(uint256 id, address buyer);
 
@@ -106,13 +109,6 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         require(id >= idFloor, "tokenId below floor");
         require(!revokedIds[id], "tokenId revoked or burnt");
         return true;
-    }
-
-    function setRoyalty(uint16 basisPoints) external {
-        require(hasRole(AGENT_ROLE, _msgSender()), "unauthorized to set royalty");
-        require(basisPoints <= 10000, "cannot exceed 10000 basis points");
-        royaltyBasisPoints = basisPoints;
-        emit RoyaltySet(basisPoints);
     }
 
     function setPrice(uint256 id, uint256 _price) external {

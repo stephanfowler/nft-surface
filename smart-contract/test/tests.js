@@ -6,7 +6,7 @@ const weiPrice = ethers.utils.parseEther("1");
 const tokenId = 12345;
 const tokenURI = "ipfs://123456789";
 const salePrice = ethers.utils.parseEther("2");
-const royaltyBasisPoints = 499; // = 4.99%
+const royaltyBasisPoints = 1499; // = 14.99%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`
@@ -43,7 +43,8 @@ beforeEach(async function() {
     admin.address,
     agent.address,
     [owner.address, admin.address],
-    [85,15]
+    [85,15],
+    royaltyBasisPoints
   );
 
   await c.deployed();
@@ -143,19 +144,10 @@ it('setPrice, buy', async function () {
 });
 
 
-it('setRoyalty', async function () {
-  // anonB attempt setRoyalty
-  await expect(c.connect(anonB).setRoyalty(royaltyBasisPoints))
-  .to.be.revertedWith('unauthorized to set royalty');
-
-  // agent attemt setRoyalty, too high
-  await expect(c.connect(agent).setRoyalty(10001))
-  .to.be.revertedWith('cannot exceed 10000 basis points');
-
-  // agent setRoyalty
-  await expect(c.connect(agent).setRoyalty(royaltyBasisPoints))
-  .to.emit(c, 'RoyaltySet')
-  .withArgs(royaltyBasisPoints);
+it('royalty', async function () {
+  // anonB royalty
+  expect(await c.connect(anonB).royaltyBasisPoints())
+  .to.equal(royaltyBasisPoints);
 
   // agent mintAuthorized for anonB
   await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
@@ -172,15 +164,14 @@ it('setRoyalty', async function () {
   .to.emit(c, 'Bought')
   .withArgs(tokenId, anonA.address);
 
-  const balance = await provider.getBalance(c.address);
-  let ethBalance = ethers.utils.formatEther(balance);
-  ethBalance = Math.round(ethBalance * 1e4) / 1e4;
+  const contractBalance = await provider.getBalance(c.address);
+  let contractEthBalance = ethers.utils.formatEther(contractBalance);
+  contractEthBalance = Math.round(contractEthBalance * 1e4) / 1e4;
 
-  let expectedRoyalty = ethers.utils.formatEther(salePrice);
-  expectedRoyalty = Math.round(expectedRoyalty * 1e6 * royaltyBasisPoints) / (1e10);
+  let expectedEthRoyalty = ethers.utils.formatEther(salePrice);
+  expectedEthRoyalty = Math.round(expectedEthRoyalty * 1e6 * royaltyBasisPoints) / (1e10);
 
-  expect(ethBalance)
-  .to.equal(expectedRoyalty);
+  expect(contractEthBalance).to.equal(expectedEthRoyalty);
 });
 
 
