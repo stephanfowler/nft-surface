@@ -3,37 +3,30 @@ const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
 const weiPrice = ethers.utils.parseEther("1");
-const tokenId = 123;
+const tokenId = 12345;
 const tokenURI = "ipfs://123456789";
-
 const salePrice = ethers.utils.parseEther("2");
 const royaltyBasisPoints = 499; // = 4.99%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`
 
-let accounts;
+let c; // the contract, for brevity
 let chainId;
-let c;
 let provider;
 let sigDomain
 let sigTypes;
 
+// accounts
 let owner;
 let admin;
 let agent;
 let anon1;
 let anon2;
+let zero = ethers.constants.AddressZero;
 
 beforeEach(async function() {
-  /*
-  Deploy contract with these accs:
-  [0] owner (deployer)
-  [1] admin
-  [2] agent
-  */
- 
-  accounts = await ethers.getSigners();
+  const accounts = await ethers.getSigners();
   owner = accounts[0];
   admin = accounts[1];
   agent = accounts[2];
@@ -44,9 +37,9 @@ beforeEach(async function() {
 
   const NFTagent = await ethers.getContractFactory('NFTagent');
 
-  c = await NFTagent.deploy(
-    "Test",
-    "TST",
+  c = await NFTagent.deploy( // c is the contract
+    "Testy McTestface",
+    "TEST",
     admin.address,
     agent.address,
     [owner.address, admin.address],
@@ -87,7 +80,7 @@ it('setPrice, buy', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [3] attempt setPrice
   await expect(c.connect(anon1).setPrice(tokenId, salePrice))
@@ -167,7 +160,7 @@ it('setRoyalty', async function () {
   // [2] mintAuthorized for [4]
   await expect(c.connect(agent).mintAuthorized(anon2.address, tokenId, tokenURI))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [4] setPrice
   await expect(c.connect(anon2).setPrice(tokenId, salePrice))
@@ -198,7 +191,7 @@ it('un-setPrice', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [4] setPrice
   await expect(c.connect(anon2).setPrice(tokenId, salePrice))
@@ -223,7 +216,7 @@ it('setPrice, transfer', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [4] setPrice
   await expect(c.connect(anon2).setPrice(tokenId, salePrice))
@@ -273,7 +266,7 @@ it('receiving and withdrawing', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [3] send 9 ETH
   await expect(anon1.sendTransaction({to: c.address, value: ethers.utils.parseEther("9")}))
@@ -345,7 +338,7 @@ it('vacant, mintAuthorized & burning', async function () {
   // [2] mintAuthorized
   await expect(c.connect(agent).mintAuthorized(agent.address, tokenId, tokenURI))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, agent.address, tokenId);
+  .withArgs(zero, agent.address, tokenId);
 
   // [4] attempt vacant
   await expect(c.connect(anon2).vacant(tokenId))
@@ -354,7 +347,7 @@ it('vacant, mintAuthorized & burning', async function () {
   // [2] burn
   await expect(c.connect(agent).burn(tokenId))
   .to.emit(c, 'Transfer')
-  .withArgs(agent.address, ethers.constants.AddressZero, tokenId);
+  .withArgs(agent.address, zero, tokenId);
 
   // [4] attempt vacant
   await expect(c.connect(anon2).vacant(tokenId))
@@ -368,12 +361,12 @@ it('vacant, floor', async function () {
   .to.equal(true);
 
   // [2] set floor
-  await expect(c.connect(agent).setIdFloor(1000))
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
   .to.emit(c, 'IdFloorSet')
-  .withArgs(1000);
+  .withArgs(tokenId + 1);
 
   expect(await c.connect(agent).idFloor())
-  .to.equal(1000)
+  .to.equal(tokenId + 1)
 
   // [4] attempt vacant
   await expect(c.connect(anon2).vacant(tokenId))
@@ -409,7 +402,7 @@ it('mintAuthorized, burning', async function () {
   // [2] mintAuthorized
   await expect(c.connect(agent).mintAuthorized(anon2.address, tokenId, tokenURI))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [2] attempt another mintAuthorized, same tokenId 
   await expect(c.connect(agent).mintAuthorized(anon2.address, tokenId, tokenURI))
@@ -422,7 +415,7 @@ it('mintAuthorized, burning', async function () {
   // [4] burn
   await expect(c.connect(anon2).burn(tokenId))
   .to.emit(c, 'Transfer')
-  .withArgs(anon2.address, ethers.constants.AddressZero, tokenId);
+  .withArgs(anon2.address, zero, tokenId);
 
   // [4] attempt second burn
   await expect(c.connect(anon2).burn(tokenId))
@@ -444,7 +437,7 @@ it('total supply', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [2] mintAuthorized
   await expect(c.connect(agent).mintAuthorized(anon2.address, tokenId + 1, tokenURI))
@@ -526,7 +519,7 @@ it('mint, burning', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [4] attempt mintable
   await expect(c.connect(anon2).mintable(weiPrice, tokenId, tokenURI, signature))
@@ -543,7 +536,7 @@ it('mint, burning', async function () {
   // [4] burn
   await expect(c.connect(anon2).burn(tokenId))
   .to.emit(c, 'Transfer')
-  .withArgs(anon2.address, ethers.constants.AddressZero, tokenId);
+  .withArgs(anon2.address, zero, tokenId);
 
   // [4] attempt mintable
   await expect(c.connect(anon2).mintable(weiPrice, tokenId, tokenURI, signature))
@@ -570,7 +563,7 @@ it('mint, various ETH values', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 });
 
 
@@ -581,7 +574,7 @@ it('revokeId an existing Id', async function () {
   // [4] mint
   await expect(c.connect(anon2).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [3] attempt revokeId
   await expect(c.connect(anon1).revokeId(tokenId))
@@ -618,24 +611,24 @@ it('revokeId an non-existant Id', async function () {
 
 it('setIdFloor', async function () {
   // [3] attempt set floor
-  await expect(c.connect(anon1).setIdFloor(1000))
+  await expect(c.connect(anon1).setIdFloor(tokenId + 1))
   .to.be.revertedWith('unauthorized to set idFloor');
 
   // [2] set floor
-  await expect(c.connect(agent).setIdFloor(1000))
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
   .to.emit(c, 'IdFloorSet')
-  .withArgs(1000);
+  .withArgs(tokenId + 1);
 
   // [4] floor
   expect(await c.connect(anon2).idFloor())
-  .to.equal(1000);
+  .to.equal(tokenId + 1);
 
   // [2] attempt set floor, lower
-  await expect(c.connect(agent).setIdFloor(999))
+  await expect(c.connect(agent).setIdFloor(tokenId))
   .to.be.revertedWith('must exceed current floor');
 
   // [2] attempt set floor, identical
-  await expect(c.connect(agent).setIdFloor(1000))
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
   .to.be.revertedWith('must exceed current floor');
 
   // [2] attempt mintAuthorized
@@ -680,7 +673,7 @@ it('agent role, revoked', async function () {
   // [4] mintAuthorized
   await expect(c.connect(anon2).mintAuthorized(anon2.address, tokenId, tokenURI))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 });
 
 
@@ -708,7 +701,7 @@ it('agent role, granted', async function () {
   // [3] mint
   await expect(c.connect(anon1).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon1.address, tokenId);
+  .withArgs(zero, anon1.address, tokenId);
 });
 
 
@@ -720,7 +713,7 @@ it('tokenURI', async function () {
   // [2] mintAuthorized
   await expect(c.connect(agent).mintAuthorized(anon2.address, tokenId, tokenURI))
   .to.emit(c, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, anon2.address, tokenId);
+  .withArgs(zero, anon2.address, tokenId);
 
   // [4] tokenUri
   expect(await c.connect(anon2).tokenURI(tokenId))
@@ -729,7 +722,7 @@ it('tokenURI', async function () {
   // [4] burn
   await expect(c.connect(anon2).burn(tokenId))
   .to.emit(c, 'Transfer')
-  .withArgs(anon2.address, ethers.constants.AddressZero, tokenId);
+  .withArgs(anon2.address, zero, tokenId);
 
   // [4] tokenUri
   expect(await c.connect(anon2).tokenURI(tokenId))
