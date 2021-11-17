@@ -125,8 +125,8 @@ it('setPrice, buy', async function () {
   await expect(c.connect(anonB).setPrice(tokenId, salePrice))
   .to.be.revertedWith('caller is not token owner');
 
-  // anonA ownerOf
-  expect(await c.connect(anonA).ownerOf(tokenId))
+  // anonB ownerOf
+  expect(await c.connect(anonB).ownerOf(tokenId))
   .to.equal(anonA.address);
 
   // agent attempt buy
@@ -227,7 +227,7 @@ it('setPrice, transfer', async function () {
   expect(await c.connect(admin).price(tokenId))
   .to.equal(salePrice);  
 
-  // anonB transferFrom
+  // anonB transferFrom to anonA
   await expect(c.connect(anonB).transferFrom(anonB.address, anonA.address, tokenId))
   .to.emit(c, 'Transfer')
   .withArgs(anonB.address, anonA.address, tokenId);
@@ -243,7 +243,7 @@ it('setPrice, transfer', async function () {
 
 
 it('role assignments', async function () {
-  // owner owner
+  // anonB owner
   expect(await c.connect(anonB).owner())
   .to.equal(owner.address);
 
@@ -255,6 +255,7 @@ it('role assignments', async function () {
   expect(await c.connect(anonB).hasRole(AGENT_ROLE, agent.address))
   .to.equal(true);
 });
+
 
 it('receiving and withdrawing', async function () {
   const startingBalance0 = await owner.getBalance();
@@ -463,7 +464,7 @@ it('total supply', async function () {
 
 
 it('signers, authorised and not', async function () {
-  // owner sign
+  // owner sign (signature will be invalid)
   const sig0 = await owner._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
   // anonA attempt mintable
@@ -477,7 +478,7 @@ it('signers, authorised and not', async function () {
   expect(await c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, sig1))
   .to.equal(true);
 
-  // anonB sign
+  // anonB sign (signature will be invalid)
   const sig2 = await anonB._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
   // anonA attempt mintable
