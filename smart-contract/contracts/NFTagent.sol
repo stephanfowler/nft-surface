@@ -115,10 +115,14 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712, AccessControl, PaymentSplit
         emit RoyaltySet(basisPoints);
     }
 
-    function setPrice(uint256 id, uint256 price) external {
+    function setPrice(uint256 id, uint256 _price) external {
         require(_msgSender() == ownerOf(id), "caller is not token owner");
-        prices[id] = price;
-        emit PriceSet(id, price);
+        prices[id] = _price;
+        emit PriceSet(id, _price);
+    }
+
+    function price(uint256 id) external view returns(uint256) {
+        return prices[id];
     }
 
     function buy(uint256 id) external payable {

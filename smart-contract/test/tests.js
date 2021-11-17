@@ -91,6 +91,10 @@ it('setPrice, buy', async function () {
   await expect(this.contract.connect(this.accounts[3]).buy(tokenId, {value: ethers.BigNumber.from(salePrice).sub(1)}))
   .to.be.revertedWith('insufficient ETH sent');
 
+  // [3] price
+  expect(await this.contract.connect(this.accounts[3]).price(tokenId))
+  .to.equal(salePrice);  
+
   const startingBalance3 = await this.accounts[3].getBalance();
 
   // [3] buy
@@ -100,6 +104,10 @@ it('setPrice, buy', async function () {
 
   const closingBalance3 = await this.accounts[3].getBalance()
   const closingBalance4 = await this.accounts[4].getBalance();
+
+  // [4] price
+  expect(await this.contract.connect(this.accounts[4]).price(tokenId))
+  .to.equal(0);  
 
   // [4] attempt setPrice
   await expect(this.contract.connect(this.accounts[4]).setPrice(tokenId, salePrice))
@@ -203,10 +211,18 @@ it('setPrice, transfer', async function () {
   .to.emit(this.contract, 'PriceSet')
   .withArgs(tokenId, salePrice);
 
+  // [1] price
+  expect(await this.contract.connect(this.accounts[1]).price(tokenId))
+  .to.equal(salePrice);  
+
   // [4] transferFrom
   await expect(this.contract.connect(this.accounts[4]).transferFrom(this.accounts[4].address, this.accounts[3].address, tokenId))
   .to.emit(this.contract, 'Transfer')
   .withArgs(this.accounts[4].address, this.accounts[3].address, tokenId);
+
+  // [1] price
+  expect(await this.contract.connect(this.accounts[1]).price(tokenId))
+  .to.equal(0);
 
   // [4] attempt buy
   await expect(this.contract.connect(this.accounts[4]).buy(tokenId, {value: salePrice}))
