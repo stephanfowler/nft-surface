@@ -44,33 +44,32 @@ task("deploy", "Deploys the contract using constructor arguments defined by the 
     const [deployer] = await ethers.getSigners();
     const NFTagent = await ethers.getContractFactory('NFTagent');
     const contract = await NFTagent.deploy(...deploymentArgs);
-    await contract.deployed();    
+    await contract.deployed();
 
     const contractAddress = contract.address;
     const { chainId } = await ethers.provider.getNetwork();
-    const signatureTestSuccess = await hre.run('sign', {
+    const signature = await hre.run('sign', {
       wei: "1000",
       id: 123,
       uri: "ipfs://foo.bar/123",
       contract: contractAddress,
       quiet: true
     });
-
     console.log('Contract deployed:')
     console.log({
       contractAddress,
       chainId,
-      signatureTestSuccess
+      signatureTest: signature ? "succeeded" : "failed"
     });  
   });
 
 
 /**
  * Summary. Generates a signature
- * Description. Generates a signature for the 'mint' contract method
+ * Description. Generates a signature for the 'mint' contract method, and tests it against the contract
  * @example npx hardhat sign --network localhost --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...etc 
  */
-task("sign", "Generates a signature, for the 'mint' contract method")
+task("sign", "Generates a signature for the 'mint' contract method, and tests it against the contract")
   .addParam("wei", "The price in wei of the NFT", undefined, types.string)
   .addParam("id", "The intended tokenId of the NFT", undefined, types.int)
   .addParam("uri", "The intended tokenURI of the NFT", undefined, types.string)
@@ -117,7 +116,7 @@ task("sign", "Generates a signature, for the 'mint' contract method")
         tokenURI,
         signature
       });
-      return true;
+      return signature;
 
     } catch(e) {
       const kmownError = "signature invalid or signer unauthorized";
@@ -129,5 +128,4 @@ task("sign", "Generates a signature, for the 'mint' contract method")
       return false;
     }
   });
-
 
