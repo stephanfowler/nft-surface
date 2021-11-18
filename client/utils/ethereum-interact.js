@@ -1,30 +1,24 @@
 import { ethers } from "ethers";
 
-const alchemyKey = "https://eth-rinkeby.alchemyapi.io/v2/JZzxLi6MDK2NoxcNmEC7DNDdwICaMxkf";
 const contractABI = require("./abi.json");
 
-async function checkChainId(provider, chainIdCheck) {
-  const {chainId} = await provider.getNetwork();
-  if (chainId === chainIdCheck) {
-    return provider;
+async function getReadableProvider(chainId) {
+  if (window.ethereum) {
+    return new ethers.providers.Web3Provider(window.ethereum, "any")
+  } else if (chainId === 31337) {
+    return new ethers.providers.JsonRpcProvider();
   } else {
-    throw 'Provider chainId != catalog chainId. ' + chainId + '!=' + chainIdCheck;
+    return new ethers.providers.JsonRpcProvider(process.env.networkKey);
   }
-} 
-
-function getReadableProvider() {
-  return window.ethereum ?
-    new ethers.providers.Web3Provider(window.ethereum, "any") :
-    new ethers.providers.JsonRpcProvider(alchemyKey);
 }
 
 async function getReadableContract(contractAddress, chainId) {
-  const provider = await checkChainId(getReadableProvider(), chainId);
+  const provider = await getReadableProvider(chainId);
   return new ethers.Contract(contractAddress, contractABI, provider)
 }
 
 async function getWriteableContract(contractAddress, chainId) {
-  const provider = await checkChainId(new ethers.providers.Web3Provider(window.ethereum, "any"), chainId);
+  const provider = await new ethers.providers.Web3Provider(window.ethereum);
   return new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());  
 }
 
@@ -40,8 +34,8 @@ export function networkName(chainId) {
   return names[chainId + ""];
 }
 
-export const isTransactionMined = async(txHash) => {
-  const provider = getReadableProvider();
+export const isTransactionMined = async(txHash, chainId) => {
+  const provider = await getReadableProvider(chainId);
   const txReceipt = await provider.waitForTransaction(txHash);
   if (txReceipt && txReceipt.blockNumber) {
       return txReceipt;

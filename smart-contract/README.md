@@ -18,12 +18,13 @@ npx hardhat test
 
 Deploy
 ```
-npx hardhat run --network rinkeby scripts/1-deploy.js 
+npx hardhat deploy --args ./delpoyment_args_localhost.js --network localhost
+npx hardhat deploy --args ./delpoyment_args_rinkeby.js   --network rinkeby
 ```
 
 Signature test
 ```
-npx hardhat run --network rinkeby scripts/2-signature.js
+npx hardhat sign --network localhost --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...etc
 ```
 
 Verify on Etherscan
@@ -33,7 +34,9 @@ npx hardhat verify --network rinkeby --constructor-args arguments.js DEPLOYED_CO
 
 Catalog preparation
 ```
-npx hardhat run --network rinkeby scripts/3-prepare-catalog.js
+npx hardhat catalog --network localhost --contract 0x5FbDB... 
+npx hardhat catalog --network rinkeby   --contract 0x15678...
+...etc
 ```
 
 See example new catalog item below; these are in display order as a JSON array in `catalog_chainid_<chainid of the network>.json`.

@@ -97,7 +97,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     if (tx) {
       setTx(tx);
       setStatus("mint_pending")
-      const txReceipt = await isTransactionMined(tx.hash)
+      const txReceipt = await isTransactionMined(tx.hash, chainId)
       if (txReceipt) {
         setTxReceipt(txReceipt);
         setOwner(walletAddress);
@@ -138,7 +138,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     : 
     chainIdMismatch ?
         <div className={styles.walletInstallInstructions}>
-          {"Please switch your wallet to "}{networkName(chainId)}
+          {"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
         </div>
     :
     <div className={statusUpdated ? styles.minter_updated : styles.minter }>

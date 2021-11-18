@@ -9,7 +9,7 @@ import { fetchCatalog } from "@utils/fetch-catalog.js";
 export async function getStaticProps() {
   const catalog = await fetchCatalog();
   const NFTs = catalog.NFTs;
-  const chainId = catalog.context.signatureDomain.chainId;
+  const chainId = catalog.context.chainId;
 
   return {
     props: { NFTs, chainId }

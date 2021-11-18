@@ -458,4 +458,6 @@ task("catalog", "Prepares the catalog ...")
       idsUploadedImage,
       idsUpdatedMetadata
     });
+
+    console.log("Updated file:", catalogFilePath)
   });

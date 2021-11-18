@@ -21,7 +21,7 @@ export async function getStaticProps({ params }) {
   const nft = catalog.NFTs.find(nft => {
     return nft.tokenId.toString() === params.tokenId
   })
-  const chainId = catalog.context.signatureDomain.chainId;
+  const chainId = catalog.context.chainId;
   return {
     props: { nft, chainId }
   }
