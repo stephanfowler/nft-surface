@@ -140,7 +140,7 @@ task("sign", "Generates a signature for the 'mint' contract method, and tests it
 /**
  * Summary. Catalog preparation
  * Description. ...
- * @example npx hardhat catalog --network rinkeby --contract 0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+ * @example npx hardhat catalog --network localhost --contract 0x5FbDB2315678afecb367f032d93F642f64180aa3
  */
 task("catalog", "Prepares the catalog ...")
   .addParam("contract", "The contract address", undefined, types.address)

@@ -29,7 +29,7 @@ npx hardhat sign --network localhost --wei 1000 --id 123 --uri ipfs://foo.bar/12
 
 Verify on Etherscan
 ```
-npx hardhat verify --network rinkeby --constructor-args arguments.js DEPLOYED_CONTRACT_ADDRESS
+npx hardhat verify --network rinkeby --constructor-args delpoyment_args_rinkeby.js DEPLOYED_CONTRACT_ADDRESS
 ```
 
 Catalog preparation
