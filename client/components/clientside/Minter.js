@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { networkName, isTransactionMined, getWallet, connectWallet, ownerOf, mintable, mint } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
-import Image from 'next/image'
+import PriceForm from '@components/clientside/PriceForm'
 import ShortAddress from '@components/ShortAddress'
+
 
 import styles from '@components/Nft.module.css'
 
@@ -143,10 +144,15 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     :
     <div className={statusUpdated ? styles.minter_updated : styles.minter }>
 
-      {status === "minted" && owner && (
+      {status === "minted" && owner && userIsOwner && (
         <div className={styles.nftOwner}>
-          This NFT is owned by {" "}
-          {etherscanAddressLink(owner, userIsOwner ? "you" : undefined)}
+          This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
+        </div>
+      )}
+
+      {status === "minted" && owner && !userIsOwner && (
+        <div className={styles.nftOwner}>
+          This NFT is owned by {" "}{etherscanAddressLink(owner)}
         </div>
       )}
 
