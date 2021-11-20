@@ -63,21 +63,20 @@ export const getWallet = async (isConnect) => {
   }
 };
 
-export const ownerOf = async (tokenId, contractAddress, chainId) => {
-  tokenId = parseInt(tokenId);
+export const contractCallOwnerOf = async (nft, contractAddress, chainId) => {
   const contract = await getReadableContract(contractAddress, chainId);
   try {
-    const owner = await contract.ownerOf(tokenId);
+    const owner = await contract.ownerOf(nft.tokenId);
     return owner;
   } catch (error) {
     return;
   }
 };
 
-export const mintable = async (art, contractAddress, chainId) => {
+export const contractCallMintable = async (nft, contractAddress, chainId) => {
   const contract = await getReadableContract(contractAddress, chainId);
   try {
-    await contract.mintable(art.weiPrice, art.tokenId, art.tokenURI, art.signature);
+    await contract.mintable(nft.weiPrice, nft.tokenId, nft.tokenURI, nft.signature);
     return true;
   } catch (error) {
     console.log(error); //
@@ -85,12 +84,34 @@ export const mintable = async (art, contractAddress, chainId) => {
   }
 };
 
-export const mint = async (art, contractAddress, chainId) => {
+export const contractCallMint = async (nft, contractAddress, chainId) => {
   const contract = await getWriteableContract(contractAddress, chainId);
   try {
-    const tx = await contract.mint(art.tokenId, art.tokenURI, art.signature, {value: art.weiPrice});
+    const tx = await contract.mint(nft.tokenId, nft.tokenURI, nft.signature, {value: nft.weiPrice});
     return { tx };
   } catch (error) {
+    return { error: error.message };
+  }
+};
+
+export const contractCallGetSalePrice = async (nft, contractAddress, chainId) => {
+  const contract = await getReadableContract(contractAddress, chainId);
+  try {
+    const price = await contract.price(nft.tokenId);
+    return price;
+  } catch (error) {
+    console.log(error)
+    return;
+  }
+};
+
+export const contractCallSetPrice = async (nft, weiPrice, contractAddress, chainId) => {
+  const contract = await getWriteableContract(contractAddress, chainId);
+  try {
+    const tx = await contract.setPrice(nft.tokenId, weiPrice);
+    return { tx };
+  } catch (error) {
+    console.log(error);
     return { error: error.message };
   }
 };

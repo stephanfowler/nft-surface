@@ -1,7 +1,17 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
-import { networkName, isTransactionMined, getWallet, connectWallet, ownerOf, mintable, mint } from "@utils/ethereum-interact.js";
+import { 
+  networkName,
+  isTransactionMined,
+  getWallet,
+  connectWallet,
+  contractCallOwnerOf,
+  contractCallMintable,
+  contractCallMint,
+  contractCallGetSalePrice,
+  contractCallSetPrice
+} from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
 import PriceForm from '@components/clientside/PriceForm'
@@ -11,10 +21,9 @@ import ShortAddress from '@components/ShortAddress'
 import styles from '@components/Nft.module.css'
 
 const Minter = ({ nft, chainId, status, setStatus }) => {
-  const tokenId = nft.tokenId;
-
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
+  const [salePrice, setSalePrice] = useState();
   const [walletAddress, setWallet] = useState();
   const [alert, setAlert] = useState();
   const [tx, setTx] = useState();
@@ -35,24 +44,19 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     fetchWallet();
 
     async function updateTokenStatus() {
-      if (status === "minted") {
-        const owner = await ownerOf(tokenId, contractAddress, chainId);
-        if (owner) {
-          setOwner(owner)
-        } else {
-          setStatus("burntOrRevoked")
-        }
-      } 
-      if (status === "mintable") {
-        const owner = await ownerOf(tokenId, contractAddress, chainId);
-        if (owner) {
-          setOwner(owner);
-          setStatus("minted")
-        } else {
-          await mintable(nft, contractAddress, chainId) ?
-            setStatus("claimable_confirmed") :
-            setStatus("burntOrRevoked") 
-        }
+      const _owner = await contractCallOwnerOf(nft, contractAddress, chainId);
+      const _salePrice = await contractCallGetSalePrice(nft, contractAddress, chainId);
+      if (_owner) {
+        setStatus("minted")
+        setOwner(_owner);
+        setSalePrice(_salePrice.toString());
+      } else if (status === "minted") {
+        setStatus("burntOrRevoked");
+
+      } else if (status === "mintable") {
+          await contractCallMintable(nft, contractAddress, chainId) ?
+            setStatus("mintable_confirmed") :
+            setStatus("burntOrRevoked")
       }
       setStatusUpdated(true);
     }
@@ -76,10 +80,11 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       setOwner();
       setWallet();
       setAlert();
+      setSalePrice();
     }
-  }, [nft, tokenId]);
+  }, []);
 
-  const onConnectWalletClicked = async (e) => {
+  const doConnectWallet = async (e) => {
     e.preventDefault();
     setIsConnecting(true);
     setAlert();
@@ -90,11 +95,11 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     setIsConnecting(false);
   };
 
-  const onClaimClicked = async (e) => {
+  const doClaim = async (e) => {
     e.preventDefault();
     setIsConnecting(true);
     setAlert();
-    const { tx, error } = await mint(nft, contractAddress, chainId);
+    const { tx, error } = await contractCallMint(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("mint_pending")
@@ -102,6 +107,26 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       if (txReceipt) {
         setTxReceipt(txReceipt);
         setOwner(walletAddress);
+        setStatus("minted");
+      } else {
+        setAlert("NOT Mined, transaction: " + tx.hash)
+      }
+    } else {
+      console.log(error);
+    }
+    setIsConnecting(false);
+  };
+
+  const doSetPrice = async (_salePrice) => {
+    setIsConnecting(true);
+    setAlert();
+    const { tx, error } = await contractCallSetPrice(nft, _salePrice, contractAddress, chainId);
+    if (tx) {
+      setTx(tx);
+      setStatus("setPrice_pending")
+      const txReceipt = await isTransactionMined(tx.hash, chainId)
+      if (txReceipt) {
+        setTxReceipt(txReceipt);
         setStatus("minted");
       } else {
         setAlert("NOT Mined, transaction: " + tx.hash)
@@ -135,7 +160,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 
   return (
     !nft ?
-      <div>No NFT is listed with tokenID {tokenId}</div>
+      <div>No matching NFT is listed</div>
     : 
     chainIdMismatch ?
         <div className={styles.walletInstallInstructions}>
@@ -147,6 +172,9 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       {status === "minted" && owner && userIsOwner && (
         <div className={styles.nftOwner}>
           This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
+          {salePrice && 
+            <PriceForm salePrice={salePrice} setSalePrice={setSalePrice} doSetPrice={doSetPrice} />
+          }
         </div>
       )}
 
@@ -169,10 +197,17 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         </div>
       )}
 
+      {status === "setPrice_pending" && (
+        <div className={styles.mintingPending}>
+          The sale price is being updated, please be patient!
+          Pending transaction is : {etherscanTxLink(tx.hash)}
+        </div>
+      )}
+
       {tx && txReceipt && (
         <div className={styles.mintingSucceeded}>
-          <span>{"Minting succeeded, with transaction "}{etherscanTxLink(tx.hash)}</span>
-          <span>{" mined in Ethereum block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
+          <span>{"Succeeded! Transaction "}{etherscanTxLink(tx.hash)}</span>
+          <span>{" was mined in the Ethereum blockchain, block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
         </div>
       )}
 
@@ -182,7 +217,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         </div>
       )}
 
-      {status === "claimable_confirmed" && (
+      {status === "mintable_confirmed" && (
         <>
           <div>
             <div>This NFT is available for minting</div>
@@ -197,11 +232,11 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
           </div>
           <div id="walletActions">{
             walletAddress ? (
-              <button disabled={isConnecting} onClick={onClaimClicked}>
+              <button disabled={isConnecting} onClick={doClaim}>
                 Mint this NFT
               </button>)
             : window.ethereum ? (
-              <button disabled={isConnecting} onClick={onConnectWalletClicked}>
+              <button disabled={isConnecting} onClick={doConnectWallet}>
                 <span>To mint this NFT, connect your Ethereum wallet</span>
               </button>)
             : (
@@ -235,7 +270,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         : isConnecting ?
           <div>Connecting...</div>
         : status === "minted" && window.ethereum &&
-          <a href="" onClick={onConnectWalletClicked}>Connect your Ethereum wallet</a>
+          <a href="" onClick={doConnectWallet}>Connect your Ethereum wallet</a>
         }
        </div>
     </div>

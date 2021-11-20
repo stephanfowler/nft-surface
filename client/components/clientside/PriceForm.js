@@ -1,33 +1,33 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 
-function floatyString(n) {
-    return isNaN(parseFloat(n)) ? "0" : parseFloat(n).toString()
-}
 
-function bigNumberify(n) {
-    return ethers.utils.parseEther(floatyString(n));
-}
-
-export default function PriceForm({ ethPrice }) {
-    const [price, setPrice] = useState(ethPrice);
+export default function PriceForm({ salePrice, setSalePrice, doSetPrice }) {
+    const [displayPriceEth, setDisplayPriceEth] = useState(ethers.utils.formatEther(salePrice));
     const [expanded, setExpanded] = useState(false);
-  
+    const [isConnecting, setIsConnecting] = useState(false);
+
+    const transact = (updatedPriceEth) => {
+        const newSalePrice = ethers.utils.parseEther(updatedPriceEth).toString();
+        if (newSalePrice != salePrice) {
+            setIsConnecting(true);
+            setSalePrice(newSalePrice);
+            doSetPrice(newSalePrice);    
+            setIsConnecting(false);
+        }
+    }
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         setExpanded(false);
-
-        console.log(floatyString(price));
-        console.log(bigNumberify(price));
+        transact(displayPriceEth)
     }
 
     const setZero = (evt) => {
         evt.preventDefault();
         setExpanded(false);
-        setPrice("")
-
-        console.log(floatyString(price));
-        console.log(bigNumberify(price));
+        setDisplayPriceEth("0")
+        transact("0");
     }
 
     const toggleExpanded = (evt) => {
@@ -43,30 +43,35 @@ export default function PriceForm({ ethPrice }) {
                         Sell it for {" "}
                         <input
                             autoFocus
-                            type="number"
-                            value={price}
-                            onChange={e => setPrice(e.target.value)}
+                            type="string"
+                            value={displayPriceEth}
+                            onChange={e => setDisplayPriceEth(e.target.value)}
                             />
                     </label>
                     <input type="submit" value="OK" />
+                    {parseFloat(displayPriceEth) > 0 ?
+                        <input type="button" value="Cancel this sale" onClick={setZero} /> :
+                        <input type="button" value="Cancel" onClick={setZero} />
+                    }
                 </form>
             }
 
-            {!expanded && price == 0 &&
+            {!expanded && !isConnecting && parseFloat(displayPriceEth) === 0 &&
                 <div>
                     <a href="" onClick={toggleExpanded}>Sell it?</a>
                 </div>
             }
 
-            {!expanded && price > 0 &&
+            {!expanded && !isConnecting && parseFloat(displayPriceEth) > 0 &&
                 <div>
-                    <div>You are selling it for {price} ETH</div>
-                    <div>[<a href="" onClick={toggleExpanded}>edit</a>]</div>
-                    <div>[<a href="" onClick={setZero}>cancel sale</a>]</div>
-                    
+                    You are selling it for {displayPriceEth} ETH 
+                    [<a href="" onClick={toggleExpanded}>relist it at a different price</a>]
                 </div>
             }
 
+            {isConnecting && 
+                <div>Updating ... </div>
+            }
         </>
     );
 }
