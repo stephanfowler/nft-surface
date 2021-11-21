@@ -21,10 +21,10 @@ import ShortAddress from '@components/ShortAddress'
 import styles from '@components/Nft.module.css'
 
 const Minter = ({ nft, chainId, status, setStatus }) => {
+  const [walletAddress, setWallet] = useState();
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
   const [salePrice, setSalePrice] = useState();
-  const [walletAddress, setWallet] = useState();
   const [alert, setAlert] = useState();
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
@@ -49,7 +49,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       if (_owner) {
         setStatus("minted")
         setOwner(_owner);
-        setSalePrice(_salePrice.toString());
+        setSalePrice(_salePrice);
       } else if (status === "minted") {
         setStatus("burntOrRevoked");
 
@@ -172,8 +172,8 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       {status === "minted" && owner && userIsOwner && (
         <div className={styles.nftOwner}>
           This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
-          {salePrice && 
-            <PriceForm salePrice={salePrice} setSalePrice={setSalePrice} doSetPrice={doSetPrice} />
+          {salePrice &&
+            <PriceForm salePrice={salePrice.toString()} setSalePrice={setSalePrice} updateContractPrice={doSetPrice} />
           }
         </div>
       )}
