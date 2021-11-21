@@ -6,16 +6,16 @@ import {
   isTransactionMined,
   getWallet,
   connectWallet,
-  contractCallOwnerOf,
-  contractCallMintable,
-  contractCallMint,
-  contractCallGetSalePrice,
-  contractCallSetPrice,
-  contractCallBuy
+  contractCall_ownerOf,
+  contractCall_mintable,
+  contractCall_mint,
+  contractCall_price,
+  contractCall_setPrice,
+  contractCall_buy
 } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
-import PriceForm from '@components/clientside/PriceForm'
+import SalesForm from '@components/clientside/SalesForm'
 import ShortAddress from '@components/ShortAddress'
 
 
@@ -45,8 +45,8 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     fetchWallet();
 
     async function updateTokenStatus() {
-      const _owner = await contractCallOwnerOf(nft, contractAddress, chainId);
-      const _salePrice = await contractCallGetSalePrice(nft, contractAddress, chainId);
+      const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
+      const _salePrice = await contractCall_price(nft, contractAddress, chainId);
       if (_owner) {
         setStatus("minted")
         setOwner(_owner);
@@ -55,7 +55,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         setStatus("burntOrRevoked");
 
       } else if (status === "mintable") {
-          await contractCallMintable(nft, contractAddress, chainId) ?
+          await contractCall_mintable(nft, contractAddress, chainId) ?
             setStatus("mintable_confirmed") :
             setStatus("burntOrRevoked")
       }
@@ -101,7 +101,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     e.preventDefault();
     setIsConnecting(true);
     setAlert();
-    const { tx, error } = await contractCallMint(nft, contractAddress, chainId);
+    const { tx, error } = await contractCall_mint(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("mint_pending")
@@ -124,7 +124,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     e.preventDefault();
     setIsConnecting(true);
     setAlert();
-    const { tx, error } = await contractCallBuy(nft, salePrice, contractAddress, chainId);
+    const { tx, error } = await contractCall_buy(nft, salePrice, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("buy_pending")
@@ -146,7 +146,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   const doSetPrice = async (_salePrice) => {
     setIsConnecting(true);
     setAlert();
-    const tx = await contractCallSetPrice(nft, _salePrice, contractAddress, chainId);
+    const tx = await contractCall_setPrice(nft, _salePrice, contractAddress, chainId);
     if (tx) {
       setTx(tx);
       setStatus("setPrice_pending")
@@ -197,7 +197,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         <div className={styles.nftOwner}>
           This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
           {salePrice &&
-            <PriceForm salePrice={salePrice.toString()} setSalePrice={setSalePrice} updateContractPrice={doSetPrice} />
+            <SalesForm salePrice={salePrice.toString()} setSalePrice={setSalePrice} updateContractPrice={doSetPrice} />
           }
         </div>
       )}

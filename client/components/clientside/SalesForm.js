@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 
-export default function PriceForm({ salePrice, setSalePrice, updateContractPrice }) {
+export default function SalesForm({ salePrice, setSalePrice, updateContractPrice }) {
     const salePriceETH = salePrice === "0" ? "" : ethers.utils.formatEther(salePrice);
 
     const [displayPriceETH, setDisplayPriceETH] = useState(salePriceETH);
