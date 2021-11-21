@@ -68,9 +68,7 @@ export const contractCallOwnerOf = async (nft, contractAddress, chainId) => {
   try {
     const owner = await contract.ownerOf(nft.tokenId);
     return owner;
-  } catch (error) {
-    return;
-  }
+  } catch (error) {}
 };
 
 export const contractCallMintable = async (nft, contractAddress, chainId) => {
@@ -96,22 +94,21 @@ export const contractCallMint = async (nft, contractAddress, chainId) => {
 
 export const contractCallGetSalePrice = async (nft, contractAddress, chainId) => {
   const contract = await getReadableContract(contractAddress, chainId);
-  try {
-    const price = await contract.price(nft.tokenId);
-    return price;
-  } catch (error) {
-    console.log(error)
-    return;
-  }
+  return await contract.price(nft.tokenId);
 };
 
-export const contractCallSetPrice = async (nft, weiPrice, contractAddress, chainId) => {
+export const contractCallSetPrice = async (nft, salePrice, contractAddress, chainId) => {
+  const contract = await getWriteableContract(contractAddress, chainId);
+  return await contract.setPrice(nft.tokenId, salePrice);
+};
+
+export const contractCallBuy = async (nft, salePrice, contractAddress, chainId) => {
   const contract = await getWriteableContract(contractAddress, chainId);
   try {
-    const tx = await contract.setPrice(nft.tokenId, weiPrice);
+    const tx = await contract.buy(nft.tokenId, {value: salePrice});
     return { tx };
   } catch (error) {
-    console.log(error);
     return { error: error.message };
   }
 };
+

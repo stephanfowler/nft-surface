@@ -55,6 +55,7 @@ li {
 }
 
 button {
+  display: block;
   margin: 0.5rem 0;
   padding: 0.6rem 1rem 0.5rem 1rem;
   border: 0px;

@@ -26,30 +26,32 @@ export default function PriceForm({ salePrice, setSalePrice, updateContractPrice
     const submit = (evt) => {
         evt.preventDefault();
         setExpanded(false);
-        transact(displayPriceETH)
+        doUpdate(displayPriceETH)
     }
 
     const setZero = (evt) => {
         evt.preventDefault();
         setExpanded(false);
         setDisplayPriceETH("0")
-        transact("0");
+        doUpdate("0");
     }
 
-    const toggleExpanded = (evt) => {
+    const expand = (evt) => {
         evt.preventDefault();
-        setExpanded(!expanded);
+        setExpanded(true);
     }
 
-    const transact = async (newPriceETH) => {
+    const doUpdate = async (newPriceETH) => {
         if (newPriceETH != salePriceETH) {
             const newSalePrice = ethers.utils.parseEther(newPriceETH);
-            setSalePrice(newSalePrice);
             setIsConnecting(true);
             try {
+                setSalePrice(newSalePrice);
                 await updateContractPrice(newSalePrice);
             } catch(e) {
-                cancel();
+                setSalePrice(salePrice);
+                setDisplayPriceETH(salePriceETH);
+                setExpanded(false);
             }
             setIsConnecting(false);
         }
@@ -71,21 +73,23 @@ export default function PriceForm({ salePrice, setSalePrice, updateContractPrice
                     <input type="submit" value="OK" disabled={salePriceETH === displayPriceETH} />
                     <input type="button" value="Cancel" onClick={cancel} />
                     {parseFloat(salePriceETH) > 0 &&
-                        <input type="button" value="Terminate the sale" onClick={setZero} />
+                        <input type="button" value="Terminate this sale" onClick={setZero} />
                     }
                 </form>
             }
 
             {!expanded && !isConnecting && !displayPriceETH &&
                 <div>
-                    <a href="" onClick={toggleExpanded}>Sell it?</a>
+                    <button onClick={expand}>
+                      Sell it?
+                    </button>
                 </div>
             }
 
             {!expanded && !isConnecting && parseFloat(displayPriceETH) > 0 &&
                 <div>
                     You are selling it for {displayPriceETH} ETH 
-                    [<a href="" onClick={toggleExpanded}>relist it at a different price</a>]
+                    [<a href="" onClick={expand}>relist it at a different price</a>]
                 </div>
             }
 
