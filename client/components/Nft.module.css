@@ -114,11 +114,16 @@
 .walletInstallInstructions a,
 .nftTrade a {
     font-weight:bold;
+    color: orange;
 }
 
 .walletInstallInstructions {
     font-size: smaller;
-    margin: 1rem 0 !important;
+    color: orange;
+    padding: 0.5rem 1rem 0.4rem 1rem;
+    margin: 1rem 0;
+    background: lightgoldenrodyellow;
+    border-radius: 8px;
 }
 
 .mintingPending,
@@ -159,4 +164,8 @@
 
 .formActions {
     margin: 0.5rem 0;
+}
+
+.marketplaces a {
+    font-weight: bold;
 }

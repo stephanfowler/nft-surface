@@ -18,8 +18,11 @@ async function getReadableContract(contractAddress, chainId) {
 }
 
 async function getWriteableContract(contractAddress, chainId) {
-  const provider = await new ethers.providers.Web3Provider(window.ethereum);
-  return new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());  
+  if (window.ethereum) {
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const contract= new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());
+    return contract;
+  }
 }
 
 export function networkName(chainId) {
@@ -99,7 +102,12 @@ export const contractCall_price = async (nft, contractAddress, chainId) => {
 
 export const contractCall_setPrice = async (nft, salePrice, contractAddress, chainId) => {
   const contract = await getWriteableContract(contractAddress, chainId);
-  return await contract.setPrice(nft.tokenId, salePrice);
+  try {
+    const tx = await contract.setPrice(nft.tokenId, salePrice);;
+    return { tx };
+  } catch (error) {
+    return { error: error.message };
+  }
 };
 
 export const contractCall_buy = async (nft, salePrice, contractAddress, chainId) => {

@@ -11,9 +11,13 @@ import {
   contractCall_mint
 } from "@utils/ethereum-interact.js";
 
-import Link from 'next/link'
+import {
+  etherscanAddressLink,
+  etherscanTxLink,
+  etherscanBlockLink
+} from "@utils/links.js"
+
 import SalesForm from '@components/clientside/SalesForm'
-import ShortAddress from '@components/ShortAddress'
 
 import styles from '@components/Nft.module.css'
 
@@ -44,10 +48,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       if (_owner) {
         setStatus("minted")
         setOwner(_owner);
-      } else if (status === "minted") {
-        setStatus("burntOrRevoked");
-
-      } else if (status === "mintable") {
+      } else {
           await contractCall_mintable(nft, contractAddress, chainId) ?
             setStatus("mintable_confirmed") :
             setStatus("burntOrRevoked")
@@ -79,20 +80,22 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   }, []);
 
   const doConnectWallet = async (e) => {
-    e.preventDefault();
-    setIsConnecting(true);
-    setAlert();
+    e && e.preventDefault();
     const wallet = await connectWallet();
     setWallet(wallet.address);
     setChainIdMismatch(wallet.chainId && wallet.chainId !== chainId);
     setAlert(wallet.error );
-    setIsConnecting(false);
   };
 
   const doMint = async (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
+    if (!window.ethereum) {
+      return;
+    }
     setIsConnecting(true);
-    setAlert();
+    if (!walletAddress) {
+      await doConnectWallet();
+    }
     const { tx, error } = await contractCall_mint(nft, contractAddress, chainId);
     if (tx) {
       setTx(tx);
@@ -111,27 +114,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     setIsConnecting(false);
   };
 
-  function etherscanAddressLink(address, linktext) {
-    return (
-      <Link href={(process.env.etherscanAddress || "").replace("<address>", address)}>
-        <a target="_blank">{linktext || <ShortAddress address={address} />}</a>
-      </Link>)
-  }
-
-  function etherscanTxLink(hash) {
-    return (
-      <Link href={(process.env.etherscanTx || "").replace("<hash>", hash)}>
-        <a target="_blank"><ShortAddress address={hash} /></a>
-      </Link>)
-  }
-
-  function etherscanBlockLink(number) {
-    return (
-      <Link href={(process.env.etherscanBlock || "").replace("<number>", number)}>
-        <a target="_blank">{number}</a>
-      </Link>)
-  }
-
   return (
     !nft ?
       <div>No matching NFT is listed</div>
@@ -143,20 +125,8 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     :
     <div className={statusUpdated ? styles.minter_updated : styles.minter }>
 
-      {owner && userIsOwner && (
-        <div className={styles.nftOwner}>
-          This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
-        </div>
-      )}
-
-      {owner && !userIsOwner && (
-        <div className={styles.nftOwner}>
-          This NFT is owned by {" "}{etherscanAddressLink(owner)}
-        </div>
-      )}
-
       {owner && (
-        <SalesForm nft={nft} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
+        <SalesForm nft={nft} owner={owner} doConnectWallet={doConnectWallet} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
       )}
 
       {status === "minted" && !owner && (
@@ -212,24 +182,10 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
             </span>
             <span className={styles.nftPriceGas}>{" + gas fee"}</span>
           </div>
-          <div id="walletActions">{
-            walletAddress ? (
-              <button disabled={isConnecting} onClick={doMint}>
+          <div id="walletActions">
+              <button onClick={doMint} disabled={isConnecting || !window.ethereum}>
                 Mint this NFT
-              </button>)
-            : window.ethereum ? (
-              <button disabled={isConnecting} onClick={doConnectWallet}>
-                <span>To mint this NFT, connect your Ethereum wallet</span>
-              </button>)
-            : (
-              <div className={styles.walletInstallInstructions}>
-                <div>To mint NFTs you need an Ethereum wallet.</div>
-                <div>
-                  On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website.
-                  On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
-                </div>
-              </div>
-            )}
+              </button>
           </div>
         </>
       )}
@@ -244,15 +200,28 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 
       <div id="alert">{alert}</div>
 
-      <div className={styles.connection}>
+      <div className={styles.walletInstallInstructions}>
         { walletAddress ?
-          (<div>
-            Your wallet address is{" "}{etherscanAddressLink(walletAddress)}
-          </div>)
-        : isConnecting ?
-          <div>Connecting...</div>
-        : status === "minted" && window.ethereum &&
-          <a href="" onClick={doConnectWallet}>Connect your Ethereum wallet</a>
+          <div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
+
+          : window.ethereum ?
+          <div>
+            {"Connect your "} 
+            <a href="" onClick={doConnectWallet}>Ethereum wallet</a>
+          </div>
+
+          :
+          <div>
+            <div>
+              To mint or buy NFTs you need an Ethereum wallet
+            </div>
+            <div>
+              On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
+            </div>
+            <div>
+              On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension
+            </div>
+          </div>
         }
        </div>
     </div>
@@ -260,3 +229,19 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 };
 
 export default Minter;
+
+/*
+            : window.ethereum ? (
+              <button disabled={isConnecting} onClick={doConnectWallet}>
+                <span>To mint this NFT, connect your Ethereum wallet</span>
+              </button>)
+            : (
+              <div className={styles.walletInstallInstructions}>
+                <div>To mint NFTs you need an Ethereum wallet.</div>
+                <div>
+                  On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website.
+                  On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
+                </div>
+              </div>
+            )}
+*/

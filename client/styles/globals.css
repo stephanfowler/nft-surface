@@ -27,7 +27,6 @@ main {
 
 a {
   color: black;
-  text-decoration-color: grey;
   text-decoration-thickness: 0.05em;
   text-underline-offset: 1.5px;
   text-decoration-skip-ink: auto;
@@ -73,11 +72,11 @@ button {
 }
 
 button:hover {
-  text-decoration: underline dotted 1px;
 }
 
 button:disabled {
-  background-color: lightgrey;
+  background-color: grey;
+  cursor:inherit;
 }
 
 input {
