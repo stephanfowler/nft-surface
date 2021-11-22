@@ -54,6 +54,10 @@ li {
   padding: 0 0 1rem 0;
 }
 
+form{
+  padding: 0.5rem 0;
+}
+
 button {
   display: block;
   margin: 0.5rem 0;
@@ -69,10 +73,28 @@ button {
 }
 
 button:hover {
-  background-color: black;
+  text-decoration: underline dotted 1px;
 }
 
 button:disabled {
-  background-color: lightgray;
+  background-color: lightgrey;
 }
 
+input {
+  border-color: black;
+  border-width: 1px;
+  border-style: dotted;
+  border-radius: 4px;
+  padding: .3rem;
+  font-size: medium;
+  width: 4rem;
+  font-weight: bold;
+}
+
+form button {
+  display: inline-block;
+  margin: 0.25rem 0.5rem 0.25rem 0 ;
+  padding: 0.3rem 0.6rem;
+  font-size: smaller;
+  font-weight: normal !important;
+}

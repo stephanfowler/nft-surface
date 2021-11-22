@@ -27,13 +27,13 @@ export default function Nft({ nft, chainId }) {
   const creatorAddress = nft.metadata.creatorAddress;
   const tokenId = nft.tokenId;
 
-  const openseaAsset      = getAssetHref(process.env.openseaAsset, contractAddress, tokenId);
-  const raribleAsset      = getAssetHref(process.env.raribleAsset, contractAddress, tokenId);
-  const etherscanToken    = getAssetHref(process.env.etherscanToken, contractAddress, tokenId);
-  const etherscanContract = getAssetHref(process.env.etherscanAddress, contractAddress, tokenId);
-  const etherscanCreator  = getAssetHref(process.env.etherscanAddress, creatorAddress, tokenId);
-  const ipfsMetadata      = getIpfsHref(process.env.ipfsGateway, nft.tokenURI);
-  const ipfsImage         = getIpfsHref(process.env.ipfsGateway, nft.metadata.image);
+  nft.openseaAsset      = getAssetHref(process.env.openseaAsset, contractAddress, tokenId);
+  nft.raribleAsset      = getAssetHref(process.env.raribleAsset, contractAddress, tokenId);
+  nft.etherscanToken    = getAssetHref(process.env.etherscanToken, contractAddress, tokenId);
+  nft.etherscanContract = getAssetHref(process.env.etherscanAddress, contractAddress, tokenId);
+  nft.etherscanCreator  = getAssetHref(process.env.etherscanAddress, creatorAddress, tokenId);
+  nft.ipfsMetadata      = getIpfsHref(process.env.ipfsGateway, nft.tokenURI);
+  nft.ipfsImage         = getIpfsHref(process.env.ipfsGateway, nft.metadata.image);
   
   const width  = nft.metadata.width  || 100;
   const height = nft.metadata.height || 100;
@@ -75,15 +75,6 @@ export default function Nft({ nft, chainId }) {
           <Minter nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
         </div>
 
-        {status === 'minted' &&
-          <div className={styles.nftTrade}>
-            {"Trade it on "} 
-            <Link href={openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-            {" or "}
-            <Link href={raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
-          </div>
-        }
-
         <div className={styles.nftDetails}>
         <div className={styles.nftDetailsHeader}>NFT details</div>
         <div>Blockchain : Ethereum</div>
@@ -91,7 +82,7 @@ export default function Nft({ nft, chainId }) {
           <div>
             {"Token ID : "}
             {(status === 'minted' || status === 'burnt') ?
-              <Link href={etherscanToken}>
+              <Link href={nft.etherscanToken}>
                   <a title="view token on etherscan">{tokenId}</a>
               </Link>
               :
@@ -100,7 +91,7 @@ export default function Nft({ nft, chainId }) {
           </div>
           <div>
               {"Contract : "}
-              <Link href={etherscanContract}>
+              <Link href={nft.etherscanContract}>
                   <a title="view contract on etherscan">
                       <ShortAddress address={contractAddress} />
                   </a>
@@ -108,7 +99,7 @@ export default function Nft({ nft, chainId }) {
           </div>
           <div>
               {"Creator : "}
-              <Link href={etherscanCreator}>
+              <Link href={nft.etherscanCreator}>
                   <a title="view creator on etherscan">
                       <ShortAddress address={creatorAddress} />
                   </a>
@@ -116,11 +107,11 @@ export default function Nft({ nft, chainId }) {
           </div>
           <div>
               {"IPFS immutable "}
-              <Link href={ipfsImage}>
+              <Link href={nft.ipfsImage}>
                   <a title="view image on IPFS">image</a>
               </Link>
               {" | "}
-              <Link href={ipfsMetadata}>
+              <Link href={nft.ipfsMetadata}>
                   <a title="view image on IPFS">metadata</a>
               </Link>
           </div>

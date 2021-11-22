@@ -111,28 +111,14 @@
     transition: max-height 0.23s ease-in;   
 }
 
-.walletInstallInstructions,
-.nftTrade {
-    background: #efe;
-    border-radius: 4px;
-    padding: 0.5rem;
-    border: 1px solid lightgreen;
-    color: darkgreen;
-}
-
 .walletInstallInstructions a,
 .nftTrade a {
     font-weight:bold;
-    color: darkgreen;
 }
 
 .walletInstallInstructions {
     font-size: smaller;
     margin: 1rem 0 !important;
-}
-
-.nftTrade {
-    margin: 0 1rem 2rem 1rem;
 }
 
 .mintingPending,
@@ -169,4 +155,8 @@
 .waiting {
     font-weight: normal;
     color: slategray;
+}
+
+.formActions {
+    margin: 0.5rem 0;
 }

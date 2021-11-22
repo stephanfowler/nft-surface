@@ -15,7 +15,6 @@ import Link from 'next/link'
 import SalesForm from '@components/clientside/SalesForm'
 import ShortAddress from '@components/ShortAddress'
 
-
 import styles from '@components/Nft.module.css'
 
 const Minter = ({ nft, chainId, status, setStatus }) => {
@@ -157,9 +156,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       )}
 
       {owner && (
-        <div className={styles.nftOwner}>
-          <SalesForm nft={nft} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
-        </div>
+        <SalesForm nft={nft} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
       )}
 
       {status === "minted" && !owner && (

@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+import Link from 'next/link'
 import { 
     isTransactionMined,
     contractCall_price,
     contractCall_setPrice,
     contractCall_buy
   } from "@utils/ethereum-interact.js";
-  
+
+import styles from '@components/Nft.module.css'
+
 export default function SalesForm({ nft, walletAddress, userIsOwner, setOwner, contractAddress, chainId }) {
 
     const [price, setPrice] = useState();
@@ -82,7 +85,16 @@ export default function SalesForm({ nft, walletAddress, userIsOwner, setOwner, c
         setExpanded(true);
     }
 
+    const marketplaces = () => {
+        return <>
+            <Link href={nft.openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
+            {" | "}
+            <Link href={nft.raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
+        </>
+    }
+
     const doUpdate = async (newPriceETH) => {
+        newPriceETH = newPriceETH || '0';
         if (newPriceETH != priceETH) {
             const newPrice = ethers.utils.parseEther(newPriceETH);
             setConnecting(true);
@@ -109,54 +121,93 @@ export default function SalesForm({ nft, walletAddress, userIsOwner, setOwner, c
     }
 
     return (
-        <>
+        <div className={styles.nftTrade}>
             {userIsOwner && expanded &&
-                <form onSubmit={submit}>
-                    <label>
-                        Sell it for {" "}
-                        <input
-                            autoFocus
-                            type="string"
-                            value={displayPriceETH}
-                            onChange={e => setDisplayPriceETH(e.target.value)}
-                            />
-                    </label>
-                    <input type="submit" value="OK" disabled={priceETH === displayPriceETH} />
-                    <input type="button" value="Cancel" onClick={cancel} />
-                    {parseFloat(priceETH) > 0 &&
-                        <input type="button" value="Terminate this sale" onClick={setZero} />
-                    }
+                <form>
+                    {"Sell this NFT for "}
+                    <input
+                        autoFocus
+                        type="string"
+                        value={displayPriceETH}
+                        onChange={e => setDisplayPriceETH(e.target.value)}
+                        />
+                    {" ETH "}
+                    <div className={styles.formActions}>
+                        <button className={styles.buttony} onClick={submit} disabled={parseFloat(priceETH) === parseFloat(displayPriceETH)}>OK</button>
+                        {parseFloat(priceETH) > 0 &&
+                            <button className={styles.buttony} onClick={setZero}>Terminate sale</button>
+                        }
+                        <button className={styles.buttony} onClick={cancel}>Cancel</button>
+                    </div>
                 </form>
             }
 
             {userIsOwner && !expanded && !connecting && priceETH == 0  &&
                 <div>
                     <button onClick={expand}>
-                      Sell it?
+                      Sell this NFT
                     </button>
+                    {" or trade it on "}
+                    {marketplaces()}
                 </div>
             }
 
             {userIsOwner && !expanded && !connecting && priceETH > 0 &&
+                <>
+                <img  className={styles.ethereumLogo} src="/ethereum.svg" />
+                    <span className={styles.nftPriceETH}>
+                        {priceETH}{" ETH"}
+                    </span>
+                    <span className={styles.nftPriceGas}>{" + gas fee"}</span>
+
+                <form>
+                    <button className={styles.buttony} onClick={expand}>Amend price or terminate sale</button>
+                </form>
                 <div>
-                    You are selling it for {priceETH} ETH 
-                    [<a href="" onClick={expand}>relist it at a different price</a>]
+                    {"You can also sell on "}
+                    {marketplaces()}
+                </div>
+                </>
+            }
+
+            {!userIsOwner && priceETH == 0 &&
+                <div>
+                    {"Trade it on "}
+                    {marketplaces()}
                 </div>
             }
 
             {!userIsOwner && priceETH > 0 &&
                 <div>
-                    <button onClick={doBuy}>
-                      Buy it for {priceETH}
+                    <img  className={styles.ethereumLogo} src="/ethereum.svg" />
+                    <span className={styles.nftPriceETH}>
+                        {priceETH}{" ETH"}
+                    </span>
+                    <span className={styles.nftPriceGas}>{" + gas fee"}</span>
+                    <button onClick={doBuy} disabled={connecting} >
+                      Buy this NFT
                     </button>
+                    <div>
+                        {"or make an offer on "} 
+                        {marketplaces()}
+                    </div>
                 </div>
             }
+
+
 
             {connecting && 
                 <div>Confirm in your wallet... </div>
             }
 
 
-        </>
+        </div>
     );
 }
+
+/*
+        <div className={styles.nftTrade}>
+          <SalesForm nft={nft} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
+        </div>
+
+*/
