@@ -1,26 +1,67 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+import { 
+    isTransactionMined,
+    contractCall_price,
+    contractCall_setPrice,
+    contractCall_buy
+  } from "@utils/ethereum-interact.js";
+  
+export default function SalesForm({ nft, walletAddress, userIsOwner, setOwner, contractAddress, chainId }) {
 
-export default function SalesForm({ salePrice, setSalePrice, updateContractPrice }) {
-    const salePriceETH = salePrice === "0" ? "" : ethers.utils.formatEther(salePrice);
-
-    const [displayPriceETH, setDisplayPriceETH] = useState(salePriceETH);
+    const [price, setPrice] = useState();
+    const [priceETH, setPriceETH] = useState();
+    const [displayPriceETH, setDisplayPriceETH] = useState();
     const [expanded, setExpanded] = useState(false);
-    const [isConnecting, setIsConnecting] = useState(false);
+    const [connecting, setConnecting] = useState();
+    const [forceRender, doForceRender] = useState();
 
     useEffect(() => {
+        async function getPrice() {
+            const _price = await contractCall_price(nft, contractAddress, chainId);
+            setPrice(_price);
+            const _priceETH = ethers.utils.formatEther(_price);
+            setPriceETH(_priceETH);
+            setDisplayPriceETH(_priceETH);
+        }
+        getPrice();
+
         return () => {
+            setPrice();
+            setPriceETH();
             setDisplayPriceETH();
             setExpanded();
-            setIsConnecting();
+            setConnecting();
         };
-    }, []);
+    }, [forceRender]);
+
+    const doBuy = async (e) => {
+        e.preventDefault();
+        setConnecting(true);
+        const { tx, error } = await contractCall_buy(nft, price, contractAddress, chainId);
+        if (tx) {
+            //setTx(tx);
+            //setStatus("buy_pending")
+            const txReceipt = await isTransactionMined(tx.hash, chainId)
+            if (txReceipt) {
+                //setTxReceipt(txReceipt);
+                setOwner(walletAddress);
+                doForceRender(1);
+                //setStatus("minted");
+            } else {
+            //setAlert("NOT Mined, transaction: " + tx.hash)
+          }
+        } else {
+          console.log(error);
+        }
+        setConnecting(false);
+    };
 
     const cancel = (evt) => {
         evt.preventDefault();
         setExpanded(false);
-        setDisplayPriceETH(salePriceETH);
+        setDisplayPriceETH(priceETH);
     }
 
     const submit = (evt) => {
@@ -42,24 +83,34 @@ export default function SalesForm({ salePrice, setSalePrice, updateContractPrice
     }
 
     const doUpdate = async (newPriceETH) => {
-        if (newPriceETH != salePriceETH) {
-            const newSalePrice = ethers.utils.parseEther(newPriceETH);
-            setIsConnecting(true);
+        if (newPriceETH != priceETH) {
+            const newPrice = ethers.utils.parseEther(newPriceETH);
+            setConnecting(true);
             try {
-                setSalePrice(newSalePrice);
-                await updateContractPrice(newSalePrice);
+                const tx = await contractCall_setPrice(nft, newPrice, contractAddress, chainId);
+                if (tx) {
+                    //setTx(tx);
+                    //setStatus("setPrice_pending")
+                    const txReceipt = await isTransactionMined(tx.hash, chainId)
+                    if (txReceipt) {
+                        setPrice(newPrice);
+                        setDisplayPriceETH(newPriceETH);
+                        doForceRender(newPrice);
+                        //setTxReceipt(txReceipt);
+                        //setStatus("minted");
+                    } else {
+                        //setAlert("NOT Mined, transaction: " + tx.hash)
+                    }
+                }
             } catch(e) {
-                setSalePrice(salePrice);
-                setDisplayPriceETH(salePriceETH);
-                setExpanded(false);
             }
-            setIsConnecting(false);
+            setConnecting(false);
         }
     }
 
     return (
         <>
-            {expanded &&
+            {userIsOwner && expanded &&
                 <form onSubmit={submit}>
                     <label>
                         Sell it for {" "}
@@ -70,15 +121,15 @@ export default function SalesForm({ salePrice, setSalePrice, updateContractPrice
                             onChange={e => setDisplayPriceETH(e.target.value)}
                             />
                     </label>
-                    <input type="submit" value="OK" disabled={salePriceETH === displayPriceETH} />
+                    <input type="submit" value="OK" disabled={priceETH === displayPriceETH} />
                     <input type="button" value="Cancel" onClick={cancel} />
-                    {parseFloat(salePriceETH) > 0 &&
+                    {parseFloat(priceETH) > 0 &&
                         <input type="button" value="Terminate this sale" onClick={setZero} />
                     }
                 </form>
             }
 
-            {!expanded && !isConnecting && !displayPriceETH &&
+            {userIsOwner && !expanded && !connecting && priceETH == 0  &&
                 <div>
                     <button onClick={expand}>
                       Sell it?
@@ -86,16 +137,26 @@ export default function SalesForm({ salePrice, setSalePrice, updateContractPrice
                 </div>
             }
 
-            {!expanded && !isConnecting && parseFloat(displayPriceETH) > 0 &&
+            {userIsOwner && !expanded && !connecting && priceETH > 0 &&
                 <div>
-                    You are selling it for {displayPriceETH} ETH 
+                    You are selling it for {priceETH} ETH 
                     [<a href="" onClick={expand}>relist it at a different price</a>]
                 </div>
             }
 
-            {isConnecting && 
+            {!userIsOwner && priceETH > 0 &&
+                <div>
+                    <button onClick={doBuy}>
+                      Buy it for {priceETH}
+                    </button>
+                </div>
+            }
+
+            {connecting && 
                 <div>Confirm in your wallet... </div>
             }
+
+
         </>
     );
 }

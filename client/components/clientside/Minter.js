@@ -8,10 +8,7 @@ import {
   connectWallet,
   contractCall_ownerOf,
   contractCall_mintable,
-  contractCall_mint,
-  contractCall_price,
-  contractCall_setPrice,
-  contractCall_buy
+  contractCall_mint
 } from "@utils/ethereum-interact.js";
 
 import Link from 'next/link'
@@ -25,7 +22,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   const [walletAddress, setWallet] = useState();
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
-  const [salePrice, setSalePrice] = useState();
   const [alert, setAlert] = useState();
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
@@ -46,11 +42,9 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 
     async function updateTokenStatus() {
       const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
-      const _salePrice = await contractCall_price(nft, contractAddress, chainId);
       if (_owner) {
         setStatus("minted")
         setOwner(_owner);
-        setSalePrice(_salePrice);
       } else if (status === "minted") {
         setStatus("burntOrRevoked");
 
@@ -82,7 +76,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       setOwner();
       setWallet();
       setAlert();
-      setSalePrice();
     }
   }, []);
 
@@ -109,54 +102,12 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       if (txReceipt) {
         setTxReceipt(txReceipt);
         setOwner(walletAddress);
-        setSalePrice('0');
         setStatus("minted");
       } else {
         setAlert("NOT Mined, transaction: " + tx.hash)
       }
     } else {
       console.log(error);
-    }
-    setIsConnecting(false);
-  };
-
-  const doBuy = async (e) => {
-    e.preventDefault();
-    setIsConnecting(true);
-    setAlert();
-    const { tx, error } = await contractCall_buy(nft, salePrice, contractAddress, chainId);
-    if (tx) {
-      setTx(tx);
-      setStatus("buy_pending")
-      const txReceipt = await isTransactionMined(tx.hash, chainId)
-      if (txReceipt) {
-        setTxReceipt(txReceipt);
-        setOwner(walletAddress);
-        setSalePrice('0');
-        setStatus("minted");
-      } else {
-        setAlert("NOT Mined, transaction: " + tx.hash)
-      }
-    } else {
-      console.log(error);
-    }
-    setIsConnecting(false);
-  };
-
-  const doSetPrice = async (_salePrice) => {
-    setIsConnecting(true);
-    setAlert();
-    const tx = await contractCall_setPrice(nft, _salePrice, contractAddress, chainId);
-    if (tx) {
-      setTx(tx);
-      setStatus("setPrice_pending")
-      const txReceipt = await isTransactionMined(tx.hash, chainId)
-      if (txReceipt) {
-        setTxReceipt(txReceipt);
-        setStatus("minted");
-      } else {
-        setAlert("NOT Mined, transaction: " + tx.hash)
-      }
     }
     setIsConnecting(false);
   };
@@ -193,23 +144,21 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     :
     <div className={statusUpdated ? styles.minter_updated : styles.minter }>
 
-      {status === "minted" && owner && userIsOwner && (
+      {owner && userIsOwner && (
         <div className={styles.nftOwner}>
           This NFT is owned by{" "}{etherscanAddressLink(owner, "you")}
-          {salePrice &&
-            <SalesForm salePrice={salePrice.toString()} setSalePrice={setSalePrice} updateContractPrice={doSetPrice} />
-          }
         </div>
       )}
 
-      {status === "minted" && owner && !userIsOwner && (
+      {owner && !userIsOwner && (
         <div className={styles.nftOwner}>
           This NFT is owned by {" "}{etherscanAddressLink(owner)}
-          {salePrice > 0 &&
-            <button disabled={isConnecting} onClick={doBuy}>
-              Buy it for {ethers.utils.formatEther(salePrice)} ETH
-            </button>
-          }
+        </div>
+      )}
+
+      {owner && (
+        <div className={styles.nftOwner}>
+          <SalesForm nft={nft} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
         </div>
       )}
 
