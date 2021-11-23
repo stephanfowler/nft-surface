@@ -1,17 +1,22 @@
 import Link from 'next/link'
-import ShortAddress from '@components/ShortAddress'
+
+export function shortAddress(address, chars) {  
+    const l = chars || 4;
+    const a = (address || "").toLowerCase();
+    return a.substr(0, l+2) + "…" + a.substr(a.length - l);
+}
 
 export function etherscanAddressLink(address, linktext) {
     return (
         <Link href={(process.env.etherscanAddress || "").replace("<address>", address)}>
-            <a target="_blank">{linktext || <ShortAddress address={address} />}</a>
+            <a target="_blank">{linktext || shortAddress(address)}</a>
         </Link>)
 }
 
 export function etherscanTxLink(hash) {
     return (
         <Link href={(process.env.etherscanTx || "").replace("<hash>", hash)}>
-            <a target="_blank"><ShortAddress address={hash} /></a>
+            <a target="_blank">{shortAddress(hash)}</a>
         </Link>)
 }
 
@@ -21,3 +26,4 @@ export function etherscanBlockLink(number) {
             <a target="_blank">{number}</a>
         </Link>)
 }
+

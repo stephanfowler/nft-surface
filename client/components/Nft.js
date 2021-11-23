@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import ShortAddress from '@components/ShortAddress'
+import { shortAddress} from "@utils/links.js";
 
 const NftStatus = dynamic(
   () => import('../components/clientside/NftStatus'),
@@ -93,7 +93,7 @@ export default function Nft({ nft, chainId }) {
               {"Contract : "}
               <Link href={nft.etherscanContract}>
                   <a title="view contract on etherscan">
-                      <ShortAddress address={contractAddress} />
+                      {shortAddress(contractAddress)}
                   </a>
               </Link>
           </div>
@@ -101,7 +101,7 @@ export default function Nft({ nft, chainId }) {
               {"Creator : "}
               <Link href={nft.etherscanCreator}>
                   <a title="view creator on etherscan">
-                      <ShortAddress address={creatorAddress} />
+                      {shortAddress(creatorAddress)}
                   </a>
               </Link>
           </div>
