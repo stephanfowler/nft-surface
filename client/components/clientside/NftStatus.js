@@ -44,7 +44,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 		const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
 		if (_owner) {
 			setOwner(_owner);
-		} else if (status = "withheld") {
+		} else if (status === "withheld") {
 			// noop
 		} else {
 			await contractCall_mintable(nft, contractAddress, chainId) ?
