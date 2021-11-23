@@ -71,9 +71,6 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-}
-
 button:disabled {
   background-color: grey;
   cursor:inherit;

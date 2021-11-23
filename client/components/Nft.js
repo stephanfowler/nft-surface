@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ShortAddress from '@components/ShortAddress'
 
-const Minter = dynamic(
-  () => import('../components/clientside/Minter'),
+const NftStatus = dynamic(
+  () => import('../components/clientside/NftStatus'),
   { ssr: false }
 )
 
@@ -72,7 +72,7 @@ export default function Nft({ nft, chainId }) {
         </div>
 
         <div className={styles.nftActions}>
-          <Minter nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
+          <NftStatus nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
         </div>
 
         <div className={styles.nftDetails}>

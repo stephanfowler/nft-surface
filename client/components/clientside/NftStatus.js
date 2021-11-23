@@ -20,7 +20,7 @@ import SalesForm from '@components/clientside/SalesForm'
 
 import styles from '@components/Nft.module.css'
 
-const Minter = ({ nft, chainId, status, setStatus }) => {
+const NftStatus = ({ nft, chainId, status, setStatus }) => {
   const [walletAddress, setWallet] = useState();
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
@@ -214,4 +214,4 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   );
 };
 
-export default Minter;
+export default NftStatus;
