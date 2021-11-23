@@ -62,7 +62,7 @@ export const getWallet = async (isConnect) => {
       return { error: error.message };
     }
   } else {
-    return {};
+    return { error: "wallet_unavailable" };
   }
 };
 

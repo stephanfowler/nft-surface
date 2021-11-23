@@ -25,21 +25,25 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   const [walletAddress, setWallet] = useState();
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
-  const [alert, setAlert] = useState();
   const [tx, setTx] = useState();
   const [txReceipt, setTxReceipt] = useState();
   const [isConnecting, setIsConnecting] = useState();
   const [chainIdMismatch, setChainIdMismatch] = useState();
 
-  const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
+  const [alert, setAlert] = useState();
+  const [notify, setNotify] = useState();
+
   const contractAddress = nft.metadata.contractAddress;
 
   useEffect(() => {
     async function fetchWallet() {
-      const wallet = await getWallet();
-      setWallet(wallet.address);
-      setChainIdMismatch(wallet.chainId && wallet.chainId !== chainId);
-      setAlert(wallet.error);
+      const { address, chainId, error } = await getWallet();
+      if (address) {
+        setWallet(address);
+        setChainIdMismatch(chainId && chainId !== chainId);
+      } else {
+        setNotify(error);
+      }
     }
     fetchWallet();
 
@@ -88,28 +92,28 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   };
 
   const doMint = async (e) => {
-    e && e.preventDefault();
-    if (!window.ethereum) {
-      return;
-    }
+    if (!window.ethereum) return;
+    setNotify("confirm_in_wallet");
     setIsConnecting(true);
-    if (!walletAddress) {
-      await doConnectWallet();
-    }
-    const { tx, error } = await contractCall_mint(nft, contractAddress, chainId);
-    if (tx) {
-      setTx(tx);
-      setStatus("mint_pending")
-      const txReceipt = await isTransactionMined(tx.hash, chainId)
-      if (txReceipt) {
-        setTxReceipt(txReceipt);
-        setOwner(walletAddress);
-        setStatus("minted");
+    if (!walletAddress) await doConnectWallet();
+    try {  
+      const { tx, error } = await contractCall_mint(nft, contractAddress, chainId);
+      if (tx) {
+        setTx(tx);
+        setNotify("tx_pending");
+        const txReceipt = await isTransactionMined(tx.hash, chainId)
+        if (txReceipt) {
+          setNotify("tx_succeded");
+          setOwner(walletAddress);
+          setStatus("minted");
+        } else {
+          setNotify("tx_failed");
+        }
       } else {
-        setAlert("NOT Mined, transaction: " + tx.hash)
+        setNotify(error.includes("insufficient funds") ? "insufficient_funds" : error);
       }
-    } else {
-      console.log(error);
+    } catch(error) {
+      setNotify(error.message);
     }
     setIsConnecting(false);
   };
@@ -126,7 +130,16 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     <div className={statusUpdated ? styles.minter_updated : styles.minter }>
 
       {owner && (
-        <SalesForm nft={nft} owner={owner} doConnectWallet={doConnectWallet} walletAddress={walletAddress} userIsOwner={userIsOwner} setOwner={setOwner} contractAddress={contractAddress} chainId={chainId} />
+        <SalesForm
+          nft={nft}
+          owner={owner}
+          doConnectWallet={doConnectWallet}
+          walletAddress={walletAddress}
+          setOwner={setOwner}
+          setNotify={setNotify}
+          setTx={setTx}          
+          contractAddress={contractAddress}
+          chainId={chainId} />
       )}
 
       {status === "minted" && !owner && (
@@ -200,28 +213,48 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 
       <div id="alert">{alert}</div>
 
-      <div className={styles.walletInstallInstructions}>
-        { walletAddress ?
+      <div className={styles.notification}>
+        { notify === "insufficient_funds" ?
+          <div>You have insufficient funds in your wallet</div>
+
+        : notify === "tx_pending" ?
+        <div>{"Please be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
+        
+        : notify === "tx_succeded" ?
+        <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
+          
+        : notify === "tx_failed" ?
+        <div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
+          
+        : notify === "confirm_in_wallet" ?
+        <div>{"Please confirm using your wallet..."}</div>
+          
+        : notify === "wallet_unavailable" ?
+        <div>
+          <div>
+            To mint or buy NFTs you need an Ethereum wallet
+          </div>
+          <div>
+            On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
+          </div>
+          <div>
+            On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension
+          </div>
+        </div>
+          
+        : notify ?
+        <div>{notify}</div>
+          
+        : walletAddress ?
           <div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
 
-          : window.ethereum ?
+        : window.ethereum ?
           <div>
             {"Connect your "} 
             <a href="" onClick={doConnectWallet}>Ethereum wallet</a>
           </div>
 
-          :
-          <div>
-            <div>
-              To mint or buy NFTs you need an Ethereum wallet
-            </div>
-            <div>
-              On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
-            </div>
-            <div>
-              On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension
-            </div>
-          </div>
+        : <></>
         }
        </div>
     </div>

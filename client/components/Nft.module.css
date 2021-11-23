@@ -111,13 +111,13 @@
     transition: max-height 0.23s ease-in;   
 }
 
-.walletInstallInstructions a,
+.notification a,
 .nftTrade a {
     font-weight:bold;
     color: orange;
 }
 
-.walletInstallInstructions {
+.notification {
     font-size: smaller;
     color: orange;
     padding: 0.5rem 1rem 0.4rem 1rem;

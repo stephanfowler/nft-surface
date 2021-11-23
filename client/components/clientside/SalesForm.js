@@ -16,7 +16,15 @@ import {
 import styles from '@components/Nft.module.css'
 
 export default function SalesForm({ 
-    nft, owner, doConnectWallet, walletAddress, userIsOwner, setOwner, contractAddress, chainId }) {
+    nft,
+    owner,
+    doConnectWallet,
+    walletAddress,
+    setOwner,
+    setNotify,
+    setTx, 
+    contractAddress,
+    chainId }) {
 
     const [price, setPrice] = useState();
     const [priceETH, setPriceETH] = useState();
@@ -24,6 +32,8 @@ export default function SalesForm({
     const [expanded, setExpanded] = useState(false);
     const [connecting, setConnecting] = useState();
     const [forceRender, doForceRender] = useState();
+
+    const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
 
     useEffect(() => {
         async function getPrice() {
@@ -78,24 +88,27 @@ export default function SalesForm({
         newPriceETH = newPriceETH || '0';
         if (newPriceETH != priceETH) {
             const newPrice = ethers.utils.parseEther(newPriceETH);
+            setNotify("confirm_in_wallet");
             setConnecting(true);
             try {
-                const { tx } = await contractCall_setPrice(nft, newPrice, contractAddress, chainId);
+                const { tx, error } = await contractCall_setPrice(nft, newPrice, contractAddress, chainId);
                 if (tx) {
-                    //setTx(tx);
-                    //setStatus("setPrice_pending")
+                    setTx(tx);
+                    setNotify("tx_pending");
                     const txReceipt = await isTransactionMined(tx.hash, chainId)
                     if (txReceipt) {
+                        setNotify("tx_succeded")
                         setPrice(newPrice);
                         setDisplayPriceETH(newPriceETH);
                         doForceRender(newPrice);
-                        //setTxReceipt(txReceipt);
-                        //setStatus("minted");
                     } else {
-                        //setAlert("NOT Mined, transaction: " + tx.hash)
+                        setNotify("tx_failed");
                     }
+                } else {
+                    setNotify(error.includes("insufficient funds") ? "insufficient_funds" : error);
                 }
-            } catch(e) {
+            } catch(error) {
+                setNotify(error.message);
             }
             setExpanded(false);
             setConnecting(false);
@@ -103,32 +116,29 @@ export default function SalesForm({
     }
 
     const doBuy = async (e) => {
-        e && e.preventDefault();
-        if (!window.ethereum) {
-            return;
-        }
+        if (!window.ethereum) return;
+        setNotify("confirm_in_wallet");
         setConnecting(true);
-        if (!walletAddress) {
-            await doConnectWallet();
-        }
-        if (walletAddress === owner) {
-            return;
-        }
-        const { tx, error } = await contractCall_buy(nft, price, contractAddress, chainId);
-        if (tx) {
-            //setTx(tx);
-            //setStatus("buy_pending")
-            const txReceipt = await isTransactionMined(tx.hash, chainId)
-            if (txReceipt) {
-                //setTxReceipt(txReceipt);
-                setOwner(walletAddress);
-                doForceRender(1);
-                //setStatus("minted");
+        if (!walletAddress) await doConnectWallet();
+        if (walletAddress === owner) return;
+        try {
+            const { tx, error } = await contractCall_buy(nft, price, contractAddress, chainId);
+            if (tx) {
+                setTx(tx);
+                setNotify("tx_pending");
+                const txReceipt = await isTransactionMined(tx.hash, chainId)
+                if (txReceipt) {
+                    setNotify("tx_succeded");
+                    setOwner(walletAddress);
+                    doForceRender(1);
+                } else {
+                    setNotify("tx_failed");
+                }
             } else {
-            //setAlert("NOT Mined, transaction: " + tx.hash)
-          }
-        } else {
-          console.log(error);
+                setNotify(error.includes("insufficient funds") ? "insufficient_funds" : error);
+            }
+        } catch(error) {
+            setNotify(error.message);
         }
         setConnecting(false);
     };
