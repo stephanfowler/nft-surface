@@ -77,12 +77,12 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 		}
 	}
 
-	const doConnectWallet = async (e) => {
+	async function doConnectWallet (e)  {
 		e && e.preventDefault();
 		await fetchWallet(true)
 	};
 
-	const showNofity = () => {
+	function showNofity () {
 		switch (notify) {
 			case "insufficient_funds":
 				return <div>You have insufficient funds in your wallet</div>
@@ -124,58 +124,58 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 				{"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
 			</div>
 
-			: !statusUpdated ?
-				<div className={styles.minter}>
-					Checking NFT status …
-				</div>
+		: !statusUpdated ?
+			<div className={styles.minter}>
+				Checking NFT status …
+			</div>
 
-				:
-				<div className={styles.nftStatus}>
-					{owner &&
-						<SalesForm
-							nft={nft}
-							owner={owner}
-							doConnectWallet={doConnectWallet}
-							walletAddress={walletAddress}
-							setOwner={setOwner}
-							setNotify={setNotify}
-							setTx={setTx}
-							contractAddress={contractAddress}
-							chainId={chainId} />
-					}
+		:
+		<div className={styles.nftStatus}>
+			{owner &&
+				<SalesForm
+					nft={nft}
+					owner={owner}
+					doConnectWallet={doConnectWallet}
+					walletAddress={walletAddress}
+					setOwner={setOwner}
+					setNotify={setNotify}
+					setTx={setTx}
+					contractAddress={contractAddress}
+					chainId={chainId} />
+			}
 
-					{!owner && status === "mintable_confirmed" &&
-						<Minter
-							nft={nft}
-							doConnectWallet={doConnectWallet}
-							walletAddress={walletAddress}
-							setOwner={setOwner}
-							setNotify={setNotify}
-							setTx={setTx}
-							contractAddress={contractAddress}
-							chainId={chainId} />
-					}
+			{!owner && status === "mintable_confirmed" &&
+				<Minter
+					nft={nft}
+					doConnectWallet={doConnectWallet}
+					walletAddress={walletAddress}
+					setOwner={setOwner}
+					setNotify={setNotify}
+					setTx={setTx}
+					contractAddress={contractAddress}
+					chainId={chainId} />
+			}
 
-					{status === "withheld" && (
-						<div>This NFT is reserved. Please contact the artist.</div>
-					)}
+			{status === "withheld" && (
+				<div>This NFT is reserved. Please contact the artist.</div>
+			)}
 
-					{status === "burntOrRevoked" && (
-						<div>Sorry, this NFT has been burnt or revoked.</div>
-					)}
+			{status === "burntOrRevoked" && (
+				<div>Sorry, this NFT has been burnt or revoked.</div>
+			)}
 
-					<div className={styles.notification}>
-						{notify ? showNofity()
+			<div className={styles.notification}>
+				{notify ? showNofity()
 
-							: walletAddress ?
-								<div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
+				: walletAddress ?
+					<div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
 
-								: window.ethereum ?
-									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>Ethereum wallet</a></div>
+				: window.ethereum ?
+					<div>{"Connect your "}<a href="" onClick={doConnectWallet}>Ethereum wallet</a></div>
 
-									: <></>}
-					</div>
-				</div>
+				: <></>}
+			</div>
+		</div>
 	);
 };
 
