@@ -1,13 +1,14 @@
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+
+import Minter from '@components/clientside/Minter'
+import SalesForm from '@components/clientside/SalesForm'
+import styles from '@components/Nft.module.css'
 
 import {
 	networkName,
-	isTransactionMined,
 	getWallet,
 	contractCall_ownerOf,
-	contractCall_mintable,
-	contractCall_mint
+	contractCall_mintable
 } from "@utils/ethereum-interact.js";
 
 import {
@@ -15,17 +16,11 @@ import {
 	etherscanTxLink
 } from "@utils/links.js"
 
-import Minter from '@components/clientside/Minter'
-import SalesForm from '@components/clientside/SalesForm'
-
-import styles from '@components/Nft.module.css'
-
 const NftStatus = ({ nft, chainId, status, setStatus }) => {
 	const [walletAddress, setWallet] = useState();
 	const [statusUpdated, setStatusUpdated] = useState();
 	const [owner, setOwner] = useState();
 	const [tx, setTx] = useState();
-	const [isConnecting, setIsConnecting] = useState();
 	const [chainIdMismatch, setChainIdMismatch] = useState();
 	const [notify, setNotify] = useState();
 
@@ -33,39 +28,31 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 
 	useEffect(() => {
 		fetchWallet();
-
-		async function updateTokenStatus() {
-			const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
-			if (_owner) {
-				setOwner(_owner);
-			} else {
-				await contractCall_mintable(nft, contractAddress, chainId) ?
-					setStatus("mintable_confirmed") :
-					setStatus("burntOrRevoked")
-			}
-			setStatusUpdated(true);
-		}
 		updateTokenStatus();
-
-		async function addWalletListener() {
-			if (window.ethereum) {
-				window.ethereum.on("accountsChanged", () => {
-					fetchWallet();
-					updateTokenStatus();
-				});
-				window.ethereum.on("chainChanged", () => {
-					window.location.reload();
-				});
-			}
-		}
 		addWalletListener();
-
 		return () => {
-			setStatus();
-			setOwner();
 			setWallet();
+			setStatusUpdated();
+			setOwner();
+			setTx();
+			setChainIdMismatch();
+			setNotify();
 		}
 	}, []);
+
+	async function updateTokenStatus() {
+		const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
+		if (_owner) {
+			setOwner(_owner);
+		} else if (status = "withheld") {
+			// noop
+		} else {
+			await contractCall_mintable(nft, contractAddress, chainId) ?
+				setStatus("mintable_confirmed") :
+				setStatus("burntOrRevoked")
+		}
+		setStatusUpdated(true);
+	}
 
 	async function fetchWallet(isConnect) {
 		const { address, walletChainId, error } = await getWallet(isConnect);
@@ -78,10 +65,58 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 		}
 	}
 
+	async function addWalletListener() {
+		if (window.ethereum) {
+			window.ethereum.on("accountsChanged", () => {
+				fetchWallet();
+				updateTokenStatus();
+			});
+			window.ethereum.on("chainChanged", () => {
+				window.location.reload();
+			});
+		}
+	}
+
 	const doConnectWallet = async (e) => {
 		e && e.preventDefault();
 		await fetchWallet(true)
 	};
+
+	const showNofity = () => {
+		switch (notify) {
+			case "insufficient_funds":
+				return <div>You have insufficient funds in your wallet</div>
+
+			case "tx_pending":
+				return <div>{"Please be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
+
+			case "tx_succeded":
+				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
+
+			case "tx_failed":
+				return <div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
+
+			case "confirmation_required":
+				return <div>{"Please confirm using your wallet..."}</div>
+
+			case "wallet_unavailable":
+				return (
+					<div>
+						<div>
+							To mint or buy NFTs you need an Ethereum wallet
+						</div>
+						<div>
+							On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
+						</div>
+						<div>
+							On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension
+						</div>
+					</div>)
+
+			default:
+				return <div>{notify}</div>
+		}
+	}
 
 	return (
 		chainIdMismatch ?
@@ -95,7 +130,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 				</div>
 
 				:
-				<div className={styles.minter_updated}>
+				<div className={styles.nftStatus}>
 					{owner &&
 						<SalesForm
 							nft={nft}
@@ -109,7 +144,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 							chainId={chainId} />
 					}
 
-					{!owner && status === "mintable_confirmed" && 
+					{!owner && status === "mintable_confirmed" &&
 						<Minter
 							nft={nft}
 							doConnectWallet={doConnectWallet}
@@ -130,48 +165,15 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 					)}
 
 					<div className={styles.notification}>
-						{notify === "insufficient_funds" ?
-							<div>You have insufficient funds in your wallet</div>
+						{notify ? showNofity()
 
-							: notify === "tx_pending" ?
-								<div>{"Please be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
+							: walletAddress ?
+								<div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
 
-								: notify === "tx_succeded" ?
-									<div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
+								: window.ethereum ?
+									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>Ethereum wallet</a></div>
 
-									: notify === "tx_failed" ?
-										<div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
-
-										: notify === "confirmation_required" ?
-											<div>{"Please confirm using your wallet..."}</div>
-
-											: notify === "wallet_unavailable" ?
-												<div>
-													<div>
-														To mint or buy NFTs you need an Ethereum wallet
-													</div>
-													<div>
-														On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
-													</div>
-													<div>
-														On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension
-													</div>
-												</div>
-
-												: notify ?
-													<div>{notify}</div>
-
-													: walletAddress ?
-														<div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
-
-														: window.ethereum ?
-															<div>
-																{"Connect your "}
-																<a href="" onClick={doConnectWallet}>Ethereum wallet</a>
-															</div>
-
-															: <></>
-						}
+									: <></>}
 					</div>
 				</div>
 	);
