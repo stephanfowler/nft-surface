@@ -5,7 +5,6 @@ import {
   networkName,
   isTransactionMined,
   getWallet,
-  connectWallet,
   contractCall_ownerOf,
   contractCall_mintable,
   contractCall_mint
@@ -26,25 +25,13 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   const [statusUpdated, setStatusUpdated] = useState();
   const [owner, setOwner] = useState();
   const [tx, setTx] = useState();
-  const [txReceipt, setTxReceipt] = useState();
   const [isConnecting, setIsConnecting] = useState();
   const [chainIdMismatch, setChainIdMismatch] = useState();
-
-  const [alert, setAlert] = useState();
   const [notify, setNotify] = useState();
 
   const contractAddress = nft.metadata.contractAddress;
 
   useEffect(() => {
-    async function fetchWallet() {
-      const { address, chainId, error } = await getWallet();
-      if (address) {
-        setWallet(address);
-        setChainIdMismatch(chainId && chainId !== chainId);
-      } else {
-        setNotify(error);
-      }
-    }
     fetchWallet();
 
     async function updateTokenStatus() {
@@ -64,7 +51,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
     async function addWalletListener() {
       if (window.ethereum) {
         window.ethereum.on("accountsChanged", () => {
-          setAlert();
           fetchWallet();
           updateTokenStatus();
         });
@@ -79,21 +65,28 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
       setStatus();
       setOwner();
       setWallet();
-      setAlert();
     }
   }, []);
 
+  async function fetchWallet(isConnect) {
+    const { address, walletChainId, error } = await getWallet(isConnect);
+    if (walletChainId && walletChainId !== chainId) {
+      setChainIdMismatch(true);
+    } else if (address) {
+      setWallet(address);
+    } else {
+      setNotify(error);
+    }
+  }
+
   const doConnectWallet = async (e) => {
     e && e.preventDefault();
-    const wallet = await connectWallet();
-    setWallet(wallet.address);
-    setChainIdMismatch(wallet.chainId && wallet.chainId !== chainId);
-    setAlert(wallet.error );
+    await fetchWallet(true)
   };
 
   const doMint = async (e) => {
     if (!window.ethereum) return;
-    setNotify("confirm_in_wallet");
+    setNotify("confirmation_required");
     setIsConnecting(true);
     if (!walletAddress) await doConnectWallet();
     try {  
@@ -119,16 +112,18 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
   };
 
   return (
-    !nft ?
-      <div>No matching NFT is listed</div>
-    : 
     chainIdMismatch ?
-        <div className={styles.walletInstallInstructions}>
-          {"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
-        </div>
-    :
-    <div className={statusUpdated ? styles.minter_updated : styles.minter }>
+      <div className={styles.notification}>
+        {"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
+      </div>
 
+    : !statusUpdated ?
+      <div className={styles.minter}>
+        Checking NFT status …
+      </div>
+
+    :
+    <div className={styles.minter_updated}>
       {owner && (
         <SalesForm
           nft={nft}
@@ -140,46 +135,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
           setTx={setTx}          
           contractAddress={contractAddress}
           chainId={chainId} />
-      )}
-
-      {status === "minted" && !owner && (
-        <div className={styles.waiting}>
-          Confirming NFT ownership …
-        </div>
-      )}
-
-      {status === "mint_pending" && (
-        <div className={styles.mintingPending}>
-          This NFT is being minted for you, please be patient!
-          Pending transaction is : {etherscanTxLink(tx.hash)}
-        </div>
-      )}
-
-      {status === "setPrice_pending" && (
-        <div className={styles.mintingPending}>
-          The sale price is being updated, please be patient!
-          Pending transaction is : {etherscanTxLink(tx.hash)}
-        </div>
-      )}
-
-      {status === "buy_pending" && (
-        <div className={styles.mintingPending}>
-          Your purchase underway, please be patient!
-          Pending transaction is : {etherscanTxLink(tx.hash)}
-        </div>
-      )}
-
-      {tx && txReceipt && (
-        <div className={styles.mintingSucceeded}>
-          <span>{"Succeeded! Transaction "}{etherscanTxLink(tx.hash)}</span>
-          <span>{" was mined in the Ethereum blockchain, block #"}{etherscanBlockLink(txReceipt.blockNumber)}</span>
-        </div>
-      )}
-
-      {status === "mintable" && (
-        <div className={styles.waiting}>
-          Confirming NFT availability …
-        </div>
       )}
 
       {status === "mintable_confirmed" && (
@@ -211,8 +166,6 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         <div>Sorry, this NFT has been burnt or revoked.</div>
       )}
 
-      <div id="alert">{alert}</div>
-
       <div className={styles.notification}>
         { notify === "insufficient_funds" ?
           <div>You have insufficient funds in your wallet</div>
@@ -226,7 +179,7 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
         : notify === "tx_failed" ?
         <div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
           
-        : notify === "confirm_in_wallet" ?
+        : notify === "confirmation_required" ?
         <div>{"Please confirm using your wallet..."}</div>
           
         : notify === "wallet_unavailable" ?
@@ -262,19 +215,3 @@ const Minter = ({ nft, chainId, status, setStatus }) => {
 };
 
 export default Minter;
-
-/*
-            : window.ethereum ? (
-              <button disabled={isConnecting} onClick={doConnectWallet}>
-                <span>To mint this NFT, connect your Ethereum wallet</span>
-              </button>)
-            : (
-              <div className={styles.walletInstallInstructions}>
-                <div>To mint NFTs you need an Ethereum wallet.</div>
-                <div>
-                  On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website.
-                  On desktop enable the <a href={`https://metamask.io/`}>Metamask</a> browser extension.
-                </div>
-              </div>
-            )}
-*/

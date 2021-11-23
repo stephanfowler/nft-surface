@@ -45,10 +45,6 @@ export const isTransactionMined = async(txHash, chainId) => {
   }
 ;}
 
-export const connectWallet = async () => {
-  return await getWallet(true);
-}
-
 export const getWallet = async (isConnect) => {
   if (window.ethereum) {
     try {
@@ -56,7 +52,7 @@ export const getWallet = async (isConnect) => {
       const network = await new ethers.providers.Web3Provider(window.ethereum).getNetwork();
       return {
         address: accounts[0],
-        chainId: network.chainId
+        walletChainId: network.chainId
       };
     } catch (error) {
       return { error: error.message };

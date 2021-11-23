@@ -88,7 +88,7 @@ export default function SalesForm({
         newPriceETH = newPriceETH || '0';
         if (newPriceETH != priceETH) {
             const newPrice = ethers.utils.parseEther(newPriceETH);
-            setNotify("confirm_in_wallet");
+            setNotify("confirmation_required");
             setConnecting(true);
             try {
                 const { tx, error } = await contractCall_setPrice(nft, newPrice, contractAddress, chainId);
@@ -117,7 +117,7 @@ export default function SalesForm({
 
     const doBuy = async (e) => {
         if (!window.ethereum) return;
-        setNotify("confirm_in_wallet");
+        setNotify("confirmation_required");
         setConnecting(true);
         if (!walletAddress) await doConnectWallet();
         if (walletAddress === owner) return;
