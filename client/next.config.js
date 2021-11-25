@@ -5,6 +5,7 @@ module.exports = {
       networkKey:       process.env.networkKey,
       catalogBase:      process.env.catalogBase,
       catalogFilename:  process.env.catalogFilename,
+			creatorAddress:   process.env.creatorAddress,
 
       creatorName:      'FLOF',
       siteTitle:        'FLOF NFT Catalog',

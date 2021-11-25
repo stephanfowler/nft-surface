@@ -16,15 +16,15 @@ import {
 	etherscanTxLink
 } from "@utils/links.js"
 
-const NftStatus = ({ nft, chainId, status, setStatus }) => {
+const NftStatus = ({ nft, context, status, setStatus }) => {
 	const [walletAddress, setWallet] = useState();
-	const [statusUpdated, setStatusUpdated] = useState();
 	const [owner, setOwner] = useState();
 	const [tx, setTx] = useState();
 	const [chainIdMismatch, setChainIdMismatch] = useState();
 	const [notify, setNotify] = useState();
 
-	const contractAddress = nft.metadata.contractAddress;
+	const contractAddress = context.contractAddress;
+	const chainId = context.chainId;
 
 	useEffect(() => {
 		fetchWallet();
@@ -32,7 +32,6 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 		addWalletListener();
 		return () => {
 			setWallet();
-			setStatusUpdated();
 			setOwner();
 			setTx();
 			setChainIdMismatch();
@@ -43,15 +42,15 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 	async function updateTokenStatus() {
 		const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
 		if (_owner) {
+			setStatus("minted");
 			setOwner(_owner);
-		} else if (status === "withheld") {
-			// noop
+		} else if (!nft.weiPrice) {
+			setStatus("withheld");
 		} else {
 			await contractCall_mintable(nft, contractAddress, chainId) ?
-				setStatus("mintable_confirmed") :
+				setStatus("mintable") :
 				setStatus("burntOrRevoked")
 		}
-		setStatusUpdated(true);
 	}
 
 	async function fetchWallet(isConnect) {
@@ -124,14 +123,14 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 				{"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
 			</div>
 
-		: !statusUpdated ?
+		: !status ?
 			<div className={styles.nftStatusPending}>
 				Checking NFT status …
 			</div>
 
 		:
 		<div className={styles.nftStatus}>
-			{owner &&
+			{status === "minted" &&
 				<SalesForm
 					nft={nft}
 					owner={owner}
@@ -144,7 +143,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 					chainId={chainId} />
 			}
 
-			{!owner && status === "mintable_confirmed" &&
+			{status === "mintable" &&
 				<Minter
 					nft={nft}
 					doConnectWallet={doConnectWallet}

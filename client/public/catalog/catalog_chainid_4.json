@@ -13,19 +13,15 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmNSi1nX4LRUVmgFHC8b9C15r3VRDhJosZ7uLptbKqV2p6",
                 "width": 700,
-                "height": 933,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 933
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgAH/8QAJBAAAQMEAAYDAAAAAAAAAAAAAQIDEQAEEiEFBiIxQYETM1H/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAECEf/aAAwDAQACEQMRAD8AaMONPXzVypkreP1uSAgRH6fOtjvS/FxXUXLkk76Va9R4rPbtD/D2l3dq/ElQ+JSBhGWPYRvZ3U1zGoNIytt4icXlpHoTqgVOXg94j//Z",
             "webOptimizedImage": "images/tooth_and_claw_web.jpg",
             "tokenURI": "ipfs://QmcjAmoYicQix6vqLbiMQ615Hxt7N1NJwhjf3fA9oKHFki",
-            "signature": "0x063a74d65564f4b6da9d40f88e9ca7418c5590cd6de40ad6815ca14f261ce56b727119b406b20a8e4405b54a33041dfeb200f9323efc78d1dc4e5b09e3a004101c",
-            "status": "mintable"
+            "signature": "0x063a74d65564f4b6da9d40f88e9ca7418c5590cd6de40ad6815ca14f261ce56b727119b406b20a8e4405b54a33041dfeb200f9323efc78d1dc4e5b09e3a004101c"
         },
         {
             "tokenId": 50,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/chin_zan_bee.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -36,19 +32,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmVAs5s6juAsdCUjwwKNueABHKXaPo5h6MkpDSxWN4Ngd5",
                 "width": 995,
-                "height": 746,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 746
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIRAAAQMEAQUAAAAAAAAAAAAAAQACEQMEEiEiBRQxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABsRAAICAwEAAAAAAAAAAAAAAAECAAMSISIx/9oADAMBAAIRAxEAPwCZ9+zuK1LEy0NaBO49wPH3ZWCeuWtMlj7q7ybxPGdhERQY2MgOhKt2i2N6Z//Z",
-            "webOptimizedImage": "images/chin_zan_bee_web.jpg",
             "tokenURI": "ipfs://QmSeWxSpWZ6K9yVRJkJL96Zwp1uoC6XfhqED7hkQKajwgq",
-            "signature": "0x067c7aabd6f102481bf1e4e2e6ef0dfefd6e5c7202602f16d9f2fabb30cd473139c8e00ad4efd51dd8fd81c7d07d5b6441e59ae6f2bb5d57dd05782d9139394c1c",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIRAAAQMEAQUAAAAAAAAAAAAAAQACEQMEEiEiBRQxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABsRAAICAwEAAAAAAAAAAAAAAAECAAMSISIx/9oADAMBAAIRAxEAPwCZ9+zuK1LEy0NaBO49wPH3ZWCeuWtMlj7q7ybxPGdhERQY2MgOhKt2i2N6Z//Z",
+            "webOptimizedImage": "images/chin_zan_bee_web.jpg"
         },
         {
             "tokenId": 49,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/disco_at_gloop_island.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -59,19 +50,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmeL2qbcAdK8sbmSd8wp5ixq95xR8BDWKgi2kG3ruybXEM",
                 "width": 778,
-                "height": 1038,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1038
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQMG/8QAJBAAAgEDBAAHAAAAAAAAAAAAAQIDBBEhAAUSFBUiMUFRobH/xAAVAQEBAAAAAAAAAAAAAAAAAAAEBf/EABwRAAICAgMAAAAAAAAAAAAAAAECAAMEMREh0f/aAAwDAQACEQMRAD8AG2fZkTYY06alWDB2ZRflby+/qNZ2Wsqo5HTxCiXiStjgi2p1FTVClll7D8lvFkDIxn90WahwbFYyfkg5+9TUwXR2awg8669iHyRYoCDU/9k=",
-            "webOptimizedImage": "images/disco_at_gloop_island_web.jpg",
             "tokenURI": "ipfs://QmYWwcoZ2EX9FDW3H4BKAt1PJz4EihhZv54dFxd9KVKxPi",
-            "signature": "0xe25bc9d97ab96d19afa099dc30b945c566ab30cfe06f23640a8bf4011268e33a10c240497a0286dcc404a921ab787ad722afdb9a779f948f8f9f2583192d4c021b",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQMG/8QAJBAAAgEDBAAHAAAAAAAAAAAAAQIDBBEhAAUSFBUiMUFRobH/xAAVAQEBAAAAAAAAAAAAAAAAAAAEBf/EABwRAAICAgMAAAAAAAAAAAAAAAECAAMEMREh0f/aAAwDAQACEQMRAD8AG2fZkTYY06alWDB2ZRflby+/qNZ2Wsqo5HTxCiXiStjgi2p1FTVClll7D8lvFkDIxn90WahwbFYyfkg5+9TUwXR2awg8669iHyRYoCDU/9k=",
+            "webOptimizedImage": "images/disco_at_gloop_island_web.jpg"
         },
         {
             "tokenId": 48,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/endangered_species.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -82,19 +68,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://Qma5t9cXiZgop5G5WRqfUjbNZNrvue3kdsFvCUSHPbxRmW",
                 "width": 753,
-                "height": 1004,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1004
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAIxAAAQQCAQMFAAAAAAAAAAAAAQIDBBEAIRIFBkETMUJRkf/EABQBAQAAAAAAAAAAAAAAAAAAAAX/xAAbEQEAAgIDAAAAAAAAAAAAAAABABECAwRCYf/aAAwDAQACEQMRAD8Ar999SWqAIkvnKivj3TtTdfIEeL+8zVtlXpp4yGVJoUbG8fS5bj8t+O6VGO02ElsGgonz+arDy5MSOtTI6bFUGzw5EbNavATZ0C0jXHM9do1fk//Z",
-            "webOptimizedImage": "images/endangered_species_web.jpg",
             "tokenURI": "ipfs://QmZpSC6KsV5zWVYcULfUbt3eZUaqLbywe2pCjD4HDyardZ",
-            "signature": "0x49c80a888bbc8bc190a4be55ae5fdd6e01a32161b76ca5c87e09c8abd8d866c624fd1ce52ace52c26a65ac60424e5ea14b49cf55fe55ede0ec5dc5e0bd01e41c1c",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAIxAAAQQCAQMFAAAAAAAAAAAAAQIDBBEAIRIFBkETMUJRkf/EABQBAQAAAAAAAAAAAAAAAAAAAAX/xAAbEQEAAgIDAAAAAAAAAAAAAAABABECAwRCYf/aAAwDAQACEQMRAD8Ar999SWqAIkvnKivj3TtTdfIEeL+8zVtlXpp4yGVJoUbG8fS5bj8t+O6VGO02ElsGgonz+arDy5MSOtTI6bFUGzw5EbNavATZ0C0jXHM9do1fk//Z",
+            "webOptimizedImage": "images/endangered_species_web.jpg"
         },
         {
             "tokenId": 47,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/jungian_archetypes.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -105,19 +86,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmecsjcW1buG91jtuJXq81cvwjaysd1cVvETmqbczvpSMD",
                 "width": 1033,
-                "height": 742,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 742
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIhAAAQQBAgcAAAAAAAAAAAAAAQADBBEFAiESEyJBgaLh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAaEQEAAgMBAAAAAAAAAAAAAAACAAMEESJB/9oADAMBAAIRAxEAPwDGx+Tgw+jWye25F388Kl3PQubruEyDxGwGRt7IijWJWntexheyeZ//2Q==",
-            "webOptimizedImage": "images/jungian_archetypes_web.jpg",
             "tokenURI": "ipfs://QmT2bHXUTNyvw2w66dGoc1tSzDV6mAJ2gFqWnh91Ye17Zd",
-            "signature": "0x771ab01006ba9239dd9381abe1a8ec14126e40d3cb028aa67624e770c7103b6048ec97fd14afd74fec6c1e2e485b29aee926529753dc9afed07953ea50d2e2341b",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIhAAAQQBAgcAAAAAAAAAAAAAAQADBBEFAiESEyJBgaLh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAaEQEAAgMBAAAAAAAAAAAAAAACAAMEESJB/9oADAMBAAIRAxEAPwDGx+Tgw+jWye25F388Kl3PQubruEyDxGwGRt7IijWJWntexheyeZ//2Q==",
+            "webOptimizedImage": "images/jungian_archetypes_web.jpg"
         },
         {
             "tokenId": 46,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/land_of_wonder.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -128,19 +104,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmdFEnXonjRCy5VnVeV12c3B61rzgMpdrXUF6fKtaLvMJt",
                 "width": 782,
-                "height": 1043,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1043
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECB//EACYQAAICAQEGBwAAAAAAAAAAAAECAxEEAAUTMTJhgRQhIkFxkeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAESIUH/2gAMAwEAAhEDEQA/ANCyFYzADKmiPiN6gVwWahw6D0/mrieTdpS7NqhzSNffy0Ypbagd5GKzY6CVH417VXY/eliGVMWFQ6UEUcnT50MdQ6tH/9k=",
-            "webOptimizedImage": "images/land_of_wonder_web.jpg",
             "tokenURI": "ipfs://QmW2UZ4ALaptMoiyK8yqRDjfciRN3LUgXzu6dXRiwoXqBx",
-            "signature": "0x8ce27c4933451ddae276d0aff3a8e5c9672c7089e44a274db1aed955a61a815e0bd308a8556ed21d3952e2d9f25310591d84c2ce8bfae133e20da9c7866a4ca81b",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECB//EACYQAAICAQEGBwAAAAAAAAAAAAECAxEEAAUTMTJhgRQhIkFxkeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAESIUH/2gAMAwEAAhEDEQA/ANCyFYzADKmiPiN6gVwWahw6D0/mrieTdpS7NqhzSNffy0Ypbagd5GKzY6CVH417VXY/eliGVMWFQ6UEUcnT50MdQ6tH/9k=",
+            "webOptimizedImage": "images/land_of_wonder_web.jpg"
         },
         {
             "tokenId": 45,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/sir_gawain.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -151,19 +122,14 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://Qmbovdf5ATbnD9z8sdQzkT9BMemyK8gFwcnNMzhHY5mnK4",
                 "width": 985,
-                "height": 739,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 739
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAIG/8QAIRAAAgIBAgcAAAAAAAAAAAAAAQIABBEDBQcSIWGBkcH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABoRAAICAwAAAAAAAAAAAAAAAAECABEDITH/2gAMAwEAAhEDEQA/ANttG51KdcGqFGmVIwmpgoeyj34kjikqAIQpK9M8yn7EQMALM4J4Za1CtT//2Q==",
-            "webOptimizedImage": "images/sir_gawain_web.jpg",
             "tokenURI": "ipfs://QmP34D8meNaKd3ZUGxeDW6mHVt1nQTE23UeNWbACDVRVeU",
-            "signature": "0xc9f6eebbe0b08520fcfe36685d7551962b21016dec1171f8cee349e64a769285497b165050f6ebb49cfe3496a00d2dc44935def5e5b9ba7ce8cea7036943fe1e1c",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAIG/8QAIRAAAgIBAgcAAAAAAAAAAAAAAQIABBEDBQcSIWGBkcH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABoRAAICAwAAAAAAAAAAAAAAAAECABEDITH/2gAMAwEAAhEDEQA/ANttG51KdcGqFGmVIwmpgoeyj34kjikqAIQpK9M8yn7EQMALM4J4Za1CtT//2Q==",
+            "webOptimizedImage": "images/sir_gawain_web.jpg"
         },
         {
             "tokenId": 44,
-            "weiPrice": "100000000000000000",
             "sourceImage": "images/tin_lion_duel.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -174,15 +140,11 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmNS7FG6Cnq7wbLd56HMn1vRdPbDMDCWhwgpw1frx23NuA",
                 "width": 980,
-                "height": 735,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 735
             },
-            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUG/8QAIBABAAEDAwUAAAAAAAAAAAAAAQIABBEDBSESIjGBwf/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAXEQADAQAAAAAAAAAAAAAAAAAAASEx/9oADAMBAAIRAxEAPwDdbZrluxS4jpye2Bg8cJg94q27/OKxbjk4cdB9pSjyIZXT/9k=",
-            "webOptimizedImage": "images/tin_lion_duel_web.jpg",
             "tokenURI": "ipfs://Qmdqx6BYNByvpobquNofsWDvsyNJ37eSA7fuUwZ1Wi9uUd",
-            "signature": "0xeffecffbe3ea34fe284609af8e471714f898acf92a68899ce1d97bc2355fd74002020b20a7e224785335ab706c8f0167828fb6aa5500a4995a798eb6358bba6f1b",
-            "status": "mintable"
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUG/8QAIBABAAEDAwUAAAAAAAAAAAAAAQIABBEDBSESIjGBwf/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAXEQADAQAAAAAAAAAAAAAAAAAAASEx/9oADAMBAAIRAxEAPwDdbZrluxS4jpye2Bg8cJg94q27/OKxbjk4cdB9pSjyIZXT/9k=",
+            "webOptimizedImage": "images/tin_lion_duel_web.jpg"
         },
         {
             "tokenId": 43,
@@ -197,15 +159,12 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmZdKzb4ZYwpPUrx3RtQawzisZhUbC1wCRZ2B7AJQwaXr6",
                 "width": 760,
-                "height": 1013,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1013
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAABAUHCP/EACQQAQABAgQGAwAAAAAAAAAAAAECAxEABAUhBhITQXGhFTFT/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAP/xAAYEQEBAQEBAAAAAAAAAAAAAAABAgARIf/aAAwDAQACEQMRAD8AZcE14RoSqkAFIN3Y73B9ecVCnqMIU4x+Pk2Auzhv7xm3S9XzEKPKSSX3zDZTuPnB0eJc8RDq1Nj9HAB9dO7ZOSd3/9k=",
             "webOptimizedImage": "images/fossil_panoply_web.jpg",
             "tokenURI": "ipfs://QmcXjSwTdQBds43RHRmKPENmfW3wmKTHWKm5SsARZEPvcz",
-            "signature": "0x13a0c47febca3070a87c3ecdbfa4ac8b41ae2d40e124cc3b956c32b67255115f66d33e3f8a07f4a27b48628fc44181c0c91f034a2761303206759fadbfe724d51c",
-            "status": "mintable"
+            "signature": "0x13a0c47febca3070a87c3ecdbfa4ac8b41ae2d40e124cc3b956c32b67255115f66d33e3f8a07f4a27b48628fc44181c0c91f034a2761303206759fadbfe724d51c"
         },
         {
             "tokenId": 42,
@@ -220,15 +179,12 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmSeL5pxy3YPQWFaupQrPb8YnFCYyyccsT87x4ZWVDDTun",
                 "width": 773,
-                "height": 1031,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1031
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAABv/EACIQAAIBBAIBBQAAAAAAAAAAAAECAwAEESEFEkEUYYGR4f/EABUBAQEAAAAAAAAAAAAAAAAAAAQF/8QAGREAAwADAAAAAAAAAAAAAAAAAAECAyFB/9oADAMBAAIRAxEAPwBZDKZ7tIpZis8iksGBdFH3sjHg+9LU5WOJFjZZCVHUkKcHHxRC64NLSP1wlWS4N11YtH5Y4JG9aNLI+Gdo1Zrx8kAnC/tTXlhaoW5fD//Z",
             "webOptimizedImage": "images/cake_acid_afternoon_web.jpg",
             "tokenURI": "ipfs://Qmd6egRmo4MPWFc4ryKyPosXjo7jVW2DeBzaWAr9vHkkap",
-            "signature": "0xaf49f48933b93ae3da90d8fc1624d16b7677656920245593404daca778b100221662f6b4c3d81ab894c9db8481b19ed605204562ddf91f5513117f0aa4b7a0991b",
-            "status": "mintable"
+            "signature": "0xaf49f48933b93ae3da90d8fc1624d16b7677656920245593404daca778b100221662f6b4c3d81ab894c9db8481b19ed605204562ddf91f5513117f0aa4b7a0991b"
         },
         {
             "tokenId": 41,
@@ -243,15 +199,12 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmWw2rFfPcm7YcxDWwGPZuRLjaKgr3paAyVem49ifH1oXC",
                 "width": 745,
-                "height": 993,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 993
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQEG/8QAJRAAAgIBAgQHAAAAAAAAAAAAAQIDEQQAEyEiJDEFBhUjMmGB/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/EABkRAAMAAwAAAAAAAAAAAAAAAAABAhEhMv/aAAwDAQACEQMRAD8A1C5szz5Ec6MEN9Qr3FKwNcQCObl7Vpn03d9yMYoR+ZblcGj+amP5fxB4rUaqMaJmk2WBa3v5Xdg8B9adiyItpOkg7Dut6FVKHgR1s//Z",
             "webOptimizedImage": "images/street_of_delusion_web.jpg",
             "tokenURI": "ipfs://QmQNvqio5CsjKmUtw3yJ5CkuDr7zrCJcLxBLcZy1re7yZ6",
-            "signature": "0x57e96ee6b01b6017adf3812484f8c4664650994675fd0621b58b5255e0feab4b4458cee4df81299484ab659ec02c48c941602fee47e9f9c235c40833ce6a9d621b",
-            "status": "mintable"
+            "signature": "0x57e96ee6b01b6017adf3812484f8c4664650994675fd0621b58b5255e0feab4b4458cee4df81299484ab659ec02c48c941602fee47e9f9c235c40833ce6a9d621b"
         },
         {
             "tokenId": 40,
@@ -265,17 +218,15 @@
                 "collection": "Gloop Dreams",
                 "image": "ipfs://QmNMcUDCZvvzniLogY86wYoXm8McKTEqGW9QYda6SYXJf8",
                 "width": 754,
-                "height": 1005,
-                "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
-                "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d"
+                "height": 1005
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgME/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDBAAREhMhMVEFBkEU/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAYEQADAQEAAAAAAAAAAAAAAAAAAQIREv/aAAwDAQACEQMRAD8AXlmRGaY0Y7bhab1HClVkL7GR3HBtbn7U1Sg+oupjkpcOYNn+Dv8ABSL2nxH5vCTQZLiyAdMgBJSRbrkW2t1WKI0hERlGJOKEi+RF9qlmem9Fpo//2Q==",
             "webOptimizedImage": "images/street_of_dreams_web.jpg",
-            "tokenURI": "ipfs://Qmc4Gj65AVHau1CTikpaFtqu7E7ztfgjz4R9yWVgFXCdLC",
-            "status": "withheld"
+            "tokenURI": "ipfs://Qmc4Gj65AVHau1CTikpaFtqu7E7ztfgjz4R9yWVgFXCdLC"
         }
     ],
     "context": {
+        "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
         "contractAddress": "0x727825fAD4Fa0C88aC4AEFFeD2322C3E0E700b1d",
         "chainId": 4
     }

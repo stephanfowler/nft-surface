@@ -16,11 +16,11 @@ function getIpfsHref(template, ipfsURI) {
     return (template || "").replace("<ipfsHash>", ipfsHash);
 }
 
-export default function Nft({ nft, chainId }) {
+export default function Nft({ nft, context }) {
   const [status, setStatus] = useState(nft.status);
 
-  const contractAddress = nft.metadata.contractAddress;
-  const creatorAddress = nft.metadata.creatorAddress;
+  const contractAddress = context.contractAddress;
+  const creatorAddress = context.creatorAddress;
   const tokenId = nft.tokenId;
 
   nft.openseaAsset      = getAssetHref(process.env.openseaAsset, contractAddress, tokenId);
@@ -68,7 +68,7 @@ export default function Nft({ nft, chainId }) {
         </div>
 
         <div className={styles.nftActions}>
-          <NftStatus nft={nft} chainId={chainId} status={status} setStatus={setStatus} />
+          <NftStatus nft={nft} context={context} status={status} setStatus={setStatus} />
         </div>
 
         <div className={styles.nftDetails}>
