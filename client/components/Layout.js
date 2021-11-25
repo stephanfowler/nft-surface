@@ -42,7 +42,7 @@ export default function Layout({ children, home, nft, context }) {
       <main>{children}</main>
 
       <footer className={home? styles.footerHome : styles.footer}>
-        {context.chainId > 1 &&
+        {context && context.chainId > 1 &&
           <>
             <span className={styles.alertIsTestnet}>{networkName(context.chainId)}</span>
             {" / "}
