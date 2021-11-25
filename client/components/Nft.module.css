@@ -98,7 +98,7 @@
     color: slategray;
 }
 
-.minter {
+.nftStatusPending {
     max-height: 1.5rem;
     overflow: hidden;
     background: white;
@@ -125,6 +125,27 @@
     margin: 1rem 0;
     background: lightgoldenrodyellow;
     border-radius: 8px;
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.notificationPending {
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, lightgoldenrodyellow 8%, white 18%, lightgoldenrodyellow 33%);
+    background-size: 800px 104px;
+    position: relative;
 }
 
 .mintingPending,

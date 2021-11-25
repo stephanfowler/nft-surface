@@ -159,7 +159,7 @@ export default function SalesForm({
 
 			{userIsOwner && expanded &&
 				<form>
-					{"Sell this NFT for "}
+					{"Sell for "}
 					<input disabled={connecting}
 						autoFocus
 						type="string"
@@ -169,9 +169,6 @@ export default function SalesForm({
 					{" ETH "}
 					<div className={styles.formActions}>
 						<button className={styles.buttony} onClick={submit} disabled={connecting || parseFloat(priceETH) === parseFloat(displayPriceETH)}>OK</button>
-						{parseFloat(priceETH) > 0 &&
-							<button className={styles.buttony} onClick={setZero} disabled={connecting}>Terminate sale</button>
-						}
 						<button className={styles.buttony} onClick={cancel} disabled={connecting}>Cancel</button>
 					</div>
 				</form>
@@ -180,7 +177,7 @@ export default function SalesForm({
 			{userIsOwner && !expanded && priceETH == 0 &&
 				<div>
 					<button onClick={expand}>
-						Sell this NFT
+						Set a sale price
 					</button>
 					{" or trade it on "}
 					{marketplaces()}
@@ -195,7 +192,10 @@ export default function SalesForm({
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>
-						<button className={styles.buttony} onClick={expand}>Amend price or terminate sale</button>
+						<button className={styles.buttony} onClick={expand} disabled={connecting}>Change price</button>
+						{parseFloat(priceETH) > 0 &&
+							<button className={styles.buttony} onClick={setZero} disabled={connecting}>End sale</button>
+						}
 					</form>
 					<div>
 						{"You can also sell on "}

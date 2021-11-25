@@ -125,7 +125,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 			</div>
 
 		: !statusUpdated ?
-			<div className={styles.minter}>
+			<div className={styles.nftStatusPending}>
 				Checking NFT status …
 			</div>
 
@@ -164,7 +164,7 @@ const NftStatus = ({ nft, chainId, status, setStatus }) => {
 				<div>Sorry, this NFT has been burnt or revoked.</div>
 			)}
 
-			<div className={styles.notification}>
+			<div className={`${styles.notification} ${(notify + "").includes("_pending") && styles.notificationPending}`}>
 				{notify ? showNofity()
 
 				: walletAddress ?
