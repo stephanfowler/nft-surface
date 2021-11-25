@@ -5,8 +5,8 @@ require("@nomiclabs/hardhat-etherscan");
 require('@openzeppelin/hardhat-upgrades');
 
 const { 
-  OWNER_ADDRESS,
-  OWNER_PRIVATE_KEY,
+  CREATOR_ADDRESS,
+  SIGNER_PRIVATE_KEY,
   RINKEBY_API_URL,
   ETHERSCAN_API_KEY,
   PINATA_API_KEY,
@@ -22,7 +22,7 @@ module.exports = {
      hardhat: {},
      rinkeby: {
         url: RINKEBY_API_URL,
-        accounts: [`0x${OWNER_PRIVATE_KEY}`]
+        accounts: [`0x${SIGNER_PRIVATE_KEY}`]
      }
   },  
   etherscan: {
@@ -356,7 +356,7 @@ task("catalog", "Prepares the catalog ...")
           idsUploadedImage.push(tokenId);
         }
 
-        nft.metadata.creatorAddress = OWNER_ADDRESS;
+        nft.metadata.creatorAddress = CREATOR_ADDRESS;
         nft.metadata.contractAddress = contractAddress;
 
         // Temporarily add tokenId, so it gets into the IPFS metadata

@@ -1,5 +1,9 @@
 import Link from 'next/link'
 
+export function getAssetHref(template, address, tokenId) {
+    return (template || "").replace("<address>", address).replace("<tokenId>", tokenId) 
+}
+
 export function shortAddress(address, chars) {  
     const l = chars || 4;
     const a = (address || "").toLowerCase();

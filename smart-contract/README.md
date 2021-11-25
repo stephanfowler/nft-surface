@@ -1,13 +1,21 @@
 Expects `.env` 
 ```
-CREATOR_ADDRESS   = "...
-CONTRACT_ADDRESS  = "...
-PRIVATE_KEY       = "...
-RINKEBY_API_URL   = "...
-ETHERSCAN_API_KEY = "...
-PINATA_API_KEY    = "...
-PINATA_API_SECRET = "...
-CATALOG_DIRECTORY = "...
+# For "deploy" task, private key of the contract deployer, who is ideally also the creator (see below),
+# For "catalog" or "sign" tasks following deploy, private key of "agent" role
+SIGNER_PRIVATE_KEY = "...
+
+# The address of the creator/artist/maker/brand/...
+CREATOR_ADDRESS    = "..."
+
+# For Rinkeby network deployments 
+RINKEBY_API_URL    = "..."
+
+# For verifying contracts on Etherscan (all public networks) 
+ETHERSCAN_API_KEY  = "..."
+
+# For NFT metadata and image uploads
+PINATA_API_KEY     = "..."
+PINATA_API_SECRET  = "..."
 ```
 
 Install
@@ -18,13 +26,12 @@ npx hardhat test
 
 Deploy
 ```
-npx hardhat deploy --args ./delpoyment_args_localhost.js --network localhost
-npx hardhat deploy --args ./delpoyment_args_rinkeby.js   --network rinkeby
+npx hardhat deploy --args ./delpoyment_args_localhost.js --network localhost|rinkeby|...
 ```
 
 Signature test
 ```
-npx hardhat sign --network localhost --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...etc
+npx hardhat sign --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...  --network localhost|rinkeby|...
 ```
 
 Verify on Etherscan
@@ -34,9 +41,7 @@ npx hardhat verify --network rinkeby --constructor-args delpoyment_args_rinkeby.
 
 Catalog preparation
 ```
-npx hardhat catalog --network localhost --contract 0x5FbDB... 
-npx hardhat catalog --network rinkeby   --contract 0x15678...
-...etc
+npx hardhat catalog --network localhost --contract 0x5FbDB...  --network localhost|rinkeby|... 
 ```
 
 See example new catalog item below; these are in display order as a JSON array in `catalog_chainid_<chainid of the network>.json`.
@@ -65,7 +70,7 @@ Added by the script:
 
 * `metadata.image`, `metadata.width`, `metadata.width`, `placeholderImage`; the first is the hash URI of `sourceImage` which is auomatically uploaded to IPFS.
 
-* `signature` and `status: "claimable"` - only if you specified `weiPrice`. 
+* If you specified `weiPrice`, then `signature` and `status: "mintable"` are added 
 
 * If you did NOT specify `weiPrice`, then `status: "withheld"` will be added. Note that the computed tokenURI will be useful to an authorised user if minting the NFT directly using the mint() contract method.
 

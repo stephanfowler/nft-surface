@@ -2,7 +2,7 @@ import { useState } from "react";
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { shortAddress} from "@utils/links.js";
+import { shortAddress, getAssetHref } from "@utils/links.js";
 
 const NftStatus = dynamic(
   () => import('../components/clientside/NftStatus'),
@@ -10,10 +10,6 @@ const NftStatus = dynamic(
 )
 
 import styles from './Nft.module.css'
-
-function getAssetHref(template, address, tokenId) {
-    return (template || "").replace("<address>", address).replace("<tokenId>", tokenId) 
-}
 
 function getIpfsHref(template, ipfsURI) {
     const ipfsHash = (ipfsURI || "").replace("ipfs://", "");
