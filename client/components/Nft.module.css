@@ -191,3 +191,8 @@
 .marketplaces a {
     font-weight: bold;
 }
+
+.bigInput {
+    display: block;
+    width: 100%;
+}

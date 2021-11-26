@@ -53,16 +53,12 @@ li {
   padding: 0 0 1rem 0;
 }
 
-form{
-  padding: 0.5rem 0;
-}
-
 button {
   display: block;
   margin: 0.5rem 0;
   padding: 0.6rem 1rem 0.5rem 1rem;
   border: 0px;
-  border-radius: 8px;
+  border-radius: 4px;
   color: white;
   background-color: orange;
   font-size: large;

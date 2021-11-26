@@ -17,8 +17,6 @@ function getIpfsHref(template, ipfsURI) {
 }
 
 export default function Nft({ nft, context }) {
-  const [status, setStatus] = useState(nft.status);
-
   const contractAddress = context.contractAddress;
   const creatorAddress = context.creatorAddress;
   const tokenId = nft.tokenId;
@@ -68,7 +66,7 @@ export default function Nft({ nft, context }) {
         </div>
 
         <div className={styles.nftActions}>
-          <NftStatus nft={nft} context={context} status={status} setStatus={setStatus} />
+          <NftStatus nft={nft} context={context} />
         </div>
 
         <div className={styles.nftDetails}>
@@ -77,13 +75,9 @@ export default function Nft({ nft, context }) {
           <div>Token Standard : ERC 721</div>
           <div>
             {"Token ID : "}
-            {(status === 'minted' || status === 'burnt') ?
-              <Link href={nft.etherscanToken}>
-                  <a title="view token on etherscan">{tokenId}</a>
-              </Link>
-              :
-              <span>{tokenId}{" (proposed)"}</span>
-            }
+						<Link href={nft.etherscanToken}>
+								<a title="view token on etherscan">{tokenId}</a>
+						</Link>
           </div>
           <div>
               {"Contract : "}

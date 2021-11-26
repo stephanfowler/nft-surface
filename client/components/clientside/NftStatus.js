@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import Mint from '@components/clientside/Mint'
-import SellBuy from '@components/clientside/SellBuy'
+import Buy from '@components/clientside/Buy'
+import Sell from '@components/clientside/Sell'
 import Transfer from '@components/clientside/Transfer'
 
 import styles from '@components/Nft.module.css'
@@ -19,7 +20,8 @@ import {
 	etherscanTxLink
 } from "@utils/links.js"
 
-const NftStatus = ({ nft, context, status, setStatus }) => {
+const NftStatus = ({ nft, context }) => {
+  const [status, setStatus] = useState(nft.status);
 	const [walletAddress, setWallet] = useState();
 	const [owner, setOwner] = useState();
 	const [tx, setTx] = useState();
@@ -30,7 +32,9 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
-	const userIsOwner = (owner && walletAddress && (ethers.utils.getAddress(owner) === ethers.utils.getAddress(walletAddress)));
+
+	const userIsOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) === ethers.utils.getAddress(owner)));
+	const userIsNotOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) !== ethers.utils.getAddress(owner)));
 
 	useEffect(() => {
 		fetchWallet();
@@ -42,6 +46,8 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 			setTx();
 			setChainIdMismatch();
 			setNotify();
+			setConnecting();
+			forceRender();
 		}
 	}, [render]);
 
@@ -93,7 +99,7 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Please be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
+				return <div>{"Be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
 
 			case "tx_succeded":
 				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
@@ -101,8 +107,8 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 			case "tx_failed":
 				return <div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
 
-			case "confirmation_required":
-				return <div>{"Please confirm using your wallet..."}</div>
+			case "confirmation_pending":
+				return <div>{"Confirm this using your wallet..."}</div>
 
 			case "wallet_unavailable":
 				return (
@@ -136,11 +142,43 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 
 		:
 		<div className={styles.nftStatus}>
-			{status === "minted" &&
-				<SellBuy
+
+			<div className={styles.nftOwner}>
+				{"This NFT is owned by "}
+				{etherscanAddressLink(owner, userIsOwner && "you")}
+			</div>
+
+			{status === "minted" && userIsOwner && !connecting &&
+				<>
+					<Sell
+						nft={nft}
+						setNotify={setNotify}
+						setTx={setTx}
+						connecting={connecting}
+						setConnecting={setConnecting}
+						forceRender={forceRender}
+						contractAddress={contractAddress}
+						chainId={chainId} />
+
+					<Transfer
+						nft={nft}
+						doConnectWallet={doConnectWallet}
+						walletAddress={walletAddress}
+						setOwner={setOwner}
+						setNotify={setNotify}
+						setTx={setTx}
+						connecting={connecting}
+						setConnecting={setConnecting}
+						forceRender={forceRender}
+						contractAddress={contractAddress}
+						chainId={chainId} />
+				</>
+			}
+
+			{status === "minted" && userIsNotOwner && !connecting &&
+				<Buy
 					nft={nft}
 					owner={owner}
-					userIsOwner={userIsOwner}
 					doConnectWallet={doConnectWallet}
 					walletAddress={walletAddress}
 					setOwner={setOwner}
@@ -153,23 +191,7 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 					chainId={chainId} />
 			}
 
-			{status === "minted" && userIsOwner &&
-				<Transfer
-					nft={nft}
-					owner={owner}
-					doConnectWallet={doConnectWallet}
-					walletAddress={walletAddress}
-					setOwner={setOwner}
-					setNotify={setNotify}
-					setTx={setTx}
-					connecting={connecting}
-					setConnecting={setConnecting}
-					forceRender={forceRender}
-					contractAddress={contractAddress}
-					chainId={chainId} />
-			}
-
-			{status === "mintable" &&
+			{status === "mintable" && !connecting &&
 				<Mint
 					nft={nft}
 					doConnectWallet={doConnectWallet}

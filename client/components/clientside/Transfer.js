@@ -25,7 +25,7 @@ export default function Transfer({
 
 	useEffect(() => {
 		return () => {
-			setExpanded();
+			setRecipient();
 			setExpanded();
 		};
 	}, []);
@@ -47,7 +47,7 @@ export default function Transfer({
 
 	const doTransfer = async () => {
 		if (!walletAddress) await doConnectWallet();
-		setNotify("confirmation_required");
+		setNotify("confirmation_pending");
 		setConnecting(true);
 		try {
 			const { tx, error } = await contractCall_safeTransferFrom(nft, walletAddress, recipient, contractAddress, chainId);
@@ -76,8 +76,10 @@ export default function Transfer({
 		<div>
 			{expanded &&
 				<form>
-					{"Transfer to "}
-					<input disabled={connecting}
+					{". Transfer it to address:"}
+					<input
+						className={styles.bigInput}
+						disabled={connecting}
 						autoFocus
 						type="string"
 						value={recipient}
@@ -92,7 +94,7 @@ export default function Transfer({
 
 			{!expanded &&
 				<div>
-					· <a href="" onClick={expand}>Transfer</a> it
+					{". "}<a href="" onClick={expand}>Transfer</a>{" it"}
 				</div>
 			}
 		</div>
