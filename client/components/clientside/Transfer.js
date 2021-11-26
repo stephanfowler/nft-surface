@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
 
 import {
 	isTransactionMined,
@@ -42,11 +43,20 @@ export default function Transfer({
 
 	const expand = (evt) => {
 		evt.preventDefault();
+		setRecipient("");
 		setExpanded(true);
 	}
 
 	const doTransfer = async () => {
 		if (!walletAddress) await doConnectWallet();
+		if (!ethers.utils.isAddress(recipient)) {
+			setNotify("invalid_address");
+			return;
+		}
+		if (ethers.utils.getAddress(walletAddress) === ethers.utils.getAddress(recipient)) {
+			setNotify("transfer_to_self");
+			return;
+		}
 		setNotify("confirmation_pending");
 		setConnecting(true);
 		try {
@@ -76,7 +86,7 @@ export default function Transfer({
 		<div>
 			{expanded &&
 				<form>
-					{". Transfer it to address:"}
+					{"Transfer to address:"}
 					<input
 						className={styles.bigInput}
 						disabled={connecting}
@@ -94,7 +104,7 @@ export default function Transfer({
 
 			{!expanded &&
 				<div>
-					{". "}<a href="" onClick={expand}>Transfer</a>{" it"}
+					<a href="" onClick={expand}>Transfer to another address</a>
 				</div>
 			}
 		</div>

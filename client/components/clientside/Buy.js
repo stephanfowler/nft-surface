@@ -78,29 +78,23 @@ export default function Buy({
 
 	return (
 		<div>
-			{priceETH == 0 &&
-				<div>
-					{"· Make an offer on "}
-					{marketplaces()}
-				</div>
-			}
-
 			{priceETH > 0 &&
 				<div>
+					{"Price "}
 					<img className={styles.ethereumLogo} src="/ethereum.svg" />
 					<span className={styles.nftPriceETH}>
 						{priceETH}{" ETH"}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<button onClick={contractBuy} disabled={connecting || !window.ethereum} >
-						Buy this NFT
+						Buy now
 					</button>
-					<div>
-						{"· Make an offer on "}
-						{marketplaces()}
-					</div>
 				</div>
 			}
+			<div>
+				{"Buy this NFT on "}
+				{marketplaces()}
+			</div>
 		</div>
 	);
 }

@@ -36,14 +36,16 @@
 }
 
 .nftDetailsHeader {
-    font-size: smaller;
     color: darkgray;
     border-top: 1px solid lightgray;
     display: inline-block;
     padding: 0.25rem 2rem 0 0;
 }
 
-.nftActions div,
+.nftActions div {
+    margin-bottom: 0.5rem;
+}
+
 .nftDetails div {
     margin-bottom: 0.25rem;
 }
@@ -92,12 +94,6 @@
     font-size:smaller;
 }
 
-.nftEdition,
-.nftCollection,
-.nftDimensions {
-    color: slategray;
-}
-
 .nftStatusPending {
     max-height: 1.5rem;
     overflow: hidden;
@@ -121,10 +117,10 @@
 .notification {
     font-size: smaller;
     color: orange;
-    padding: 0.5rem 1rem 0.4rem 1rem;
+    padding: 0.5rem 1rem 0.2rem 1rem;
     margin: 1rem 0;
     background: lightgoldenrodyellow;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 @keyframes placeHolderShimmer{
@@ -186,6 +182,10 @@
 
 .formActions {
     margin: 0.5rem 0;
+}
+
+.marketplaces {
+	margin:0 0 1rem 0;
 }
 
 .marketplaces a {

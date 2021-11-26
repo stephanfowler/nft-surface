@@ -27,7 +27,7 @@ export default function Sell({
 	useEffect(() => {
 		async function getPrice() {
 			const _price = await contractCall_price(nft, contractAddress, chainId);
-			const _priceETH = ethers.utils.formatEther(_price);
+			const _priceETH = parseFloat(ethers.utils.formatEther(_price));
 			setPriceETH(_priceETH);
 			setDisplayPriceETH(_priceETH);
 		}
@@ -53,20 +53,20 @@ export default function Sell({
 
 	const setZero = (evt) => {
 		evt.preventDefault();
-		setDisplayPriceETH("0")
 		contractSetPrice("0");
 	}
 
 	const expand = (evt) => {
 		evt.preventDefault();
+		setDisplayPriceETH(priceETH || "");
 		setExpanded(true);
 	}
 
 	const marketplaces = () => {
-		return <span className={styles.marketplaces}>
-			<Link href={nft.openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
+		return <span>
+			<Link href={nft.openseaAsset}><a>OpenSea</a></Link>
 			{" or "}
-			<Link href={nft.raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
+			<Link href={nft.raribleAsset}><a>Rarible</a></Link>
 		</span>
 	}
 
@@ -107,13 +107,13 @@ export default function Sell({
 					{"Sell for "}
 					<input disabled={connecting}
 						autoFocus
-						type="string"
+						type="number"
 						value={displayPriceETH}
 						onChange={e => setDisplayPriceETH(e.target.value)}
 					/>
 					{" ETH "}
 					<div className={styles.formActions}>
-						<button className={styles.buttony} onClick={submit} disabled={connecting || parseFloat(priceETH) === parseFloat(displayPriceETH)}>OK</button>
+						<button className={styles.buttony} onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
 						<button className={styles.buttony} onClick={cancel} disabled={connecting}>Cancel</button>
 					</div>
 				</form>
@@ -124,8 +124,6 @@ export default function Sell({
 					<button onClick={expand}>
 						Set a sale price
 					</button>
-					{"· Trade it on "}
-					{marketplaces()}
 				</div>
 			}
 
@@ -142,11 +140,14 @@ export default function Sell({
 							<button className={styles.buttony} onClick={setZero} disabled={connecting}>End sale</button>
 						}
 					</form>
-					<div>
-						{"· Sell it on "}
-						{marketplaces()}
-					</div>
 				</>
+			}
+
+			{!expanded &&
+				<div className={styles.marketplaces}>
+					{"Sell on "}
+					{marketplaces()}
+				</div>
 			}
 
 		</div>

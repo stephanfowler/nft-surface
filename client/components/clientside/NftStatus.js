@@ -99,7 +99,7 @@ const NftStatus = ({ nft, context }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Be patient while transaction "}{etherscanTxLink(tx.hash)}{" is added to the blockchain..."}</div>
+				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being added to the blockchain..."}</div>
 
 			case "tx_succeded":
 				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
@@ -109,6 +109,12 @@ const NftStatus = ({ nft, context }) => {
 
 			case "confirmation_pending":
 				return <div>{"Confirm this using your wallet..."}</div>
+
+			case "transfer_to_self":
+				return <div>{"You are already the owner!"}</div>
+
+			case "invalid_address":
+				return <div>{"That is not a valid Ethereum address"}</div>
 
 			case "wallet_unavailable":
 				return (
@@ -143,10 +149,16 @@ const NftStatus = ({ nft, context }) => {
 		:
 		<div className={styles.nftStatus}>
 
-			{owner &&
+			{owner && userIsOwner &&
 				<div className={styles.nftOwner}>
-					{"This NFT is owned by "}
-					{etherscanAddressLink(owner, userIsOwner && "you")}
+					{etherscanAddressLink(owner, "You")}{" own this NFT"}
+				</div>
+			}
+
+			{owner && !userIsOwner &&
+				<div className={styles.nftOwner}>
+					{"Owned by user "}
+					{etherscanAddressLink(owner)}
 				</div>
 			}
 
