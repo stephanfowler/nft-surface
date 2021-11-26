@@ -116,3 +116,13 @@ export const contractCall_buy = async (nft, salePrice, contractAddress, chainId)
   }
 };
 
+export const contractCall_safeTransferFrom = async (nft, from, to, contractAddress, chainId) => {
+  const contract = await getWriteableContract(contractAddress, chainId);
+  try {
+    const tx = await contract.safeTransferFrom(from, to, nft.tokenId);
+    return { tx };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+

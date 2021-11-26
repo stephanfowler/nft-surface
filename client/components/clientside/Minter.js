@@ -15,6 +15,7 @@ export default function Minter({
 	setOwner,
 	setNotify,
 	setTx,
+	forceRender,
 	contractAddress,
 	chainId }) {
 
@@ -34,6 +35,7 @@ export default function Minter({
 				if (txReceipt) {
 					setNotify("tx_succeded");
 					setOwner(walletAddress);
+					forceRender(Math.random())
 				} else {
 					setNotify("tx_failed");
 				}

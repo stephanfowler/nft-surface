@@ -23,15 +23,15 @@ export default function SalesForm({
 	setOwner,
 	setNotify,
 	setTx,
+	forceRender,
 	contractAddress,
 	chainId }) {
 
 	const [price, setPrice] = useState();
 	const [priceETH, setPriceETH] = useState();
 	const [displayPriceETH, setDisplayPriceETH] = useState();
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState();
 	const [connecting, setConnecting] = useState();
-	const [render, forceRender] = useState();
 
 	const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
 
@@ -52,7 +52,7 @@ export default function SalesForm({
 			setExpanded();
 			setConnecting();
 		};
-	}, [render]);
+	}, [owner]);
 
 	const cancel = (evt) => {
 		evt.preventDefault();
@@ -62,13 +62,13 @@ export default function SalesForm({
 
 	const submit = (evt) => {
 		evt.preventDefault();
-		doUpdate(displayPriceETH)
+		contractSetPrice(displayPriceETH)
 	}
 
 	const setZero = (evt) => {
 		evt.preventDefault();
 		setDisplayPriceETH("0")
-		doUpdate("0");
+		contractSetPrice("0");
 	}
 
 	const expand = (evt) => {
@@ -79,12 +79,12 @@ export default function SalesForm({
 	const marketplaces = () => {
 		return <span className={styles.marketplaces}>
 			<Link href={nft.openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-			{" · "}
+			{" or "}
 			<Link href={nft.raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
 		</span>
 	}
 
-	const doUpdate = async (newPriceETH) => {
+	const contractSetPrice = async (newPriceETH) => {
 		newPriceETH = newPriceETH || '0';
 		if (newPriceETH != priceETH) {
 			const newPrice = ethers.utils.parseEther(newPriceETH);
@@ -100,7 +100,7 @@ export default function SalesForm({
 						setNotify("tx_succeded")
 						setPrice(newPrice);
 						setDisplayPriceETH(newPriceETH);
-						forceRender(newPrice);
+						forceRender(Math.random());
 					} else {
 						setNotify("tx_failed");
 					}
@@ -115,12 +115,12 @@ export default function SalesForm({
 		}
 	}
 
-	const doBuy = async (e) => {
+	const contractBuy = async (e) => {
 		if (!window.ethereum) return;
 		setNotify("confirmation_required");
 		setConnecting(true);
 		if (!walletAddress) await doConnectWallet();
-		if (walletAddress === owner) return;
+		if (userIsOwner) return;
 		try {
 			const { tx, error } = await contractCall_buy(nft, price, contractAddress, chainId);
 			if (tx) {
@@ -130,7 +130,7 @@ export default function SalesForm({
 				if (txReceipt) {
 					setNotify("tx_succeded");
 					setOwner(walletAddress);
-					forceRender(1);
+					forceRender(Math.random());
 				} else {
 					setNotify("tx_failed");
 				}
@@ -179,7 +179,7 @@ export default function SalesForm({
 					<button onClick={expand}>
 						Set a sale price
 					</button>
-					{" or trade it on "}
+					{"· Trade it on "}
 					{marketplaces()}
 				</div>
 			}
@@ -198,7 +198,7 @@ export default function SalesForm({
 						}
 					</form>
 					<div>
-						{"You can also sell on "}
+						{"· Sell it on "}
 						{marketplaces()}
 					</div>
 				</>
@@ -206,7 +206,7 @@ export default function SalesForm({
 
 			{!userIsOwner && priceETH == 0 &&
 				<div>
-					{"Make an offer on "}
+					{"· Make an offer on "}
 					{marketplaces()}
 				</div>
 			}
@@ -218,11 +218,11 @@ export default function SalesForm({
 						{priceETH}{" ETH"}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
-					<button onClick={doBuy} disabled={connecting || !window.ethereum} >
+					<button onClick={contractBuy} disabled={connecting || !window.ethereum} >
 						Buy this NFT
 					</button>
 					<div>
-						{"or make an offer on "}
+						{"· Make an offer on "}
 						{marketplaces()}
 					</div>
 				</div>

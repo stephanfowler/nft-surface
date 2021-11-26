@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Minter from '@components/clientside/Minter'
 import SalesForm from '@components/clientside/SalesForm'
+import Transfer from '@components/clientside/Transfer'
 import styles from '@components/Nft.module.css'
 
 import {
@@ -22,6 +23,7 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 	const [tx, setTx] = useState();
 	const [chainIdMismatch, setChainIdMismatch] = useState();
 	const [notify, setNotify] = useState();
+	const [render, forceRender] = useState();
 
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
@@ -37,14 +39,14 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 			setChainIdMismatch();
 			setNotify();
 		}
-	}, []);
+	}, [render]);
 
 	async function updateTokenStatus() {
 		const _owner = await contractCall_ownerOf(nft, contractAddress, chainId);
 		if (_owner) {
 			setStatus("minted");
 			setOwner(_owner);
-		} else if (!nft.weiPrice) {
+		} else if (!nft.signature) {
 			setStatus("withheld");
 		} else {
 			await contractCall_mintable(nft, contractAddress, chainId) ?
@@ -139,6 +141,21 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 					setOwner={setOwner}
 					setNotify={setNotify}
 					setTx={setTx}
+					forceRender={forceRender}
+					contractAddress={contractAddress}
+					chainId={chainId} />
+			}
+
+			{status === "minted" &&
+				<Transfer
+					nft={nft}
+					owner={owner}
+					doConnectWallet={doConnectWallet}
+					walletAddress={walletAddress}
+					setOwner={setOwner}
+					setNotify={setNotify}
+					setTx={setTx}
+					forceRender={forceRender}
 					contractAddress={contractAddress}
 					chainId={chainId} />
 			}
@@ -151,6 +168,7 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 					setOwner={setOwner}
 					setNotify={setNotify}
 					setTx={setTx}
+					forceRender={forceRender}
 					contractAddress={contractAddress}
 					chainId={chainId} />
 			}
