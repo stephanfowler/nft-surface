@@ -1,35 +1,34 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
 
-import Link from 'next/link'
 import {
 	isTransactionMined,
 	contractCall_safeTransferFrom
 } from "@utils/ethereum-interact.js";
 
-import {
-	etherscanAddressLink
-} from "@utils/links.js"
-
 import styles from '@components/Nft.module.css'
 
 export default function Transfer({
 	nft,
-	owner,
 	doConnectWallet,
 	walletAddress,
 	setOwner,
 	setNotify,
 	setTx,
+	connecting,
+	setConnecting,
 	forceRender,
 	contractAddress,
 	chainId }) {
 
-	const [expanded, setExpanded] = useState();
-	const [connecting, setConnecting] = useState();
 	const [recipient, setRecipient] = useState("");
+	const [expanded, setExpanded] = useState();
 
-	const userIsOwner = (owner && walletAddress && (owner.toUpperCase() === walletAddress.toUpperCase()));
+	useEffect(() => {
+		return () => {
+			setExpanded();
+			setExpanded();
+		};
+	}, []);
 
 	const cancel = (evt) => {
 		evt.preventDefault();
@@ -48,8 +47,6 @@ export default function Transfer({
 
 	const doTransfer = async () => {
 		if (!walletAddress) await doConnectWallet();
-		console.log(walletAddress, owner, userIsOwner)
-		if (!userIsOwner) return;
 		setNotify("confirmation_required");
 		setConnecting(true);
 		try {
@@ -77,7 +74,7 @@ export default function Transfer({
 
 	return (
 		<div>
-			{userIsOwner && expanded &&
+			{expanded &&
 				<form>
 					{"Transfer to "}
 					<input disabled={connecting}
@@ -93,7 +90,7 @@ export default function Transfer({
 				</form>
 			}
 
-			{userIsOwner && !expanded &&
+			{!expanded &&
 				<div>
 					· <a href="" onClick={expand}>Transfer</a> it
 				</div>

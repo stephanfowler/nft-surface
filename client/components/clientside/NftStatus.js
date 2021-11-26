@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
-import Minter from '@components/clientside/Minter'
-import SalesForm from '@components/clientside/SalesForm'
+import Mint from '@components/clientside/Mint'
+import SellBuy from '@components/clientside/SellBuy'
 import Transfer from '@components/clientside/Transfer'
+
 import styles from '@components/Nft.module.css'
 
 import {
@@ -23,10 +25,12 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 	const [tx, setTx] = useState();
 	const [chainIdMismatch, setChainIdMismatch] = useState();
 	const [notify, setNotify] = useState();
+	const [connecting, setConnecting] = useState();
 	const [render, forceRender] = useState();
 
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
+	const userIsOwner = (owner && walletAddress && (ethers.utils.getAddress(owner) === ethers.utils.getAddress(walletAddress)));
 
 	useEffect(() => {
 		fetchWallet();
@@ -133,20 +137,23 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 		:
 		<div className={styles.nftStatus}>
 			{status === "minted" &&
-				<SalesForm
+				<SellBuy
 					nft={nft}
 					owner={owner}
+					userIsOwner={userIsOwner}
 					doConnectWallet={doConnectWallet}
 					walletAddress={walletAddress}
 					setOwner={setOwner}
 					setNotify={setNotify}
 					setTx={setTx}
+					connecting={connecting}
+					setConnecting={setConnecting}
 					forceRender={forceRender}
 					contractAddress={contractAddress}
 					chainId={chainId} />
 			}
 
-			{status === "minted" &&
+			{status === "minted" && userIsOwner &&
 				<Transfer
 					nft={nft}
 					owner={owner}
@@ -155,19 +162,23 @@ const NftStatus = ({ nft, context, status, setStatus }) => {
 					setOwner={setOwner}
 					setNotify={setNotify}
 					setTx={setTx}
+					connecting={connecting}
+					setConnecting={setConnecting}
 					forceRender={forceRender}
 					contractAddress={contractAddress}
 					chainId={chainId} />
 			}
 
 			{status === "mintable" &&
-				<Minter
+				<Mint
 					nft={nft}
 					doConnectWallet={doConnectWallet}
 					walletAddress={walletAddress}
 					setOwner={setOwner}
 					setNotify={setNotify}
 					setTx={setTx}
+					connecting={connecting}
+					setConnecting={setConnecting}
 					forceRender={forceRender}
 					contractAddress={contractAddress}
 					chainId={chainId} />
