@@ -143,10 +143,12 @@ const NftStatus = ({ nft, context }) => {
 		:
 		<div className={styles.nftStatus}>
 
-			<div className={styles.nftOwner}>
-				{"This NFT is owned by "}
-				{etherscanAddressLink(owner, userIsOwner && "you")}
-			</div>
+			{owner &&
+				<div className={styles.nftOwner}>
+					{"This NFT is owned by "}
+					{etherscanAddressLink(owner, userIsOwner && "you")}
+				</div>
+			}
 
 			{status === "minted" && userIsOwner && !connecting &&
 				<>
