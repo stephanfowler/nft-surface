@@ -1,7 +1,11 @@
 import Head from 'next/head'
 import Layout from '@components/Layout'
 import styles from '@components/Layout.module.css'
-import Link from 'next/link'
+
+/* 
+Is it real / what it says it is?
+Do I have the authority to sell it?
+*/
 
 export default function FirstPost() {
     return (

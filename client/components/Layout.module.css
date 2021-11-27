@@ -14,11 +14,6 @@
   color: black;
 }
 
-.header a {
-  color: orange;
-  text-decoration: none;
-}
-
 .header a:hover {
   color: black;
 }

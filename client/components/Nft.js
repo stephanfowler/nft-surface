@@ -9,7 +9,7 @@ const NftStatus = dynamic(
   { ssr: false }
 )
 
-import styles from './Nft.module.css'
+import styles from '@components/Nft.module.css'
 
 function getIpfsHref(template, ipfsURI) {
     const ipfsHash = (ipfsURI || "").replace("ipfs://", "");
@@ -76,7 +76,9 @@ export default function Nft({ nft, context }) {
           <div>
             {"Token ID : "}
 						<Link href={nft.etherscanToken}>
-								<a title="view token on etherscan">{tokenId}</a>
+								<a title="view token on etherscan">
+									{tokenId}
+								</a>
 						</Link>
           </div>
           <div>

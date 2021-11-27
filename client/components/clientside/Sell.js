@@ -113,8 +113,8 @@ export default function Sell({
 					/>
 					{" ETH "}
 					<div className={styles.formActions}>
-						<button className={styles.buttony} onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
-						<button className={styles.buttony} onClick={cancel} disabled={connecting}>Cancel</button>
+						<button onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
+						<button className={styles.secondary} onClick={cancel} disabled={connecting}>Cancel</button>
 					</div>
 				</form>
 			}
@@ -135,9 +135,9 @@ export default function Sell({
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>
-						<button className={styles.buttony} onClick={expand} disabled={connecting}>Change price</button>
+						<button onClick={expand} disabled={connecting}>Change price</button>
 						{parseFloat(priceETH) > 0 &&
-							<button className={styles.buttony} onClick={setZero} disabled={connecting}>End sale</button>
+							<button className={styles.secondary} onClick={setZero} disabled={connecting}>End sale</button>
 						}
 					</form>
 				</>

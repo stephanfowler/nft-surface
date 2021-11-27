@@ -96,15 +96,15 @@ export default function Transfer({
 						onChange={e => setRecipient(e.target.value)}
 					/>
 					<div className={styles.formActions}>
-						<button className={styles.buttony} onClick={submit} disabled={connecting || !recipient}>OK</button>
-						<button className={styles.buttony} onClick={cancel} disabled={connecting}>Cancel</button>
+						<button onClick={submit} disabled={connecting || !recipient}>OK</button>
+						<button  className={styles.secondary} onClick={cancel} disabled={connecting}>Cancel</button>
 					</div>
 				</form>
 			}
 
 			{!expanded &&
 				<div>
-					<a href="" onClick={expand}>Transfer to another address</a>
+					<a href="" onClick={expand}>Transfer</a>{" to another address"}
 				</div>
 			}
 		</div>

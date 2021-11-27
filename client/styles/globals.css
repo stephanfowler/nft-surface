@@ -60,7 +60,7 @@ button {
   border: 0px;
   border-radius: 4px;
   color: white;
-  background-color: orange;
+  background-color: black;
   font-size: large;
   text-align: center;
   font-weight: bold;
@@ -68,7 +68,7 @@ button {
 }
 
 button:disabled {
-  background-color: grey;
+  background-color: #666;
   cursor:inherit;
 }
 
