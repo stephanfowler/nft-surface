@@ -232,7 +232,7 @@ const NftStatus = ({ nft, context }) => {
 				{notify ? showNofity()
 
 				: walletAddress ?
-					<div>Your wallet address is{" "}{etherscanAddressLink(walletAddress)}</div>
+					<div>{"You are connected as "}{etherscanAddressLink(walletAddress)}</div>
 
 				: window.ethereum ?
 					<div>{"Connect your "}<a href="" onClick={doConnectWallet}>Ethereum wallet</a></div>
