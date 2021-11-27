@@ -43,6 +43,7 @@ export default function Sell({
 	const cancel = (evt) => {
 		evt.preventDefault();
 		setExpanded(false);
+		setNotify();
 		setDisplayPriceETH(priceETH);
 	}
 

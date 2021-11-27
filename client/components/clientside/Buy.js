@@ -92,7 +92,7 @@ export default function Buy({
 				</div>
 			}
 			<div>
-				{"Buy this NFT on "}
+				{"Buy on "}
 				{marketplaces()}
 			</div>
 		</div>

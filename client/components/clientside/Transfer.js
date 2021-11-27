@@ -34,6 +34,7 @@ export default function Transfer({
 	const cancel = (evt) => {
 		evt.preventDefault();
 		setExpanded(false);
+		setNotify();
 	}
 
 	const submit = (evt) => {
