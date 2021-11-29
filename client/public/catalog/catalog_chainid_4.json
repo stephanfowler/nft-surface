@@ -222,7 +222,6 @@
         },
         {
             "tokenId": 60,
-            "weiPrice": "10000000000000000",
             "sourceImage": "images/street_of_dreams.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -237,8 +236,7 @@
             },
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgME/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDBAAREhMhMVEFBkEU/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAYEQADAQEAAAAAAAAAAAAAAAAAAQIREv/aAAwDAQACEQMRAD8AXlmRGaY0Y7bhab1HClVkL7GR3HBtbn7U1Sg+oupjkpcOYNn+Dv8ABSL2nxH5vCTQZLiyAdMgBJSRbrkW2t1WKI0hERlGJOKEi+RF9qlmem9Fpo//2Q==",
             "webOptimizedImage": "images/street_of_dreams_web.jpg",
-            "tokenURI": "ipfs://QmaxRk26ML7TmeRBmoBJPg4xF3AWAiLkjpBVkjydATALkW",
-            "signature": "0xd40315dad86490df1c00d090c555a921f589c4dd5090838aca4d2924b2e5a1490aa4ffef09a224512c580e3c0389f6341b166b262e3796086cd9ecc1211702ee1c"
+            "tokenURI": "ipfs://QmaxRk26ML7TmeRBmoBJPg4xF3AWAiLkjpBVkjydATALkW"
         }
     ],
     "context": {

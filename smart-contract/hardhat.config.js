@@ -381,6 +381,7 @@ task("catalog", "Prepares the catalog ...")
 						console.log("Errored " + tokenId + " ...signature invalid?")
 					}
 				} else {
+					delete nft.signature;
 					idsWithheld.push(nft.tokenId);
 				}
 
