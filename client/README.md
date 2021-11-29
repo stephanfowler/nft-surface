@@ -1,13 +1,20 @@
 # NFT Surface - client site
 
-The frontend is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
+The frontend is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc. 
 
+It can also be run locally using Hardhat. This is highly recommended, to familiarise yourself with the process.
 
-To run on localhost, first deploy the contract and prepare a catalog (see [smart-contract](/smart-contract) README). Then, in the `client` directory:
+## Deployment
+
+First deploy the smart contract and prepare a catalog (see [smart-contract](/smart-contract) README). Then, in the `client` directory:
 ```
 npm install
 npm run dev
 ```
+
+## Configuration
+
+You will need to ammend `clien/.env`. Note that this file doe NOT contain secrets, unlike `smart-contract/.env`. 
 
 ```
 #catalogFilename = 'catalog_chainid_31337.json'
@@ -17,27 +24,25 @@ catalogFilename = 'catalog_chainid_4.json'
 # or a URL path to a remote directory, eg. 'http://example.com/catalog'
 catalogBase = '/catalog'
 
-creatorAddress  = '0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844'
+creatorAddress  = '0x72dAd7...'
 creatorName     = 'FLOX'
 siteTitle       = 'FLOX NFT Catalog'
 siteDescription = 'Artworks by FLOX for minting, trading or linking to secondary open NFT marketplaces'
 twitterHandle   = '@stephanfowler'
 
-networkKey = 'https://eth-rinkeby.alchemyapi.io/v2/JZzxLi6MDK2NoxcNmEC7DNDdwICaMxkf'
+networkKey = 'https://eth-rinkeby.alchemyapi.io/v2/JZzxf4....'
 ```
 
+The `networkKey` property contains an API key that will be visible in th client. You should configure your Ethereum provifer to only accept requests from your deployment domain(s).
 
-If using images hosted on an external URL, In `next.config.js`, set your catalog json URL and images base URL, not forgetting to enable your domain as an image source: 
+If using catalog and images hosted on an external URL, in `next.config.js` enable your domain as an image source: 
 ```
 module.exports = {
     env: {
-      catalogUrl:       'http://stephanfowler.com/nft-agent-assets/catalog_chainid_4.json',
-      catalogImages:    'http://stephanfowler.com/nft-agent-assets/images',
       ...
-
     },
     images: {
-      domains: ['stephanfowler.com'],
+      domains: ['myimages.com'],
     },
   }
   ```

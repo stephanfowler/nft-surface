@@ -2,15 +2,11 @@
 
 Built using Hardhat and ethers.js
 
-Adds the following Hardhat tasks:
+## Configuration
 
- * __deploy__ : Deploys the contract using constructor arguments in the specified file (and runs a signature test against the contract)
- *  __sign__ : Generates a signature for the 'mint' contract method, and tests it against the deployed contract
-  * __catalog__ : Given a json catalog file, automatically manages IPFS metadata and image uploads, lay-minting signatures, etc 
+### Contract constructor
 
-For usage, do `npx hardhat help deploy`, etc
-
-The smart contract requires the following deployment arguments, specified in the relevant deployment_args-*.js file:
+The smart contract requires the following contract constructor arguments for deployment. These are specified in the relevant deployment_args-*.js file (depending on the network you are deploying to):
 
 ```
 * "Andy Warhol"        // ERC721 name
@@ -22,7 +18,10 @@ The smart contract requires the following deployment arguments, specified in the
 * 495                  // Royalty basis points, eg. 495 is 4.95%
 ```
 
-Expects `.env` 
+### Environment variables
+
+Expects the below `.env` file in the directory `smart-contract`. IMPORTANT: this file contains secrets and is referenced in `.gitignore`)
+
 ```
 # For the "deploy" task, private key of the contract deployer, who is ideally also the creator (see below). For "catalog" or "sign" tasks following a deploy, private key of "agent" role.
 SIGNER_PRIVATE_KEY = "...
@@ -44,59 +43,59 @@ PINATA_API_KEY     = "..."
 PINATA_API_SECRET  = "..."
 ```
 
-## Install
+## Installation
 ```
 npm install
 npx hardhat test
 ```
 
-## Deployment and management
+## Contract deployment and catalog management
 
-The following additional Hardhat tasks are provided:
+The following additional Hardhat tasks are provided by the project:
 
  * __deploy__ : Deploys the contract using constructor arguments in the specified file (and runs a signature test against the contract)
- *  __sign__ : Generates a signature for the 'mint' contract method, and tests it against the deployed contract
-  * __catalog__ : Given a json catalog file, automatically manages IPFS metadata and image uploads, lay-minting signatures, etc.
+ *  __sign__ : Generates a signature for the lazy 'mint' contract method, and tests it against the deployed contract
+  * __catalog__ : Given a json catalog file, automatically manages IPFS metadata and image uploads, lazy-minting signatures, etc.
 
-For usage, do `npx hardhat help deploy`, etc
+For usage, do `npx hardhat help deploy`, etc.
 
+The following examples illustrate usage on the Rinkeby testnet.
 
 ### Deploy
 ```
-npx hardhat deploy --args ./delpoyment_args_localhost.js --network localhost 
+npx hardhat deploy --args ./delpoyment_args_rinkeby.js --network rinkeby 
 ```
 
 ### Signature test
 ```
-npx hardhat sign --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...  --network localhost|rinkeby|...
+npx hardhat sign --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract <DEPLOYED_CONTRACT_ADDRESS>  --network rinkeby
 ```
 
 ### Verify on Etherscan
 ```
-npx hardhat verify --network rinkeby --constructor-args delpoyment_args_rinkeby.js DEPLOYED_CONTRACT_ADDRESS
+npx hardhat verify --network rinkeby --constructor-args delpoyment_args_rinkeby.js <DEPLOYED_CONTRACT_ADDRESS>
 ```
 
 ### Catalog preparation
 ```
-npx hardhat catalog --network localhost --contract 0x5FbDB...  --network localhost|rinkeby|... 
+npx hardhat catalog --network rinkeby --contract <DEPLOYED_CONTRACT_ADDRESS>  
 ```
 
-The catalog is expressed in a json file. By defaut these are in `client/public/catalog`, but you may specify a different location including a remote one. 
+The catalog is defined in a json file located by default in `client/public/catalog`. You may specify a different location including a remote one. 
 
-__Images__ are always expected to be in the `images` subdirectoty of the specified catalog directory.
+Images are always expected to be in the `images` subdirectory of the catalog directory.
 
-In this json file, you need to provide basic data regarding each NFT. See an example new catalog item below. These should be added in intended display order to the `NFTs` JSON array in the file. This data is enhanced in-file by the `catalog` task, which automatically manages IPFS metadata/image uploads, image measurment, image optimisation for web display, lay-minting signatures, etc.  
+In this json file, manually provide the basic data for each NFT; see an example catalog item below. These should be added in display order to the `NFTs` JSON array in the file. This is enhanced in-file by the `catalog` task, which automatically manages IPFS metadata/image uploads, image measurement, image optimisation for web display, lay-minting signatures, and adds the relevant properties to the manually-entered NFTs' initial properties.  
 
-Importantly, there is a specifi catalog file _+_per network_ that you deploy to (ie. localhost, testnets such as Rinkeby, and Mainnet). The filenames are differentoated by the integer ["chainid"](https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/) of the network, according to this form:
+Importantly, there is a specific catalog file _for each network_ that you choose to deploy to (ie. localhost, testnets such as Rinkeby, and Mainnet). The json file names are differentiated by the integer ["chainid"](https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/) of the network, according to this form:
 ```
 catalog_chainid_<chainid of the network>.json
 ```
-For example, `catalog_chainid_1.json` for Mainnet, `catalog_chainid_4.json` for Rinkeby, etc. Note that the hardhat local network has a chainId of 31337. 
+For example, `catalog_chainid_1.json` for Mainnet, `catalog_chainid_4.json` for Rinkeby, etc. Note that the Hardhat local network has a chainId of 31337. 
 
 ### Catalog examples
 
-All `sourceImage` paths must be relative to `images` directory. 
-
+Enter the definition of each NFT as follows, in the catalog file's `NFTs` array:
 ```
 {
     "tokenId": 603,
@@ -109,19 +108,22 @@ All `sourceImage` paths must be relative to `images` directory.
     }
 }
 ```
-Arbitary other properties can be added (e.g. `collection` ...) for the purpose of rendering or additional provenance mechanisms.
+IMPORTANT: IT IS UP TO YOU to specify tokenIds. The `3-prepare-catalog.js` script will help by disallowing tokenId duplicates within the `catalog.json` file, tokenId omissions, tokenId non-integers, and will set `status` appropriately if the tokenId is already minted/burnt. 
 
-IMPORTANT: IT IS UP TO YOU to specify tokenIds. The `3-prepare-catalog.js` script will help by disallowing tokenId duplicates within the `catalog.json` file, tokenId omissions, tokenId non-integers, and will set `status` approriately if the tokenId is already minted/burnt. 
+All `sourceImage` paths must be relative to `images` directory. Arbitrary other properties can be added (e.g. `collection` ...) for the purpose of rendering or additional provenance mechanisms.
 
-Added by the script:
+The following properties will be automatically added by the `catalog` Hardhat task:
 
-* `tokenURI` 
+* `tokenURI` - ipfs://hash URI of the metadata uploaded to IPFS by the task
+* `metadata.image` - ipfs://hash URI of the `sourceImage` file uploaded to IPFS by the task
+* `metadata.width` - the width of `sourceImage`
+* `metadata.height` - the height of `sourceImage`
+* `webOptimizedImage` - smaller low quality version of `sourceImage` for web display
+* `placeholderImage` - tiny blurred version of `sourceImage` for lazy image loading   
 
-* `metadata.image`, `metadata.width`, `metadata.width`, `webOptimizedImage` and `placeholderImage`; the first is the IPFS hash URI of `sourceImage` which is auomatically uploaded to IPFS.
+* `signature` - if `weiPrice` was specified, a signature is created which enables lazy minting an NFT at that price, having the accompanying `tokenId`, and `tokenURI`  
 
-* If you specified `weiPrice`, then `signature` is added 
-
-Example after script is run:
+Example NFT definition after script is run:
 ```
 {
     "tokenId": 603,
@@ -141,7 +143,18 @@ Example after script is run:
     "signature": "0x255ad96c61585acb950f9f5014d4c9cd236fcaa1a1bd1943a690966068743ca2286abc5ae ... "
 }
 
+The `deploy` task also appends the following context information to the catalog json file. This will acts as config to the `client` that consumes the catalog. For example:
+
 ```
+"context": {
+		"creatorAddress": "0x72dAd71E ...",
+		"contractAddress": "0x1211b395 ...",
+		"chainId": 4,
+		"royaltyBasisPoints": 495
+}
+```
+
+
 ## Status
 
 Smart-contact has extensive [test coverage](/smart-contract/test/tests.js).
