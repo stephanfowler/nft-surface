@@ -1,42 +1,35 @@
-# NFT minter and gallery
+# NFT Surface
 
-## Item page:
+An NFT platform for minting and selling NFTs with a sovereign Ethereum smart contract. 
 
-![NFT display/minting page](/docs/images/nft-agent-01.png?raw=true "NFT display/minting page")
+### Example front page:
 
-## Gallery page:
+![NFT display/minting page](/docs/images/front.png?raw=true "NFT display/minting page")
 
-![NFT gallery page](/docs/images/nft-agent-02.png?raw=true "NFT gallery page")
+### Example catalog page:
+
+![NFT gallery page](/docs/images/catalog.png?raw=true "NFT gallery page")
+
+### Example NFT item page:
+
+![NFT display/minting page](/docs/images/nft.png?raw=true "NFT display/minting page")
 
 ## Description
 
-Deploys an NFT smart contract (ERC721 standard) and an SEO-optimised responsive site to showcase and mint NFTs.
+* Showcase, mint, sell, buy, and transfer NFTs
+* Custom Ethereum smart contract, ERC-721 NFT standard
+* Adheres to strict NFT provenance best-practice
+* SEO-optimised responsive site
+* Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
+* Provides links to NFT marketplaces for secondaery sales (Opensea, Rarible, ...)
+* Re-assignable role for catalog management
+* Configurable revenue shares
+* Configurable royalty
+* Connects to Metamask & compatible Ethereum wallets (desktop)
+* Works within Metamask browser (mobile)
 
-* Adheres to NFT provenance best-practices
-* Lazy minting (add NFTs to catalog without pre-minting them)
-* Re-assignable agent role for managing the catalog
-* Configurable revenue shares for multiple accounts
+See an [example test deployment](https://nft-surface.vercel.app/) on an Ethereum testnet (set your wallet to "Rinkeby Test Network", and [get some test ETH](https://www.google.com/search?q=rinkeby+faucet)).
 
-See an [example test deployment](https://nft-agent.vercel.app/) on an Ethereum testnet (set your wallet to "Rinkeby Test Network").
-
-## Deployment notes
-
-The [smart contract](/smart-contract/contracts/NFTagent.sol) requires six deployment arguments:
-
-```
-* "Andy Warhol"          // ERC721 name
-* "WRHL"                 // ERC721 symbol
-* "0x1E89…"              // admin role address
-* "0x1E89…"              // agent role address
-* ["0x8Cb6", "0x72dA…"]  // PaymentSplitter payees array
-* [85, 15]               // PaymentSplitter shares array
-```
-
-The frontend site is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc.
+## Deployment
 
 See READMEs for the separate [smart-contact](/smart-contract/) and [client](/client/) projects.
-
-## Status
-
-Smart-contact has extensive [test coverage](/smart-contract/test/tests.js).
-Client has been tested extensively against Rinkeby.

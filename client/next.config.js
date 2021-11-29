@@ -6,11 +6,10 @@ module.exports = {
       catalogBase:      process.env.catalogBase,
       catalogFilename:  process.env.catalogFilename,
 			creatorAddress:   process.env.creatorAddress,
-
-      creatorName:      'FLOF',
-      siteTitle:        'FLOF NFT Catalog',
-      siteDescription:  'NFT works by FLOF for minting or secondary trading on open NFT marketplaces',
-      twitterHandle:    '@stephanfowler',
+      creatorName:      process.env.creatorName,
+      siteTitle:        process.env.siteTitle,
+      siteDescription:  process.env.siteDescription,
+      twitterHandle:    process.env.twitterHandle,
 
       etherscanAddress: 'https://rinkeby.etherscan.io/address/<address>',
       etherscanToken:   'https://rinkeby.etherscan.io/token/<address>?a=<tokenId>',

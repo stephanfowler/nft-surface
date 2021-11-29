@@ -44,7 +44,7 @@ module.exports = {
  * Description. Deploys the contract using constructor arguments defined by the specified module (and runs a signature test against it)
  * @example npx hardhat deploy --args ./delpoyment_args_localhost.js --network localhost 
  */
-task("deploy", "Deploys the contract using constructor arguments defined by the specified module (and runs a signature test against it)")
+task("deploy", "Deploys the contract using constructor arguments in the specified file (and runs a signature test against the contract)")
 	.addParam("args", "Relative path to the arguments module")
 	.setAction(async (args, hre) => {
 		await hre.run('compile');
@@ -77,7 +77,7 @@ task("deploy", "Deploys the contract using constructor arguments defined by the 
  * Description. Generates a signature for the 'mint' contract method, and tests it against the contract
  * @example npx hardhat sign --network localhost --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract 0xe7f17...etc 
  */
-task("sign", "Generates a signature for the 'mint' contract method, and tests it against the contract")
+task("sign", "Generates a signature for the 'mint' contract method, and tests it against the deployed contract")
 	.addParam("wei", "The price in wei of the NFT", undefined, types.string)
 	.addParam("id", "The intended tokenId of the NFT", undefined, types.int)
 	.addParam("uri", "The intended tokenURI of the NFT", undefined, types.string)
@@ -143,7 +143,7 @@ task("sign", "Generates a signature for the 'mint' contract method, and tests it
  * Description. ...
  * @example npx hardhat catalog --network localhost --contract 0x5FbDB2315678afecb367f032d93F642f64180aa3
  */
-task("catalog", "Prepares the catalog ...")
+task("catalog", "Given a json catalog file, automatically manages IPFS metadata and image uploads, lay-minting signatures, etc")
 	.addParam("contract", "The contract address", undefined, types.address)
 	.addOptionalParam("catalogdir", "Absolute path of local directory containing catalog and images. By default, the directory used is client/public/catalog ")
 	.setAction(async (args, hre) => {
