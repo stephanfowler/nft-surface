@@ -22,7 +22,7 @@
         },
         {
             "tokenId": 70,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/chin_zan_bee.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -38,11 +38,11 @@
             "tokenURI": "ipfs://QmUccqBSY1SJUPdyGnwUEKaVcmFg2UM6dgQpATkVhMDcqy",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIRAAAQMEAQUAAAAAAAAAAAAAAQACEQMEEiEiBRQxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABsRAAICAwEAAAAAAAAAAAAAAAECAAMSISIx/9oADAMBAAIRAxEAPwCZ9+zuK1LEy0NaBO49wPH3ZWCeuWtMlj7q7ybxPGdhERQY2MgOhKt2i2N6Z//Z",
             "webOptimizedImage": "images/chin_zan_bee_web.jpg",
-            "signature": "0xc9f6b2a5168deae407dad11f735fde396012ad72689f297792195d025bb1c7994092acc18ab9b8ad4424c7e0ab8a8d33d87ec199d7f6be8839564aaf32d3f3561c"
+            "signature": "0xb77a991d5a0c4c4433e6443793c6cbd5bce24ab51cf03dbad5e3ac3be7a3070b41557fd1955f8917b68cc22ba6de01ca9151ba338a9201aaba0f2640a422c9de1b"
         },
         {
             "tokenId": 69,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/disco_at_gloop_island.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -58,11 +58,11 @@
             "tokenURI": "ipfs://QmTH58jQNpuAJKRQq4pwT9vFwT369e2fuPTLcgycKxZeFz",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQMG/8QAJBAAAgEDBAAHAAAAAAAAAAAAAQIDBBEhAAUSFBUiMUFRobH/xAAVAQEBAAAAAAAAAAAAAAAAAAAEBf/EABwRAAICAgMAAAAAAAAAAAAAAAECAAMEMREh0f/aAAwDAQACEQMRAD8AG2fZkTYY06alWDB2ZRflby+/qNZ2Wsqo5HTxCiXiStjgi2p1FTVClll7D8lvFkDIxn90WahwbFYyfkg5+9TUwXR2awg8669iHyRYoCDU/9k=",
             "webOptimizedImage": "images/disco_at_gloop_island_web.jpg",
-            "signature": "0xb30cf465d3b02005f931e08dce600466dfbf3e3a2ddfbe9211488a51fc17957d64bd5cb629e81dd4912bcc305e6e79796cd4fb6f6de9e9f7a41a13e5febd79cd1b"
+            "signature": "0x6184d681ff0327dc81b1e02ce94c49be1b332bd45ba535e69058497eb5a2560169482cca9b3cdf0707f94040d9396d43da27afc88fb0d1d26dd0df3a598762851c"
         },
         {
             "tokenId": 68,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/endangered_species.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -78,11 +78,11 @@
             "tokenURI": "ipfs://Qmb1pEd1nuLy65sHDrJRKDRkx6dzLP2yUAN3M73bBjxEyp",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAIxAAAQQCAQMFAAAAAAAAAAAAAQIDBBEAIRIFBkETMUJRkf/EABQBAQAAAAAAAAAAAAAAAAAAAAX/xAAbEQEAAgIDAAAAAAAAAAAAAAABABECAwRCYf/aAAwDAQACEQMRAD8Ar999SWqAIkvnKivj3TtTdfIEeL+8zVtlXpp4yGVJoUbG8fS5bj8t+O6VGO02ElsGgonz+arDy5MSOtTI6bFUGzw5EbNavATZ0C0jXHM9do1fk//Z",
             "webOptimizedImage": "images/endangered_species_web.jpg",
-            "signature": "0x9354d62e94f3110edbc2797068f70481d1453798919902a33b632f111718e8fd029f5ca1b487800d101e7461c3938bffbaca3ff712330a4726e13be0182e7bcf1b"
+            "signature": "0x217c3d3cce2efa6e7ef4e77147e22a548b220849b92ff88725066bec4e791ff9060aa3bae5e9c5ceb3bd74ec02abba5b70799f9c3d12033bf3adb323a29e8c551b"
         },
         {
             "tokenId": 67,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/jungian_archetypes.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -98,11 +98,11 @@
             "tokenURI": "ipfs://QmbGthLaXnx9VNKkXAGmREhC8aMDQwBfwRp7vgMbUopVQF",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIhAAAQQBAgcAAAAAAAAAAAAAAQADBBEFAiESEyJBgaLh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAaEQEAAgMBAAAAAAAAAAAAAAACAAMEESJB/9oADAMBAAIRAxEAPwDGx+Tgw+jWye25F388Kl3PQubruEyDxGwGRt7IijWJWntexheyeZ//2Q==",
             "webOptimizedImage": "images/jungian_archetypes_web.jpg",
-            "signature": "0x1fa7af0200b5b59f275f6533fca65250492f7b7144974afb157b636c54cbb01f0457db99bcb52cb4580459085690dad4be84ee54a7027fa16af11ba4753499131c"
+            "signature": "0x4af90b7af7dcceeb89f724ce448898461e978026b087d202c04541d450ccd97425624a43f835676270c3214ef3b32b075b71ae2da5db63d1d17d007b4a9694481c"
         },
         {
             "tokenId": 66,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/land_of_wonder.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -118,11 +118,11 @@
             "tokenURI": "ipfs://QmYWzxX5cTioRwLcvmrP8m3o4JPF5UPzjYnDggNA7RaB9N",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECB//EACYQAAICAQEGBwAAAAAAAAAAAAECAxEEAAUTMTJhgRQhIkFxkeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAESIUH/2gAMAwEAAhEDEQA/ANCyFYzADKmiPiN6gVwWahw6D0/mrieTdpS7NqhzSNffy0Ypbagd5GKzY6CVH417VXY/eliGVMWFQ6UEUcnT50MdQ6tH/9k=",
             "webOptimizedImage": "images/land_of_wonder_web.jpg",
-            "signature": "0x3a6a4f9512a3e6e1570387b7e6dbfd84becadab88a43ad87a315aa7bf967ab2777ffd94558ec3de7faa745ea3afd85bcfea89cc1ef458a9e0da2618529e7cbbe1b"
+            "signature": "0xe425e9fe5dc5bf8e31419ad67c745c8ae44321061488bd712d1cd6258f1e999e4ec962f6433af8f30871d6ff3077205dd462d5a6baff386f8cc1b60bb60e6ffe1b"
         },
         {
             "tokenId": 65,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/sir_gawain.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -138,11 +138,11 @@
             "tokenURI": "ipfs://QmX3NXd2w6QgCodkVYMynPFTgBagHfu5wfDEdhmiX8BGSH",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAIG/8QAIRAAAgIBAgcAAAAAAAAAAAAAAQIABBEDBQcSIWGBkcH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABoRAAICAwAAAAAAAAAAAAAAAAECABEDITH/2gAMAwEAAhEDEQA/ANttG51KdcGqFGmVIwmpgoeyj34kjikqAIQpK9M8yn7EQMALM4J4Za1CtT//2Q==",
             "webOptimizedImage": "images/sir_gawain_web.jpg",
-            "signature": "0x4bd1c8248546480f5dacd4e446cc7fd78597711d6399df29e737442400d029036bd314945bcafa42b5bf65029cb5bf0c1ccf2f6e196dcfe07f6d6273fcd7d6e11c"
+            "signature": "0xffb73338571e00e9b40ed064d955cc24931b0615d7f11471ef55bcd4211a0ac216fd84a4a4a37f868e2f1669d372afc40d78bb86126f8645eddc7c9cb0e208e41c"
         },
         {
             "tokenId": 64,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/tin_lion_duel.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -158,7 +158,7 @@
             "tokenURI": "ipfs://QmZ3xrrFd3pg2rRoTZpkfC8B6pwPNDaudMQZiDYTnvefZm",
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUG/8QAIBABAAEDAwUAAAAAAAAAAAAAAQIABBEDBSESIjGBwf/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAXEQADAQAAAAAAAAAAAAAAAAAAASEx/9oADAMBAAIRAxEAPwDdbZrluxS4jpye2Bg8cJg94q27/OKxbjk4cdB9pSjyIZXT/9k=",
             "webOptimizedImage": "images/tin_lion_duel_web.jpg",
-            "signature": "0x8f6dee40023e9b49a52a98d13f265b4d2447771b51dc5478eea1c4391a8bf0b01d7449f0dabdc59c7cbdfdc629861133732a27841d1052034f3c1614a7d1cf461b"
+            "signature": "0x949f971dacb4916d03a798c4f0061541c78f717201e8ee527369071534386f522d142b09530c566a9746511cc1c7a798f7512ce87f3c5c8fae0ab5216e72cdc01b"
         },
         {
             "tokenId": 63,
@@ -222,7 +222,7 @@
         },
         {
             "tokenId": 60,
-            "weiPrice": "1000000000000000000",
+            "weiPrice": "10000000000000000",
             "sourceImage": "images/street_of_dreams.jpg",
             "metadata": {
                 "creator": "FLOX",
@@ -238,7 +238,7 @@
             "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgME/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDBAAREhMhMVEFBkEU/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAYEQADAQEAAAAAAAAAAAAAAAAAAQIREv/aAAwDAQACEQMRAD8AXlmRGaY0Y7bhab1HClVkL7GR3HBtbn7U1Sg+oupjkpcOYNn+Dv8ABSL2nxH5vCTQZLiyAdMgBJSRbrkW2t1WKI0hERlGJOKEi+RF9qlmem9Fpo//2Q==",
             "webOptimizedImage": "images/street_of_dreams_web.jpg",
             "tokenURI": "ipfs://QmaxRk26ML7TmeRBmoBJPg4xF3AWAiLkjpBVkjydATALkW",
-            "signature": "0xd43a207fcc93d58cba3cf498794f1d15b384b655805965bb59b5d5fcf3ff800d0988d9c7431098836591734d89dfebb039e0af1042a27577ca1665688799c0da1b"
+            "signature": "0xd40315dad86490df1c00d090c555a921f589c4dd5090838aca4d2924b2e5a1490aa4ffef09a224512c580e3c0389f6341b166b262e3796086cd9ecc1211702ee1c"
         }
     ],
     "context": {
