@@ -47,10 +47,11 @@ module.exports = {
 task("deploy", "Deploys the contract using constructor arguments defined by the specified module (and runs a signature test against it)")
 	.addParam("args", "Relative path to the arguments module")
 	.setAction(async (args, hre) => {
+		await hre.run('compile');
 		const deploymentArgs = require(args.args);
 		const [deployer] = await ethers.getSigners();
-		const NFTagent = await ethers.getContractFactory('NFTagent');
-		const contract = await NFTagent.deploy(...deploymentArgs);
+		const NFTsurface = await ethers.getContractFactory('NFTsurface');
+		const contract = await NFTsurface.deploy(...deploymentArgs);
 		await contract.deployed();
 
 		const contractAddress = contract.address;
@@ -94,19 +95,19 @@ task("sign", "Generates a signature for the 'mint' contract method, and tests it
 		}
 
 		const [defaultAcc] = await ethers.getSigners();
-		const NFTagent = await ethers.getContractFactory('NFTagent');
-		const contract = await NFTagent.attach(contractAddress);
+		const NFTsurface = await ethers.getContractFactory('NFTsurface');
+		const contract = await NFTsurface.attach(contractAddress);
 		const { chainId } = await ethers.provider.getNetwork();
 
 		const signature = await defaultAcc._signTypedData(
 			{
-				name: 'NFTagent',
+				name: 'NFTsurface',
 				version: '1.0.0',
 				chainId: chainId,
 				verifyingContract: contractAddress,
 			},
 			{
-				NFT: [
+				mint: [
 					{ name: 'weiPrice', type: 'uint256' },
 					{ name: 'tokenId', type: 'uint256' },
 					{ name: 'tokenURI', type: 'string' }
@@ -156,7 +157,7 @@ task("catalog", "Prepares the catalog ...")
 
 		const pinataSDK = require('@pinata/sdk');
 		const pinata = pinataSDK(PINATA_API_KEY, PINATA_API_SECRET);
-		const contractABI = require("./artifacts/contracts/NFTagent.sol/NFTagent.json");
+		const contractABI = require("./artifacts/contracts/NFTsurface.sol/NFTsurface.json");
 		const keccak256 = require('keccak256');
 		const AGENT_ROLE = `0x${keccak256('AGENT_ROLE').toString('hex')}`
 

@@ -35,9 +35,9 @@ beforeEach(async function() {
 
   ({ chainId } = await ethers.provider.getNetwork());
 
-  const NFTagent = await ethers.getContractFactory('NFTagent');
+  const NFTsurface = await ethers.getContractFactory('NFTsurface');
 
-  c = await NFTagent.deploy( // c is the contract
+  c = await NFTsurface.deploy( // c is the contract
     "Testy McTestface",
     "TEST",
     admin.address,
@@ -52,14 +52,14 @@ beforeEach(async function() {
   provider = ethers.provider;
 
   sigDomain = {
-    name: 'NFTagent',
+    name: 'NFTsurface',
     version: '1.0.0',
     chainId: chainId,
     verifyingContract: c.address,
   };
 
   sigTypes = {
-    NFT: [
+    mint: [
       { name: 'weiPrice', type: 'uint256' },
       { name: 'tokenId',  type: 'uint256' },
       { name: 'tokenURI', type: 'string' }
