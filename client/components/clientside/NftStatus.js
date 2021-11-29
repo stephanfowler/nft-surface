@@ -99,7 +99,7 @@ const NftStatus = ({ nft, context }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being added to the blockchain..."}</div>
+				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being mined on the Ethereum blockchain..."}</div>
 
 			case "tx_succeded":
 				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>

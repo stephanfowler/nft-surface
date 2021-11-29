@@ -242,6 +242,7 @@
     "context": {
         "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
         "contractAddress": "0x1211b395c018130d87468e7c3DE822AFA3D48968",
-        "chainId": 4
+        "chainId": 4,
+        "royaltyBasisPoints": 495
     }
 }

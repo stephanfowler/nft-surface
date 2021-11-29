@@ -405,6 +405,9 @@ task("catalog", "Prepares the catalog ...")
 			return;
 		}
 
+		// Get the royalty rate, for info
+		const royaltyBasisPoints = await contract.royaltyBasisPoints();
+
 		// OK all's good
 
 		// Add the context
@@ -412,7 +415,8 @@ task("catalog", "Prepares the catalog ...")
 		catalogUpdated.context = {
 			creatorAddress: CREATOR_ADDRESS,
 			contractAddress,
-			chainId
+			chainId,
+			royaltyBasisPoints
 		};
 
 		// Update the catalog file
