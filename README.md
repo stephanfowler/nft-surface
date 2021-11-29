@@ -4,15 +4,15 @@ An NFT platform for minting and selling NFTs with a sovereign Ethereum smart con
 
 ### Example front page:
 
-![NFT display/minting page](/docs/images/front.png?raw=true "NFT display/minting page")
+![NFT display/minting page](/docs/front.png?raw=true "NFT display/minting page")
 
 ### Example catalog page:
 
-![NFT gallery page](/docs/images/catalog.png?raw=true "NFT gallery page")
+![NFT gallery page](/docs/catalog.png?raw=true "NFT gallery page")
 
 ### Example NFT item page:
 
-![NFT display/minting page](/docs/images/nft.png?raw=true "NFT display/minting page")
+![NFT display/minting page](/docs/nft.png?raw=true "NFT display/minting page")
 
 ## Description
 
