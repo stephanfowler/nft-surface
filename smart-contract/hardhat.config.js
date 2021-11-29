@@ -277,10 +277,15 @@ task("catalog", "Prepares the catalog ...")
 			}
 		}
 
-		// Iterate over NFTs
+		///////////////////////
+		// Iterate over NFTs //
+		///////////////////////
+
 		for (const nft of catalog.NFTs) {
 
 			const tokenId = nft.tokenId;
+			let minted = false;
+			let burnt = false;
 
 			if (hasInvalidProperties) {
 				return;
@@ -298,7 +303,7 @@ task("catalog", "Prepares the catalog ...")
 				idsNewlyMinted.push(tokenId)
 				nft.tokenURI = mintedTokenURI;
 				delete nft.signature;
-				delete nft.weiPrice;
+				minted = true;
 			} else {
 				try {
 					// if this passes, we're neiter minted or burnt...
@@ -307,79 +312,82 @@ task("catalog", "Prepares the catalog ...")
 					// ah, we're burnt
 					idsNewlyBurntOrRevoked.push(tokenId);
 					delete nft.signature;
-					delete nft.weiPrice;
+					burnt = true;
 				}
 			}
 
-			// For IPFS uploads, first make a readable filename
-			const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+			if (minted || burnt ) { 
+				console.log("Ignored " + tokenId + (minted ? " (minted)" : "") + (burnt ? " (burnt)" : ""))
 
-			// upload image to IPFS, generate web optimised and placeholder images
-			if (!nft.metadata.image) {
-				console.log("Uploading : " + tokenId + " : " + nft.sourceImage);
-
-				const imageFilePath = catalogDirectory + "/" + nft.sourceImage;
-				const fileStream = fs.createReadStream(imageFilePath);
-				pinnedImage = await pinata.pinFileToIPFS(fileStream, { pinataMetadata: { name: ipfsFilename } });
-				nft.metadata.image = "ipfs://" + pinnedImage.IpfsHash;
-
-				const imageData = await processImage(imageFilePath);
-				nft.metadata.width = imageData.width;
-				nft.metadata.height = imageData.height;
-				nft.placeholderImage = imageData.blurredBase64;
-				nft.webOptimizedImage = imageData.webOptimizedFilePath.replace(catalogDirectory + "/", "");
-
-				idsUploadedImage.push(tokenId);
-			}
-
-			// Always (re)create the tokenURI, by uploading metadata JSON to IPFS
-			const ipfsMetadata = { ...nft.metadata };
-			ipfsMetadata.creatorAddress = CREATOR_ADDRESS;
-			ipfsMetadata.contractAddress = contractAddress;
-			ipfsMetadata.tokenId = tokenId;
-			pinnedMetadata = await pinata.pinJSONToIPFS(ipfsMetadata, { pinataMetadata: { name: ipfsFilename + ".json" } });
-			const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
-			const oldTokenURI = nft.tokenURI + "";
-			if (newTokenURI !== oldTokenURI) {
-				idsUpdatedMetadata.push(tokenId);
-				nft.tokenURI = newTokenURI;
-				if (oldTokenURI) {
-					// remove old metadata from IPFS
-					await pinata.unpin(nft.tokenURI.replace("ipfs://", ""));
-				}
-			}
-
-			// If specified, weiPrice must be a numeric string, including the string "0"
-			const weiPrice = ((typeof nft.weiPrice === 'string' || nft.weiPrice instanceof String)
-				&& /^\d+$/.test(nft.weiPrice)) ? nft.weiPrice : undefined;
-
-			// Presence of weiPrice implies item is (lazy) mintable, so needs a signature
-			if (weiPrice) {
-				// (Re)create the signature
-				const signature = await hre.run('sign', {
-					wei: weiPrice,
-					id: tokenId,
-					uri: nft.tokenURI,
-					contract: contractAddress,
-					quiet: true
-				});
-
-				// Test signature / mintableness 
-				try {
-					await contract.mintable(weiPrice, tokenId, nft.tokenURI, signature);
-					nft.signature = signature;
-					idsMintable.push(nft.tokenId);
-				} catch (error) {
-					failedSignatures = true;
-					console.log("Error: signature invalid??")
-				}
 			} else {
-				idsWithheld.push(nft.tokenId);
+				// Make a meaningful filename for IPFS uploads
+				const ipfsFilename = pad(tokenId, 6) + "_" + nft.metadata.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
+				// If not done already, process the image (upload to IPFS, get dimensions, generate web optimised and placeholder images
+				if (!nft.metadata.image || !nft.metadata.width || !nft.metadata.height || !nft.placeholderImage || !nft.webOptimizedImage) {
+					const imageFilePath = catalogDirectory + "/" + nft.sourceImage;
+					const fileStream = fs.createReadStream(imageFilePath);
+					pinnedImage = await pinata.pinFileToIPFS(fileStream, { pinataMetadata: { name: ipfsFilename } });
+					nft.metadata.image = "ipfs://" + pinnedImage.IpfsHash;
+
+					const imageData = await processImage(imageFilePath);
+					nft.metadata.width = imageData.width;
+					nft.metadata.height = imageData.height;
+					nft.placeholderImage = imageData.blurredBase64;
+					nft.webOptimizedImage = imageData.webOptimizedFilePath.replace(catalogDirectory + "/", "");
+
+					idsUploadedImage.push(tokenId);
+				}
+
+				// (re)create the tokenURI by uploading metadata JSON to IPFS
+				const ipfsMetadata = { ...nft.metadata };
+				ipfsMetadata.creatorAddress = CREATOR_ADDRESS;
+				ipfsMetadata.contractAddress = contractAddress;
+				ipfsMetadata.tokenId = tokenId;
+				pinnedMetadata = await pinata.pinJSONToIPFS(ipfsMetadata, { pinataMetadata: { name: ipfsFilename + ".json" } });
+				const newTokenURI = "ipfs://" + pinnedMetadata.IpfsHash;
+				const oldTokenURI = nft.tokenURI + "";
+				if (newTokenURI !== oldTokenURI) {
+					idsUpdatedMetadata.push(tokenId);
+					nft.tokenURI = newTokenURI;
+					if (oldTokenURI) {
+						// remove old metadata from IPFS
+						await pinata.unpin(nft.tokenURI.replace("ipfs://", ""));
+					}
+				}
+
+				// If specified, weiPrice must be a numeric string, including the string "0"
+				const weiPrice = ((typeof nft.weiPrice === 'string' || nft.weiPrice instanceof String)
+					&& /^\d+$/.test(nft.weiPrice)) ? nft.weiPrice : undefined;
+
+				// Presence of weiPrice implies item is (lazy) mintable, so needs a signature
+				if (weiPrice) {
+					// (Re)create the signature
+					const signature = await hre.run('sign', {
+						wei: weiPrice,
+						id: tokenId,
+						uri: nft.tokenURI,
+						contract: contractAddress,
+						quiet: true
+					});
+
+					// Test signature / mintableness 
+					try {
+						await contract.mintable(weiPrice, tokenId, nft.tokenURI, signature);
+						nft.signature = signature;
+						idsMintable.push(nft.tokenId);
+					} catch (error) {
+						failedSignatures = true;
+						console.log("Errored " + tokenId + " ...signature invalid?")
+					}
+				} else {
+					idsWithheld.push(nft.tokenId);
+				}
+
+				console.log("Updated " + tokenId + (nft.signature ? " (mintable)" : ""))
 			}
 
 			catalogUpdated.NFTs.push(nft)
-
-			console.log("Processed " + tokenId + (nft.signature ? " mintable" : ""))
 		}
 
 		// Warn on duplicate tokenURIs. This may be accidental or intended (tho kinda weird)

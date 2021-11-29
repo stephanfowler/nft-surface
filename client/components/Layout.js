@@ -52,8 +52,8 @@ export default function Layout({ children, home, nft, context }) {
           <a>NFT provenance</a>
         </Link>
         {" / "}
-        <Link href="https://github.com/stephanfowler/nft-agent">
-          <a>GitHub</a>
+        <Link href="https://github.com/stephanfowler/nft-surface">
+          <a>NFT Surface</a>
         </Link>
       </footer>
     </div>
