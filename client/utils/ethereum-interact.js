@@ -19,7 +19,7 @@ async function getReadableContract(contractAddress, chainId) {
 
 async function getWriteableContract(contractAddress, chainId) {
   if (window.ethereum) {
-    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const provider = await new ethers.providers.Web3Provider(window.ethereum, "any");
     const contract= new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());
     return contract;
   }
