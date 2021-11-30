@@ -108,7 +108,7 @@ Enter the definition of each NFT as follows, in the catalog file's `NFTs` array:
     }
 }
 ```
-IMPORTANT: IT IS UP TO YOU to specify tokenIds. The `3-prepare-catalog.js` script will help by disallowing tokenId duplicates within the `catalog.json` file, tokenId omissions, tokenId non-integers, and will set `status` appropriately if the tokenId is already minted/burnt. 
+IMPORTANT: IT IS UP TO YOU to specify tokenIds. The `catalog` task will help by disallowing tokenId duplicates within the `catalog.json` file, tokenId omissions, tokenId non-integers, an will not add signature to tokens that are already minted/burnt. 
 
 All `sourceImage` paths must be relative to `images` directory. Arbitrary other properties can be added (e.g. `collection` ...) for the purpose of rendering or additional provenance mechanisms.
 
@@ -142,7 +142,7 @@ Example NFT definition after script is run:
     "tokenURI": "ipfs://Qma5ysnKpCK1PtaVvGPNc6eCssbftpJzhGykavrFy2izMm",
     "signature": "0x255ad96c61585acb950f9f5014d4c9cd236fcaa1a1bd1943a690966068743ca2286abc5ae ... "
 }
-
+```
 The `deploy` task also appends the following context information to the catalog json file. This will acts as config to the `client` that consumes the catalog. For example:
 
 ```
