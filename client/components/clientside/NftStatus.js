@@ -196,7 +196,7 @@ const NftStatus = ({ nft, context }) => {
 						</>
 					}
 
-					{status === "minted" && userIsNotOwner && !connecting &&
+					{status === "minted" && (userIsNotOwner || !walletAddress) && !connecting &&
 						<Buy
 							nft={nft}
 							owner={owner}
