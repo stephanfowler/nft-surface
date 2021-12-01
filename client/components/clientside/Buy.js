@@ -92,7 +92,7 @@ export default function Buy({
 				</div>
 			}
 			<div>
-				{"Buy on "}
+				{"View on "}
 				{marketplaces()}
 			</div>
 		</div>

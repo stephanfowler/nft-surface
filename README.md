@@ -36,10 +36,9 @@ See an [example test deployment](https://nft-surface.vercel.app/) on an Ethereum
 
 ## Deployment
 
-Deployment consists of the following, irrespective of the particular target Ethereum network:
+Deployment consists of the following:
 
-* Deploy the smart contract with appropriate configuration
-* Create and process a catalog file
-* Deploy the client to a suitable host (eg Vercel.com)
+* Deploy a smart contract and create a catalog file using the [smart-contact](/smart-contract/) project.
+* Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
 
-See READMEs for the separate [smart-contact](/smart-contract/) and [client](/client/) projects.
+It is highly reccomended to first do this a few times on an Ethereum testnet (eg Rinkeby). Ethereum mainnet deploymets are _expensive_.
