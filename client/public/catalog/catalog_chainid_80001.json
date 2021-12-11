@@ -1,0 +1,248 @@
+{
+    "NFTs": [
+        {
+            "tokenId": 71,
+            "weiPrice": "0",
+            "sourceImage": "images/tooth_and_claw.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Tooth and Claw",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmNSi1nX4LRUVmgFHC8b9C15r3VRDhJosZ7uLptbKqV2p6",
+                "width": 700,
+                "height": 933
+            },
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgAH/8QAJBAAAQMEAAYDAAAAAAAAAAAAAQIDEQAEEiEFBiIxQYETM1H/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAECEf/aAAwDAQACEQMRAD8AaMONPXzVypkreP1uSAgRH6fOtjvS/FxXUXLkk76Va9R4rPbtD/D2l3dq/ElQ+JSBhGWPYRvZ3U1zGoNIytt4icXlpHoTqgVOXg94j//Z",
+            "webOptimizedImage": "images/tooth_and_claw_web.jpg",
+            "tokenURI": "ipfs://QmabWvLVYZ48VHHcrsL8KqgLuLn6VNhgUQmg3TrVfa8gwt",
+            "signature": "0x564739a2bac2dffc230ae7a938848c53572dfb5a8a1a97f4563782b8b508acd75027a122d13495ed6993661f2646449ddd53bb1798125cf15e649d9fb2b476fd1b"
+        },
+        {
+            "tokenId": 70,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/chin_zan_bee.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Chin Zan Bee",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmVAs5s6juAsdCUjwwKNueABHKXaPo5h6MkpDSxWN4Ngd5",
+                "width": 995,
+                "height": 746
+            },
+            "tokenURI": "ipfs://QmV1ywTJg5Ub6tRaLXYMfQsAsr1D77f4xS1uqE5mSafpbN",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIRAAAQMEAQUAAAAAAAAAAAAAAQACEQMEEiEiBRQxQWH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABsRAAICAwEAAAAAAAAAAAAAAAECAAMSISIx/9oADAMBAAIRAxEAPwCZ9+zuK1LEy0NaBO49wPH3ZWCeuWtMlj7q7ybxPGdhERQY2MgOhKt2i2N6Z//Z",
+            "webOptimizedImage": "images/chin_zan_bee_web.jpg",
+            "signature": "0xa62eb390395fba58dd6a5ae56e6b425c5d3fd3faf67f09e43c66cf3679d187e10b4072155621a40cf869934394ca2b96ede65f0dc418e25b5bc4cbb0c64177f81b"
+        },
+        {
+            "tokenId": 69,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/disco_at_gloop_island.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Disco at Gloop Island",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmeL2qbcAdK8sbmSd8wp5ixq95xR8BDWKgi2kG3ruybXEM",
+                "width": 778,
+                "height": 1038
+            },
+            "tokenURI": "ipfs://QmeeEysnCv772iRhHPVhngZGbb3sAgVkDQWPcdADTDt6nv",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQMG/8QAJBAAAgEDBAAHAAAAAAAAAAAAAQIDBBEhAAUSFBUiMUFRobH/xAAVAQEBAAAAAAAAAAAAAAAAAAAEBf/EABwRAAICAgMAAAAAAAAAAAAAAAECAAMEMREh0f/aAAwDAQACEQMRAD8AG2fZkTYY06alWDB2ZRflby+/qNZ2Wsqo5HTxCiXiStjgi2p1FTVClll7D8lvFkDIxn90WahwbFYyfkg5+9TUwXR2awg8669iHyRYoCDU/9k=",
+            "webOptimizedImage": "images/disco_at_gloop_island_web.jpg",
+            "signature": "0xbab188eef291ace4546d62069785865ac73d3d6027e04cb8c841eb4a6a30cdbf67a0017037b843c3cba43ddee3f34cf97660b8bf4999624598afe79c24a664701b"
+        },
+        {
+            "tokenId": 68,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/endangered_species.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Endangered Species",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://Qma5t9cXiZgop5G5WRqfUjbNZNrvue3kdsFvCUSHPbxRmW",
+                "width": 753,
+                "height": 1004
+            },
+            "tokenURI": "ipfs://QmV9b4quoPsEw7HPcEzsit2oVb9HQNiAEHkReh1apBQ7Gk",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAIxAAAQQCAQMFAAAAAAAAAAAAAQIDBBEAIRIFBkETMUJRkf/EABQBAQAAAAAAAAAAAAAAAAAAAAX/xAAbEQEAAgIDAAAAAAAAAAAAAAABABECAwRCYf/aAAwDAQACEQMRAD8Ar999SWqAIkvnKivj3TtTdfIEeL+8zVtlXpp4yGVJoUbG8fS5bj8t+O6VGO02ElsGgonz+arDy5MSOtTI6bFUGzw5EbNavATZ0C0jXHM9do1fk//Z",
+            "webOptimizedImage": "images/endangered_species_web.jpg",
+            "signature": "0x9cae042ebbcde7c2d34d9ffcd7854c5d59cee801586648400661dca08e96bc4d226ab172b8bf343dcb1a87cdfc9299f304bf6a45f097c2891247e74202a414311b"
+        },
+        {
+            "tokenId": 67,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/jungian_archetypes.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Jungian Archetypes",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmecsjcW1buG91jtuJXq81cvwjaysd1cVvETmqbczvpSMD",
+                "width": 1033,
+                "height": 742
+            },
+            "tokenURI": "ipfs://QmTsFu9hhN7QaBCPtBE8AVL6YsKb7Sp3WTW21rPsb5rM6d",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQF/8QAIhAAAQQBAgcAAAAAAAAAAAAAAQADBBEFAiESEyJBgaLh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAaEQEAAgMBAAAAAAAAAAAAAAACAAMEESJB/9oADAMBAAIRAxEAPwDGx+Tgw+jWye25F388Kl3PQubruEyDxGwGRt7IijWJWntexheyeZ//2Q==",
+            "webOptimizedImage": "images/jungian_archetypes_web.jpg",
+            "signature": "0x3c8c97d1c6be107667216981c22ca0f7b195a298a9dc00d2115a9a486556a46411a765cb48c1ec7ea431057a8499b66ac11559a5900de6e36f8798969fd0641e1b"
+        },
+        {
+            "tokenId": 66,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/land_of_wonder.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Land of Wonder",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmdFEnXonjRCy5VnVeV12c3B61rzgMpdrXUF6fKtaLvMJt",
+                "width": 782,
+                "height": 1043
+            },
+            "tokenURI": "ipfs://QmSrqjLjDVEMi7ieo6qB5D9b8kFVNBjpYWChLWDGFbfK6T",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECB//EACYQAAICAQEGBwAAAAAAAAAAAAECAxEEAAUTMTJhgRQhIkFxkeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAESIUH/2gAMAwEAAhEDEQA/ANCyFYzADKmiPiN6gVwWahw6D0/mrieTdpS7NqhzSNffy0Ypbagd5GKzY6CVH417VXY/eliGVMWFQ6UEUcnT50MdQ6tH/9k=",
+            "webOptimizedImage": "images/land_of_wonder_web.jpg",
+            "signature": "0xbe91d6ff229fd3a0aa4edd498dc9e37d90dddcf98046af777b32ad730600f60f00becba56440ad0a50ca48f20592e241360fb19251f42e931a6dee195f8132d91c"
+        },
+        {
+            "tokenId": 65,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/sir_gawain.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Sir Gawain",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://Qmbovdf5ATbnD9z8sdQzkT9BMemyK8gFwcnNMzhHY5mnK4",
+                "width": 985,
+                "height": 739
+            },
+            "tokenURI": "ipfs://QmStES6so2XQFL2tTGaEfmBPJ6wG74PxUBEdt3gW2mgNS9",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAIG/8QAIRAAAgIBAgcAAAAAAAAAAAAAAQIABBEDBQcSIWGBkcH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABoRAAICAwAAAAAAAAAAAAAAAAECABEDITH/2gAMAwEAAhEDEQA/ANttG51KdcGqFGmVIwmpgoeyj34kjikqAIQpK9M8yn7EQMALM4J4Za1CtT//2Q==",
+            "webOptimizedImage": "images/sir_gawain_web.jpg",
+            "signature": "0xd908359271847a3f430d954bda8523a7953463081b2db33631dc98067b696ee152bbf876d4aee915cfebe4fef23504d4545f030d58461a51e4d70c39974314dd1b"
+        },
+        {
+            "tokenId": 64,
+            "weiPrice": "10000000000000000",
+            "sourceImage": "images/tin_lion_duel.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Tin Lion Duel",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmNS7FG6Cnq7wbLd56HMn1vRdPbDMDCWhwgpw1frx23NuA",
+                "width": 980,
+                "height": 735
+            },
+            "tokenURI": "ipfs://QmUE7Qy9BCuVcEuMQTWkLMfigg52n2cdzxHayo4uPzDey4",
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUG/8QAIBABAAEDAwUAAAAAAAAAAAAAAQIABBEDBSESIjGBwf/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAXEQADAQAAAAAAAAAAAAAAAAAAASEx/9oADAMBAAIRAxEAPwDdbZrluxS4jpye2Bg8cJg94q27/OKxbjk4cdB9pSjyIZXT/9k=",
+            "webOptimizedImage": "images/tin_lion_duel_web.jpg",
+            "signature": "0x4e4e60063e91abfcd506c843f46c31b6d0857dd540eda19d6ed51afd2b31d8ee7b88b58414cb6de48486fcfb822ff84bf821ef7653b0fa1f65a0d4b25d36bed61c"
+        },
+        {
+            "tokenId": 63,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/fossil_panoply.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "New Fossil Panoply",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmZdKzb4ZYwpPUrx3RtQawzisZhUbC1wCRZ2B7AJQwaXr6",
+                "width": 760,
+                "height": 1013
+            },
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAABAUHCP/EACQQAQABAgQGAwAAAAAAAAAAAAECAxEABAUhBhITQXGhFTFT/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAP/xAAYEQEBAQEBAAAAAAAAAAAAAAABAgARIf/aAAwDAQACEQMRAD8AZcE14RoSqkAFIN3Y73B9ecVCnqMIU4x+Pk2Auzhv7xm3S9XzEKPKSSX3zDZTuPnB0eJc8RDq1Nj9HAB9dO7ZOSd3/9k=",
+            "webOptimizedImage": "images/fossil_panoply_web.jpg",
+            "tokenURI": "ipfs://QmQAxdoHW4yQ6MScLJhQgLTyGMUpMCh9LTPUKrGvbM3PgU",
+            "signature": "0xc075369171892f4a7825c8880032d62e1a71da5ebef63082913d918de7a2a3e3574d0bd6450301ccc4db25afa370566a5d34f39ded64dd95af4cfe8234ef42151b"
+        },
+        {
+            "tokenId": 62,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/cake_acid_afternoon.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Cake Acid Afternoon",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmSeL5pxy3YPQWFaupQrPb8YnFCYyyccsT87x4ZWVDDTun",
+                "width": 773,
+                "height": 1031
+            },
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAABv/EACIQAAIBBAIBBQAAAAAAAAAAAAECAwAEESEFEkEUYYGR4f/EABUBAQEAAAAAAAAAAAAAAAAAAAQF/8QAGREAAwADAAAAAAAAAAAAAAAAAAECAyFB/9oADAMBAAIRAxEAPwBZDKZ7tIpZis8iksGBdFH3sjHg+9LU5WOJFjZZCVHUkKcHHxRC64NLSP1wlWS4N11YtH5Y4JG9aNLI+Gdo1Zrx8kAnC/tTXlhaoW5fD//Z",
+            "webOptimizedImage": "images/cake_acid_afternoon_web.jpg",
+            "tokenURI": "ipfs://QmPeqDyUa8VTjEjhw4MgaJwTDJKX1i1jn31rugnegD7fpm",
+            "signature": "0x2de0f0cd82b7f9889dfbbba220bd547bd0afe4f140534628f2313db819df65a666e8140badaf6a4f1e59d50445bf177262065ed6179c3b03e817a3ce0d735fcf1b"
+        },
+        {
+            "tokenId": 61,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/street_of_delusion.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Street of Delusion.jpg",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmWw2rFfPcm7YcxDWwGPZuRLjaKgr3paAyVem49ifH1oXC",
+                "width": 745,
+                "height": 993
+            },
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQEG/8QAJRAAAgIBAgQHAAAAAAAAAAAAAQIDEQQAEyEiJDEFBhUjMmGB/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/EABkRAAMAAwAAAAAAAAAAAAAAAAABAhEhMv/aAAwDAQACEQMRAD8A1C5szz5Ec6MEN9Qr3FKwNcQCObl7Vpn03d9yMYoR+ZblcGj+amP5fxB4rUaqMaJmk2WBa3v5Xdg8B9adiyItpOkg7Dut6FVKHgR1s//Z",
+            "webOptimizedImage": "images/street_of_delusion_web.jpg",
+            "tokenURI": "ipfs://QmTpZDvfg7VxT3G7v1TApKqUHvghri85htxJABUxr6VUFo",
+            "signature": "0x3cb7b5a0a9f9431250ee700ac8f9dcd0afba63e9d57b9286632aa7fb52ee6e135a62622c62d55f5bb518dc73971cd6d4d6fae43773e9de37ec48e2a42bacac481b"
+        },
+        {
+            "tokenId": 60,
+            "sourceImage": "images/street_of_dreams.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Street of Dreams",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams",
+                "image": "ipfs://QmNMcUDCZvvzniLogY86wYoXm8McKTEqGW9QYda6SYXJf8",
+                "width": 754,
+                "height": 1005
+            },
+            "placeholderImage": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgME/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDBAAREhMhMVEFBkEU/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAYEQADAQEAAAAAAAAAAAAAAAAAAQIREv/aAAwDAQACEQMRAD8AXlmRGaY0Y7bhab1HClVkL7GR3HBtbn7U1Sg+oupjkpcOYNn+Dv8ABSL2nxH5vCTQZLiyAdMgBJSRbrkW2t1WKI0hERlGJOKEi+RF9qlmem9Fpo//2Q==",
+            "webOptimizedImage": "images/street_of_dreams_web.jpg",
+            "tokenURI": "ipfs://Qmcom92235nMerrM8qgpkNLA2d7PK3UJbnSzJxAYhXi3tJ"
+        }
+    ],
+    "context": {
+        "creatorAddress": "0x72dAd71E89a5e4ED46754b0A0fb28Cb6AF721844",
+        "contractAddress": "0xC5c71Ba861DfdFA1E65aF831aC5599FC8f2B7d09",
+        "chainId": 80001,
+        "royaltyBasisPoints": 495
+    }
+}

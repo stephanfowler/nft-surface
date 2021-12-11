@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 import Link from 'next/link'
 import {
+	chainSpec,
 	isTransactionMined,
 	contractCall_price,
 	contractCall_buy
@@ -80,10 +81,9 @@ export default function Buy({
 		<div>
 			{priceETH > 0 &&
 				<div>
-					{"Price "}
-					<img className={styles.ethereumLogo} src="/ethereum.svg" />
+					{"Price : "}
 					<span className={styles.nftPriceETH}>
-						{priceETH}{" ETH"}
+						{priceETH}{" "}{chainSpec(chainId).coin}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<button onClick={contractBuy} disabled={connecting || !window.ethereum} >

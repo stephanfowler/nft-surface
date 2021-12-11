@@ -9,7 +9,7 @@ import Transfer from '@components/clientside/Transfer'
 import styles from '@components/Nft.module.css'
 
 import {
-	networkName,
+	chainSpec,
 	getWallet,
 	contractCall_ownerOf,
 	contractCall_mintable
@@ -32,6 +32,7 @@ const NftStatus = ({ nft, context }) => {
 
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
+	const blockchainName = chainSpec(chainId).blockchain;
 
 	const userIsOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) === ethers.utils.getAddress(owner)));
 	const userIsNotOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) !== ethers.utils.getAddress(owner)));
@@ -106,7 +107,7 @@ const NftStatus = ({ nft, context }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being mined on the Ethereum blockchain..."}</div>
+				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being mined on the "}{blockchainName}{" blockchain..."}</div>
 
 			case "tx_succeded":
 				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
@@ -121,13 +122,13 @@ const NftStatus = ({ nft, context }) => {
 				return <div>{"You are already the owner!"}</div>
 
 			case "invalid_address":
-				return <div>{"That is not a valid Ethereum address"}</div>
+				return <div>{"That is not a valid "}{blockchainName}{" address"}</div>
 
 			case "wallet_unavailable":
 				return (
 					<div>
 						<div>
-							To mint or buy NFTs you need an Ethereum wallet
+							{"To mint or buy NFTs you need a wallet funded with "}{blockchainName}
 						</div>
 						<div>
 							On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
@@ -145,7 +146,7 @@ const NftStatus = ({ nft, context }) => {
 	return (
 		chainIdMismatch ?
 			<div className={styles.notification}>
-				{"To establish the status of this NFT, please switch your wallet to network: "}{networkName(chainId)}
+				{"To establish the status of this NFT, please switch your wallet to network: "}{chainSpec(chainId).network}
 			</div>
 
 			: !status ?
@@ -242,7 +243,7 @@ const NftStatus = ({ nft, context }) => {
 								<div>{"You are connected as "}{etherscanAddressLink(walletAddress)}</div>
 
 								: window.ethereum ?
-									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>Ethereum wallet</a></div>
+									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{blockchainName}{" wallet"}</a></div>
 
 									: <></>}
 					</div>

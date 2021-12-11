@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 import Link from 'next/link'
 import {
+	chainSpec,
 	isTransactionMined,
 	contractCall_price,
 	contractCall_setPrice
@@ -112,7 +113,7 @@ export default function Sell({
 						value={displayPriceETH}
 						onChange={e => setDisplayPriceETH(e.target.value)}
 					/>
-					{" ETH "}
+					{" "}{chainSpec(chainId).coin}
 					<div className={styles.formActions}>
 						<button onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
 						<button className={styles.secondary} onClick={cancel} disabled={connecting}>Cancel</button>
@@ -130,9 +131,9 @@ export default function Sell({
 
 			{!expanded && priceETH > 0 &&
 				<>
-					<img className={styles.ethereumLogo} src="/ethereum.svg" />
+					<div>Direct sale price :</div>
 					<span className={styles.nftPriceETH}>
-						{priceETH}{" ETH"}
+						{priceETH}{" "}{chainSpec(chainId).coin}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>

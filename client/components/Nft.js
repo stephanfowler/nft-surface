@@ -1,8 +1,9 @@
-import { useState } from "react";
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { shortAddress, getAssetHref } from "@utils/links.js";
+
+import { chainSpec } from "@utils/ethereum-interact.js";
 
 const NftStatus = dynamic(
 	() => import('../components/clientside/NftStatus'),
@@ -71,7 +72,7 @@ export default function Nft({ nft, context }) {
 
 				<div className={styles.nftDetails}>
 					<div className={styles.nftDetailsHeader}>NFT details</div>
-					<div>Blockchain : Ethereum</div>
+					<div>Blockchain : {chainSpec(context.chainId).blockchain}</div>
 					<div>Token standard : ERC721</div>
 					<div>
 						{"Secondary sale royalty : "}

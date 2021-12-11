@@ -8,7 +8,9 @@ const {
 	CREATOR_ADDRESS,
 	SIGNER_PRIVATE_KEY,
 	RINKEBY_API_URL,
+	MUMBAI_API_URL,
 	ETHERSCAN_API_KEY,
+	POLYGONSCAN_API_KEY,
 	PINATA_API_KEY,
 	PINATA_API_SECRET
 } = process.env;
@@ -23,10 +25,18 @@ module.exports = {
 		rinkeby: {
 			url: RINKEBY_API_URL,
 			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
+		},
+		mumbai: {
+			chainId: 80001, 
+			url: MUMBAI_API_URL,
+			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
 		}
 	},
 	etherscan: {
 		apiKey: ETHERSCAN_API_KEY
+	},
+	polygonscan: {
+		apiKey: POLYGONSCAN_API_KEY
 	},
 	solidity: {
 		version: "0.8.2",
@@ -316,7 +326,7 @@ task("catalog", "Given a json catalog file, automatically manages IPFS metadata 
 				}
 			}
 
-			if (minted || burnt ) { 
+			if (minted || burnt) {
 				console.log("Ignored " + tokenId + (minted ? " (minted)" : "") + (burnt ? " (burnt)" : ""))
 
 			} else {

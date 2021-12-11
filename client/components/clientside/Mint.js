@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 
 import {
+	chainSpec,
 	isTransactionMined,
 	contractCall_mint
 } from "@utils/ethereum-interact.js";
@@ -51,11 +52,11 @@ export default function Minter({
 	return <>
 		<div>
 			<div>This NFT is available for minting</div>
-			<img className={styles.ethereumLogo} src="/ethereum.svg" />
+			<span>Price : </span>
 			<span className={styles.nftPriceETH}>
 				{nft.weiPrice === "0" ?
 					"FREE" :
-					`${ethers.utils.formatEther(nft.weiPrice)} ETH`
+					`${ethers.utils.formatEther(nft.weiPrice)} ${chainSpec(chainId).coin}`
 				}
 			</span>
 			<span className={styles.nftPriceGas}>{" + gas fee"}</span>

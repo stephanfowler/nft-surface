@@ -71,10 +71,11 @@ npx hardhat deploy --args ./delpoyment_args_rinkeby.js --network rinkeby
 npx hardhat sign --wei 1000 --id 123 --uri ipfs://foo.bar/123 --contract <DEPLOYED_CONTRACT_ADDRESS>  --network rinkeby
 ```
 
-### Verify on Etherscan
+### Verify on Etherscan (or Polygonscan)
 ```
 npx hardhat verify --network rinkeby --constructor-args delpoyment_args_rinkeby.js <DEPLOYED_CONTRACT_ADDRESS>
 ```
+Contract validation uses hardhat-etherscan, which expects the property `ETHERSCAN_API_KEY` in the `.env` file in the case of both Etherscan and Polygonscan. These are however distinct APIs so require distinct values; apply for an API key from the relevant one.
 
 ### Catalog preparation
 ```
