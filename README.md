@@ -1,6 +1,6 @@
 # NFT Surface
 
-An NFT platform for minting and selling NFTs with a sovereign Ethereum smart contract. 
+An NFT platform for minting and selling NFTs with a sovereign ERC721 smart contract, for EVM blockchains (Ethereum, Polygon, ...) 
 
 ### Example front page:
 
@@ -21,7 +21,7 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 ## Description
 
 * Showcase, mint, sell, buy, and transfer NFTs
-* Custom Ethereum smart contract, ERC-721 NFT standard
+* Custom smart contract, ERC-721 NFT standard
 * Adheres to strict NFT provenance best-practice
 * SEO-optimised responsive site
 * Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
@@ -29,10 +29,12 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 * Re-assignable role for catalog management
 * Configurable revenue shares
 * Configurable royalty
-* Connects to Metamask & compatible Ethereum wallets (desktop)
+* Connects to Metamask or compatible wallet (desktop)
 * Works within Metamask browser (mobile)
 
-See an [example test deployment](https://nft-surface.vercel.app/) on an Ethereum testnet (set your wallet to "Rinkeby Test Network", and [get some test ETH](https://www.google.com/search?q=rinkeby+faucet)).
+See example deployments on these testnets: 
+- [Ethereum testnet](https://nft-surface.vercel.app/) (set your Metamask wallet to "Rinkeby Test Network" and [get some test ETH](https://www.google.com/search?q=rinkeby+faucet)). 
+- [Polygon testnet](https://nft-surface-1yq9h1kix-stephanfowler.vercel.app/) (first [add Mumbai Testnet](https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/) to your Metamask wallet, switch to it, and [get some test MATIC](https://www.google.com/search?q=mumbai+faucet)) 
 
 ## Deployment
 
@@ -41,4 +43,4 @@ Deployment consists of the following:
 * Deploy a smart contract and create a catalog file using the [smart-contact](/smart-contract/) project.
 * Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
 
-It is highly reccomended to first do this a few times on an Ethereum testnet (eg Rinkeby). Ethereum mainnet deploymets are _expensive_.
+It is highly reccomended to try this a few times first on a testnet! Mainnet deploymets are _expensive_.

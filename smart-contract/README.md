@@ -35,7 +35,7 @@ RINKEBY_API_URL    = "..."
 # For Mainnet network deployments 
 MAINNET_API_URL    = "..."
 
-# For verifying contracts on Etherscan (all public networks) 
+# For verifying contracts on Etherscan (mainnets and testnets on Etherem/Polygon/...) 
 ETHERSCAN_API_KEY  = "..."
 
 # For NFT metadata and image uploads
