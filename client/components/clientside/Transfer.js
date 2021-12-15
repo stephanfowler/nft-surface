@@ -105,7 +105,7 @@ export default function Transfer({
 
 			{!expanded &&
 				<div>
-					<a href="" onClick={expand}>Transfer</a>{" to another address"}
+					<a href="" onClick={expand} title="transfer this NFT to another address">Transfer</a>{" to another address"}
 				</div>
 			}
 		</div>

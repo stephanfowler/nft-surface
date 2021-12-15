@@ -25,20 +25,6 @@ async function getWriteableContract(contractAddress, chainId) {
 	}
 }
 
-export function chainSpec(chainId) {
-	const names = {
-		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
-		"3": { network: "Ropsten Test Network", blockchain: "Ethereum", coin: "ETH" },
-		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
-		"5": { network: "Goerli Test Network", blockchain: "Ethereum", coin: "ETH" },
-		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
-		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" }
-	}
-	return names[chainId + ""];
-}
-
 function errorMessage(error) {
 	const e = error || "Error";
 	return (e.data && e.data.message) || e.message || e;
@@ -136,3 +122,14 @@ export const contractCall_safeTransferFrom = async (nft, from, to, contractAddre
 	}
 };
 
+export function chainSpec(chainId) {
+	const spec = {
+		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
+		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
+		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
+		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" }
+	}
+	return spec[chainId + ""];
+}

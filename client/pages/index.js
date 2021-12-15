@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Layout from '@components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { shortAddress, getAssetHref } from "@utils/links.js";
+import { explorerAddressLink } from "@utils/links.js";
 import styles from '@components/Layout.module.css'
 
 import frontImage from '@public/frontpage-bg.jpg'
@@ -19,11 +19,9 @@ export async function getStaticProps() {
 }
 
 export default function Home(props) {
-	const contractAddress = props.context.contractAddress
-	const creatorAddress = props.context.creatorAddress
-
-	const etherscanContract = getAssetHref(process.env.etherscanAddress, contractAddress);
-	const etherscanCreator = getAssetHref(process.env.etherscanAddress, creatorAddress);
+	const contractAddress = props.context.contractAddress;
+	const creatorAddress = props.context.creatorAddress;
+	const chainId = props.context.chainId;
 
 	return (
 		<Layout context={props.context} home>
@@ -48,12 +46,8 @@ export default function Home(props) {
 				</a>
 			</Link>
 			<div className={styles.landingAddress}>
-				<Link href={etherscanCreator}>
-					<div>{process.env.creatorName} address : <a>{shortAddress(creatorAddress)}</a></div>
-				</Link>
-				<Link href={etherscanContract}>
-					<div>Smart Contract : <a>{shortAddress(contractAddress)}</a></div>
-				</Link>
+				<div>{process.env.creatorName} address : {explorerAddressLink(chainId, creatorAddress)}</div>
+				<div>Smart Contract : {explorerAddressLink(chainId, contractAddress)}</div>
 			</div>
 		</Layout>
 	)

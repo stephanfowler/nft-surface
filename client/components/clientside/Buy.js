@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import Link from 'next/link'
+import { marketplaces } from "@utils/links.js";
 import {
 	chainSpec,
 	isTransactionMined,
@@ -40,14 +40,6 @@ export default function Buy({
 		setPrice(_price);
 		const _priceETH = ethers.utils.formatEther(_price);
 		setPriceETH(_priceETH);
-	}
-
-	const marketplaces = () => {
-		return <span className={styles.marketplaces}>
-			<Link href={nft.openseaAsset}><a className={styles.nftMarket}>OpenSea</a></Link>
-			{" or "}
-			<Link href={nft.raribleAsset}><a className={styles.nftMarket}>Rarible</a></Link>
-		</span>
 	}
 
 	const contractBuy = async (e) => {
@@ -92,8 +84,7 @@ export default function Buy({
 				</div>
 			}
 			<div>
-				{"View on "}
-				{marketplaces()}
+				{"View on "}{marketplaces(chainId, contractAddress, nft.tokenId)}
 			</div>
 		</div>
 	);

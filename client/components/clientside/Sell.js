@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import Link from 'next/link'
+import { marketplaces } from "@utils/links.js";
 import {
 	chainSpec,
 	isTransactionMined,
@@ -62,14 +62,6 @@ export default function Sell({
 		evt.preventDefault();
 		setDisplayPriceETH(priceETH || "");
 		setExpanded(true);
-	}
-
-	const marketplaces = () => {
-		return <span>
-			<Link href={nft.openseaAsset}><a>OpenSea</a></Link>
-			{" or "}
-			<Link href={nft.raribleAsset}><a>Rarible</a></Link>
-		</span>
 	}
 
 	const contractSetPrice = async (newPriceETH) => {
@@ -146,9 +138,8 @@ export default function Sell({
 			}
 
 			{!expanded &&
-				<div className={styles.marketplaces}>
-					{"Sell on "}
-					{marketplaces()}
+				<div>
+					{"Sell on "}{marketplaces(chainId, contractAddress, nft.tokenId)}
 				</div>
 			}
 

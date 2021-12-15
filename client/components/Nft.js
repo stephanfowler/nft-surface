@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { shortAddress, getAssetHref } from "@utils/links.js";
+import { explorerAddressLink, explorerTokenLink, ipfsLink } from "@utils/links.js";
 
 import { chainSpec } from "@utils/ethereum-interact.js";
 
@@ -12,24 +12,11 @@ const NftStatus = dynamic(
 
 import styles from '@components/Nft.module.css'
 
-function getIpfsHref(template, ipfsURI) {
-	const ipfsHash = (ipfsURI || "").replace("ipfs://", "");
-	return (template || "").replace("<ipfsHash>", ipfsHash);
-}
-
 export default function Nft({ nft, context }) {
 	const contractAddress = context.contractAddress;
 	const creatorAddress = context.creatorAddress;
+	const chainId = context.chainId;
 	const tokenId = nft.tokenId;
-
-	nft.openseaAsset = getAssetHref(process.env.openseaAsset, contractAddress, tokenId);
-	nft.raribleAsset = getAssetHref(process.env.raribleAsset, contractAddress, tokenId);
-	nft.etherscanToken = getAssetHref(process.env.etherscanToken, contractAddress, tokenId);
-	nft.etherscanContract = getAssetHref(process.env.etherscanAddress, contractAddress, tokenId);
-	nft.etherscanCreator = getAssetHref(process.env.etherscanAddress, creatorAddress, tokenId);
-	nft.ipfsMetadata = getIpfsHref(process.env.ipfsGateway, nft.tokenURI);
-	nft.ipfsImage = getIpfsHref(process.env.ipfsGateway, nft.metadata.image);
-
 	const width = nft.metadata.width || 100;
 	const height = nft.metadata.height || 100;
 	const orient = width > height ? 'landscape' : 'portrait';
@@ -72,46 +59,25 @@ export default function Nft({ nft, context }) {
 
 				<div className={styles.nftDetails}>
 					<div className={styles.nftDetailsHeader}>NFT details</div>
-					<div>Blockchain : {chainSpec(context.chainId).blockchain}</div>
+					<div>Blockchain : {chainSpec(chainId).blockchain}</div>
 					<div>Token standard : ERC721</div>
 					<div>
-						{"Secondary sale royalty : "}
-						{context.royaltyBasisPoints / 100}
-						{"%"}
+						{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}
 					</div>
 					<div>
-						{"Token ID : "}
-						<Link href={nft.etherscanToken}>
-							<a title="view token on etherscan">
-								{tokenId}
-							</a>
-						</Link>
+						{"Token ID : "}{explorerTokenLink(chainId, contractAddress, tokenId)}
 					</div>
 					<div>
-						{"Contract : "}
-						<Link href={nft.etherscanContract}>
-							<a title="view contract on etherscan">
-								{shortAddress(contractAddress)}
-							</a>
-						</Link>
+						{"Contract : "}{explorerAddressLink(chainId, contractAddress)}
 					</div>
 					<div>
-						{"Creator : "}
-						<Link href={nft.etherscanCreator}>
-							<a title="view creator on etherscan">
-								{shortAddress(creatorAddress)}
-							</a>
-						</Link>
+						{"Creator : "}{explorerAddressLink(chainId, creatorAddress)}
 					</div>
 					<div>
 						{"IPFS immutable "}
-						<Link href={nft.ipfsImage}>
-							<a title="view image on IPFS">image</a>
-						</Link>
-						{" | "}
-						<Link href={nft.ipfsMetadata}>
-							<a title="view image on IPFS">metadata</a>
-						</Link>
+						{ipfsLink(nft.metadata.image, "image")}
+						{" / "}
+						{ipfsLink(nft.tokenURI, "metadata")}
 					</div>
 				</div>
 			</div>

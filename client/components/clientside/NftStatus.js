@@ -16,8 +16,8 @@ import {
 } from "@utils/ethereum-interact.js";
 
 import {
-	etherscanAddressLink,
-	etherscanTxLink
+	explorerAddressLink,
+	explorerTxLink
 } from "@utils/links.js"
 
 const NftStatus = ({ nft, context }) => {
@@ -107,13 +107,13 @@ const NftStatus = ({ nft, context }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Be patient. Transaction "}{etherscanTxLink(tx.hash)}{" is being mined on the "}{blockchainName}{" blockchain..."}</div>
+				return <div>{"Be patient. Transaction "}{explorerTxLink(chainId, tx.hash)}{" is being mined on the "}{blockchainName}{" blockchain..."}</div>
 
 			case "tx_succeded":
-				return <div>{"Done! Transaction "}{etherscanTxLink(tx.hash)}{" was succesful"}</div>
+				return <div>{"Done! Transaction "}{explorerTxLink(chainId, tx.hash)}{" was succesful"}</div>
 
 			case "tx_failed":
-				return <div>{"Sorry, transaction "}{etherscanTxLink(tx.hash)}{" failed"}</div>
+				return <div>{"Sorry, transaction "}{explorerTxLink(chainId, tx.hash)}{" failed"}</div>
 
 			case "confirmation_pending":
 				return <div>{"Confirm this using your wallet..."}</div>
@@ -159,14 +159,14 @@ const NftStatus = ({ nft, context }) => {
 
 					{owner && userIsOwner &&
 						<div className={styles.nftOwner}>
-							{etherscanAddressLink(owner, "You")}{" own this NFT"}
+							{explorerAddressLink(chainId, owner, "You")}{" own this NFT"}
 						</div>
 					}
 
 					{owner && !userIsOwner &&
 						<div className={styles.nftOwner}>
 							{"Owned by user "}
-							{etherscanAddressLink(owner)}
+							{explorerAddressLink(chainId, owner)}
 						</div>
 					}
 
@@ -240,7 +240,7 @@ const NftStatus = ({ nft, context }) => {
 						{notify ? showNofity()
 
 							: walletAddress ?
-								<div>{"You are connected as "}{etherscanAddressLink(walletAddress)}</div>
+								<div>{"You are connected as "}{explorerAddressLink(chainId, walletAddress)}</div>
 
 								: window.ethereum ?
 									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{blockchainName}{" wallet"}</a></div>
