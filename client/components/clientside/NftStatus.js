@@ -33,6 +33,7 @@ const NftStatus = ({ nft, context }) => {
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
 	const blockchainName = chainSpec(chainId).blockchain;
+	const coin = chainSpec(chainId).coin;
 
 	const userIsOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) === ethers.utils.getAddress(owner)));
 	const userIsNotOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) !== ethers.utils.getAddress(owner)));
@@ -128,7 +129,7 @@ const NftStatus = ({ nft, context }) => {
 				return (
 					<div>
 						<div>
-							{"To mint or buy NFTs you need a wallet funded with "}{blockchainName}
+							{"To mint or buy NFTs you need a wallet funded with "}{coin}
 						</div>
 						<div>
 							On mobile use the <a href={`https://metamask.io/`}>Metamask</a> app broswer to view this website
