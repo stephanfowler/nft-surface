@@ -35,45 +35,50 @@ export default function Nft({ nft, context }) {
 					layout="responsive" />
 			</div>
 
-			<div className={styles.nftStory}>
+			<div className={styles.nftSections}>
 
-				<div className={styles.nftMetadata}>
+				<div className={styles.nftSection}>
 					<h1 className={styles.nftName}>{nft.metadata.name}</h1>
-					<div className={styles.nftCreatorAndDate}>{nft.metadata.creator} {nft.metadata.date}</div>
-					<div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
-					<div className={styles.nftDimensions}>{width}{" x "}{height}{" px"}</div>
-					{nft.metadata.collection &&
-						<div className={styles.nftEdition}>Collection : {nft.metadata.collection || "1 / 1"}</div>
-					}
-					<div className={styles.nftDescription}>{
-						(nft.metadata.description + "").split("/n").map((para, index) =>
-							<div key={index}>{para}</div>
-						)
-					}</div>
+					<div className={styles.nftDetails}>
+						<div>{nft.metadata.creator} {nft.metadata.date}</div>
+						<div>Edition {nft.metadata.edition || "1 / 1"}</div>
+						<div>{width}{" x "}{height}{" px"}</div>
+						{nft.metadata.collection &&
+							<div>Collection : {nft.metadata.collection || "1 / 1"}</div>
+						}
+						<div>{
+							(nft.metadata.description + "").split("/n").map((para, index) =>
+								<div key={index}>{para}</div>
+							)
+						}</div>
+					</div>
 				</div>
 
-				<NftStatus nft={nft} context={context} />
+				<div className={styles.nftSection}>
+					<NftStatus nft={nft} context={context} />
+				</div>
 
-				<div className={styles.nftDetails}>
-					<div className={styles.nftDetailsHeader}>NFT details</div>
-					<div>
-						{"Token ID : "}{explorerTokenLink(chainId, contractAddress, tokenId)}
+				<div className={styles.nftSection}>
+					<div className={styles.nftDetails}>
+						<div>
+							{"Token ID : "}{explorerTokenLink(chainId, contractAddress, tokenId)}
+						</div>
+						<div>
+							{"Contract : "}{explorerAddressLink(chainId, contractAddress)}
+						</div>
+						<div>
+							{"Creator : "}{explorerAddressLink(chainId, creatorAddress)}
+						</div>
+						<div>
+							{"IPFS immutable "}
+							{ipfsLink(nft.tokenURI, "metadata")}
+							{" / "}
+							{ipfsLink(nft.metadata.image, "image")}
+						</div>
+						<div>{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}</div>
+						<div>Token type : ERC-721</div>
+						<div>Blockchain : {chainSpec(chainId).blockchain}</div>
 					</div>
-					<div>
-						{"Contract : "}{explorerAddressLink(chainId, contractAddress)}
-					</div>
-					<div>
-						{"Creator : "}{explorerAddressLink(chainId, creatorAddress)}
-					</div>
-					<div>
-						{"IPFS immutable "}
-						{ipfsLink(nft.tokenURI, "metadata")}
-						{" / "}
-						{ipfsLink(nft.metadata.image, "image")}
-					</div>
-					<div>{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}</div>
-					<div>Token type : ERC-721</div>
-					<div>Blockchain : {chainSpec(chainId).blockchain}</div>
 				</div>
 			</div>
 		</div>

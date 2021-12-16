@@ -76,6 +76,10 @@ form {
 	margin: 0 0 0.5rem 0;
 }
 
+form > div {
+	margin: 0 0 0.5rem 0;
+}
+
 input {
   border-color: black;
   border-width: 1px;

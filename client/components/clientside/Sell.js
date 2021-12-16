@@ -98,16 +98,24 @@ export default function Sell({
 		<div>
 			{expanded &&
 				<form>
-					{"Sell for "}
-					<input disabled={connecting}
-						autoFocus
-						type="number"
-						value={displayPriceETH}
-						onChange={e => setDisplayPriceETH(e.target.value)}
-					/>
-					{" "}{chainSpec(chainId).coin}
+					<div className={styles.nftDetails}>
+						Important: prices are recorded on-chain, so setting or changing a price will incur a transaction fee.
+					</div>
+					<div>
+						{"Sell for "}
+						<input disabled={connecting}
+							autoFocus
+							type="number"
+							value={displayPriceETH}
+							onChange={e => setDisplayPriceETH(e.target.value)}
+						/>
+						{" "}{chainSpec(chainId).coin}
+					</div>
 					<div className={styles.formActions}>
 						<button onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
+						{parseFloat(priceETH) > 0 &&
+							<button className={styles.secondary} onClick={setZero} disabled={connecting}>End sale</button>
+						}
 						<button className={styles.secondary} onClick={cancel} disabled={connecting}>Cancel</button>
 					</div>
 				</form>
@@ -130,9 +138,6 @@ export default function Sell({
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>
 						<button className={styles.secondary} onClick={expand} disabled={connecting}>Change price</button>
-						{parseFloat(priceETH) > 0 &&
-							<button className={styles.secondary} onClick={setZero} disabled={connecting}>End sale</button>
-						}
 					</form>
 				</>
 			}

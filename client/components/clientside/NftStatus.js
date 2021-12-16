@@ -152,7 +152,7 @@ const NftStatus = ({ nft, context }) => {
 
 			: !status ?
 				<div className={styles.nftStatusPending}>
-					Checking NFT status …
+					Checking status …
 				</div>
 
 				:

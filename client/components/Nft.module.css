@@ -25,30 +25,59 @@
     padding: 1rem 0 0 0;
 }
 
+.nftThumb .nftName {
+    font-size: inherit;
+}
+
+.nftThumbDeets {
+		margin: 0 0 2rem 0;
+    padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
+}
+
+.nftSections {
+		padding: 0 1rem;
+}
+
+.nftSection {
+    padding: 1rem 0;
+    border-bottom: 1px solid lightgray;
+}
+
+.nftSection:last-of-type {
+    border-bottom: none;
+}
+
+.nftDetails {
+    font-size: smaller;
+}
+
+.nftDetails div {
+    margin: 0 0 .25rem 0;
+}
+
 .nftStatusPending {
-    padding: 0 1rem;
-    min-height: 2rem;
-    max-height: 2rem;
+    min-height: 1.5rem;
+    max-height: 1.5rem;
     overflow: hidden;
     background: white;
     color: darkgrey
 }
 
 .nftStatus {
-    padding: 0 1rem;
     background: white;
     overflow: hidden;
     min-height: 2rem;
     max-height: 20rem;
-    transition: max-height 0.5s ease-in;   
-}
-
-.nftStatus div {
-    margin-bottom: 0.5rem;
+    transition: max-height 0.3s ease-in;   
 }
 
 .nftStatus > div:first-of-type {
     font-weight: bold;
+}
+
+.nftStatus > div {
+    margin-bottom: 0.25rem;
 }
 
 .connection {
@@ -60,22 +89,6 @@
     color:orange;
 }
 
-.nftDetails {
-    font-size: smaller;
-    padding: 1rem;
-}
-
-.nftDetailsHeader {
-    color: darkgray;
-    border-top: 1px solid lightgray;
-    display: inline-block;
-    padding: 0.25rem 2rem 0 0;
-}
-
-.nftDetails div {
-    margin-bottom: 0.25rem;
-}
-
 .nftThumbImage.portrait {
     margin: 0 1rem;
 }
@@ -84,44 +97,20 @@
     margin: 0;
 }
 
-.nftMetadata {
-    margin: 0 0 2rem 0;
-    padding: 1rem;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 25px 20px -20px;
-}
-
-.nft .nftMetadata div {
-    margin: 0 0 .25rem 0;
-}
-
 .nftName {
     font-size: larger;
     font-weight: bold;
 }
 
-.nftThumb .nftName {
-    font-size: inherit;
-}
-
-.nftCreatorAndDate,
-.nftDescription, 
-.nftEdition,
-.nftCollection,
-.nftDimensions {
-    font-size:smaller;
-}
-
-.notification a,
-.nftTrade a {
-    font-weight:bold;
-    color: orange;
-}
-
 .notification {
+		margin: 1rem 0 0 0;
     color: orange;
     font-size: smaller;
-    margin: 1rem 0;
-    border-radius: 4px;
+}
+
+.notification a {
+    font-weight:bold;
+    color: orange;
 }
 
 @keyframes placeHolderShimmer{
@@ -140,24 +129,11 @@
     animation-name: placeHolderShimmer;
     animation-timing-function: linear;
     color: orange;
-    padding: 0.5rem 1rem 0.2rem 1rem;
+    padding: 1rem;
     background: linear-gradient(to right, lightgoldenrodyellow 8%, white 18%, lightgoldenrodyellow 33%);
     background-size: 800px 104px;
+    border-radius: 4px;
     position: relative;
-}
-
-.mintingPending,
-.mintingPending a {
-    color: orange;
-    font-weight: normal;
-    padding: 1rem 0;
-}
-
-.mintingSucceeded,
-.mintingSucceeded a {
-    color: darkgreen;
-    font-weight: normal;
-    padding: 1rem 0;
 }
 
 .nftPriceETH {
@@ -171,27 +147,8 @@
     font-size: smaller;
 }
 
-.ethereumLogo {
-    display: inline;
-    height: 1rem;
-    margin: 0 .4rem 0 0;
-}
-
-.waiting {
-    font-weight: normal;
-    color: slategray;
-}
-
 .formActions {
     margin: 0.5rem 0;
-}
-
-.marketplaces {
-	margin:0 0 1rem 0;
-}
-
-.marketplaces a {
-    font-weight: bold;
 }
 
 .bigInput {

@@ -50,8 +50,8 @@ export default function Minter({
 	};
 
 	return <>
+		<div>This NFT is available for minting</div>
 		<div>
-			<div>This NFT is available for minting</div>
 			<span>Price : </span>
 			<span className={styles.nftPriceETH}>
 				{nft.weiPrice === "0" ?

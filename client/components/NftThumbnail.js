@@ -28,12 +28,14 @@ export default function NftThumbnail({ nft, index }) {
 						</a>
 					</Link>
 				</div>
-				<div className={styles.nftMetadata}>
+				<div className={styles.nftThumbDeets}>
 					<Link href={`/nft/${nft.tokenId}`}>
 						<div className={styles.nftName}><a>{nft.metadata.name}</a></div>
 					</Link>
-					<div className={styles.nftCreatorAndDate}>{nft.metadata.creator} {nft.metadata.date}</div>
-					<div className={styles.nftEdition}>Edition {nft.metadata.edition || "1 / 1"}</div>
+					<div className={styles.nftDetails}>
+						<div>{nft.metadata.creator} {nft.metadata.date}</div>
+						<div>Edition {nft.metadata.edition || "1 / 1"}</div>
+					</div>
 				</div>
 			</div>
 		)
