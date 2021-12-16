@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import Link from 'next/link'
 import { explorerAddressLink, explorerTokenLink, ipfsLink } from "@utils/links.js";
 
 import { chainSpec } from "@utils/ethereum-interact.js";
@@ -53,17 +52,10 @@ export default function Nft({ nft, context }) {
 					}</div>
 				</div>
 
-				<div className={styles.nftActions}>
-					<NftStatus nft={nft} context={context} />
-				</div>
+				<NftStatus nft={nft} context={context} />
 
 				<div className={styles.nftDetails}>
 					<div className={styles.nftDetailsHeader}>NFT details</div>
-					<div>Blockchain : {chainSpec(chainId).blockchain}</div>
-					<div>Token standard : ERC721</div>
-					<div>
-						{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}
-					</div>
 					<div>
 						{"Token ID : "}{explorerTokenLink(chainId, contractAddress, tokenId)}
 					</div>
@@ -75,10 +67,13 @@ export default function Nft({ nft, context }) {
 					</div>
 					<div>
 						{"IPFS immutable "}
-						{ipfsLink(nft.metadata.image, "image")}
-						{" / "}
 						{ipfsLink(nft.tokenURI, "metadata")}
+						{" / "}
+						{ipfsLink(nft.metadata.image, "image")}
 					</div>
+					<div>{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}</div>
+					<div>Token type : ERC-721</div>
+					<div>Blockchain : {chainSpec(chainId).blockchain}</div>
 				</div>
 			</div>
 		</div>

@@ -3,6 +3,7 @@ import Layout from '@components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { explorerAddressLink } from "@utils/links.js";
+import { chainSpec } from "@utils/ethereum-interact.js";
 import styles from '@components/Layout.module.css'
 
 import frontImage from '@public/frontpage-bg.jpg'
@@ -45,9 +46,10 @@ export default function Home(props) {
 					NFT<br />CATALOG
 				</a>
 			</Link>
-			<div className={styles.landingAddress}>
+			<div className={styles.landingSpec}>
 				<div>{process.env.creatorName} address : {explorerAddressLink(chainId, creatorAddress)}</div>
 				<div>Smart Contract : {explorerAddressLink(chainId, contractAddress)}</div>
+				<div>NFT type : ERC721 on {chainSpec(chainId).blockchain}</div>
 			</div>
 		</Layout>
 	)

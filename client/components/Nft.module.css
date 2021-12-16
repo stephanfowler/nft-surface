@@ -25,9 +25,39 @@
     padding: 1rem 0 0 0;
 }
 
-.nftActions {
+.nftStatusPending {
     padding: 0 1rem;
     min-height: 2rem;
+    max-height: 2rem;
+    overflow: hidden;
+    background: white;
+    color: darkgrey
+}
+
+.nftStatus {
+    padding: 0 1rem;
+    background: white;
+    overflow: hidden;
+    min-height: 2rem;
+    max-height: 20rem;
+    transition: max-height 0.5s ease-in;   
+}
+
+.nftStatus div {
+    margin-bottom: 0.5rem;
+}
+
+.nftStatus > div:first-of-type {
+    font-weight: bold;
+}
+
+.connection {
+    color:orange;
+    font-size: smaller;
+}
+
+.connection a {
+    color:orange;
 }
 
 .nftDetails {
@@ -42,21 +72,8 @@
     padding: 0.25rem 2rem 0 0;
 }
 
-.nftActions div {
-    margin-bottom: 0.5rem;
-}
-
 .nftDetails div {
     margin-bottom: 0.25rem;
-}
-
-.nftActions .connection {
-    color:orange;
-    font-size: smaller;
-}
-
-.nftActions .connection a {
-    color:orange;
 }
 
 .nftThumbImage.portrait {
@@ -92,20 +109,6 @@
 .nftCollection,
 .nftDimensions {
     font-size:smaller;
-}
-
-.nftStatusPending {
-    max-height: 1.5rem;
-    overflow: hidden;
-    background: white;
-    color: darkgrey
-}
-
-.nftStatus {
-    background: white;
-    overflow: hidden;
-    max-height: 20rem;
-    transition: max-height 0.23s ease-in;   
 }
 
 .notification a,

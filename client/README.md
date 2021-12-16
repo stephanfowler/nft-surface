@@ -33,7 +33,7 @@ twitterHandle   = '@stephanfowler'
 networkKey = 'https://eth-rinkeby.alchemyapi.io/v2/JZzxf4....'
 ```
 
-The `networkKey` property contains an API key that will be visible in th client. You should configure your Ethereum provifer to only accept requests from your deployment domain(s).
+The `networkKey` property contains an API key that will be visible in the client. You should configure your blockchain RPC provider to only accept requests from your deployment domain(s).
 
 If using catalog and images hosted on an external URL, in `next.config.js` enable your domain as an image source: 
 ```

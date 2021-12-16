@@ -129,7 +129,7 @@ export default function Sell({
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>
-						<button onClick={expand} disabled={connecting}>Change price</button>
+						<button className={styles.secondary} onClick={expand} disabled={connecting}>Change price</button>
 						{parseFloat(priceETH) > 0 &&
 							<button className={styles.secondary} onClick={setZero} disabled={connecting}>End sale</button>
 						}

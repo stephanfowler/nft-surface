@@ -42,19 +42,12 @@ export default function Layout({ children, home, nft, context }) {
 			<main>{children}</main>
 
 			<footer className={home ? styles.footerHome : styles.footer}>
-				{context && context.chainId > 1 &&
-					<>
-						<span className={styles.alertIsTestnet}>{chainSpec(context.chainId).network}</span>
-						{" / "}
-					</>
-				}
-				<Link href="/docs/provenance">
-					<a>NFT provenance</a>
-				</Link>
-				{" / "}
 				<Link href="https://github.com/stephanfowler/nft-surface">
 					<a>NFT Surface</a>
 				</Link>
+				{context.chainId > 1 &&
+					<div className={styles.alertIsTestnet}>{chainSpec(context.chainId).network}</div>
+				}
 			</footer>
 		</div>
 	)

@@ -19,8 +19,9 @@
 }
 
 .alertIsTestnet {
-  margin-top: 1rem;
+  margin-top: 0.25rem;
   color:orange;
+	font-weight: bold;
 }
 
 .pageContainer {
@@ -81,12 +82,12 @@
   text-decoration: none;
 }
 
-.landingAddress {
+.landingSpec {
   z-index: 1;
   margin: 3rem 2rem;
   padding: 0.5rem;
   color: white;
-  background: orange;
+  background: rgb(255,140,0, 95%);
   font-size: smaller;
   border-radius: 8px;
   display: inline-block;
