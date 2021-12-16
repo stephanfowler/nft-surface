@@ -34,7 +34,7 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 
 See example deployments on these testnets: 
 - [Ethereum testnet](https://nft-surface.vercel.app/) (set your Metamask wallet to "Rinkeby Test Network" and [get some test ETH](https://www.google.com/search?q=rinkeby+faucet)). 
-- [Polygon testnet](https://nft-surface-1yq9h1kix-stephanfowler.vercel.app/) (first [add Mumbai Testnet](https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/) to your Metamask wallet, switch to it, and [get some test MATIC](https://www.google.com/search?q=mumbai+faucet)) 
+- [Polygon testnet](https://nft-surface-polygon.vercel.app/) (first [add Mumbai Testnet](https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/) to your Metamask wallet, switch to it, and [get some test MATIC](https://www.google.com/search?q=mumbai+faucet)) 
 
 ## Deployment
 
