@@ -38,6 +38,7 @@ export default function Nft({ nft, context }) {
 			<div className={styles.nftSections}>
 
 				<div className={styles.nftSection}>
+
 					<h1 className={styles.nftName}>{nft.metadata.name}</h1>
 					<div className={styles.nftDetails}>
 						<div>{nft.metadata.creator} {nft.metadata.date}</div>
