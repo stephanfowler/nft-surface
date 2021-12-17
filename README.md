@@ -32,9 +32,12 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 * Connects to Metamask or compatible wallet (desktop)
 * Works within Metamask browser (mobile)
 
-See example deployments on these testnets: 
-- [Ethereum testnet](https://nft-surface.vercel.app/) (set your Metamask wallet to "Rinkeby Test Network" and [get some test ETH](https://www.google.com/search?q=rinkeby+faucet)). 
-- [Polygon testnet](https://nft-surface-polygon.vercel.app/) (first [add Mumbai Testnet](https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/) to your Metamask wallet, switch to it, and [get some test MATIC](https://www.google.com/search?q=mumbai+faucet)) 
+See example deployments of NFT Surface on these testnets:
+- [Ethereum (Rinkeby testnet)](https://nft-surface.vercel.app/)
+- [Polygon (Mumbai testnet)](https://nft-surface-polygon.vercel.app/)
+- [Arbitrum (Rinkeby testnet)](https://nft-surface-arbitrum.vercel.app/)
+
+To interact with these you'll need a [Metamask](https://metamask.io/) wallet (to which you may need to add the relevant [testnet details](https://chainlist.org/)) and some relevant test currency (eg. Google "Rinkeby faucet").
 
 ## Deployment
 
@@ -44,3 +47,20 @@ Deployment consists of the following:
 * Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
 
 It is highly reccomended to try this a few times first on a testnet! Mainnet deploymets are _expensive_.
+
+## Chain support
+
+The repo currently has support for these chainIDs:
+* 1 - Ethereum Mainnet
+* 4 - Rinkeby Testnet
+* 137 - Polygon Mainnet
+* 80001 - Polygon Testnet
+* 421611 - Arbitrum Testnet
+
+To add other chains, add their details in these files, following the pattern for the existing chains:
+```
+smart-contract/.env
+smart-contract/hardhat.config.js
+client/utils/chain-spec.js
+```
+Also add a `client/public/catalog/catalog_chainid_<your new chain id>.json` (see [smart-contact](/smart-contract/)).

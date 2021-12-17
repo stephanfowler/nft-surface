@@ -3,12 +3,12 @@ import Link from 'next/link'
 export function chainSpec(chainId) {
 	const spec = {
 		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
-		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
+		"4": { network: "Rinkeby Testnet", blockchain: "Ethereum", coin: "ETH" },
 		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
 		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
 		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" },
-		"421611": { network: "Arbitrum Test Network", blockchain: "Arbitrum", coin: "ETH" }
+		"80001": { network: "Polygon Mumbai Testnet", blockchain: "Polygon", coin: "MATIC" },
+		"421611": { network: "Arbitrum Rinkeby Testnet", blockchain: "Arbitrum", coin: "ETH" }
 	}
 	return spec[chainId + ""] || { network: "Unknown network", blockchain: "Unknown blockchain", coin: "Unknown coin" };
 }
