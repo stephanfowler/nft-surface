@@ -84,7 +84,7 @@ export default function Buy({
 				</div>
 			}
 			<div>
-				{"View on "}{marketplaces(chainId, contractAddress, nft.tokenId)}
+				{marketplaces(chainId, contractAddress, nft.tokenId, "View on ")}
 			</div>
 		</div>
 	);

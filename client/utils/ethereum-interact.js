@@ -2,6 +2,19 @@ import { ethers } from "ethers";
 
 const contractABI = require("./abi.json");
 
+export function chainSpec(chainId) {
+	const spec = {
+		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
+		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
+		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
+		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" },
+		"421611": { network: "Arbitrum Test Network", blockchain: "Arbitrum", coin: "ETH" }
+	}
+	return spec[chainId + ""] || { network: "Unknown network", blockchain: "Unknown blockchain", coin: "Unknown coin" };
+}
+
 async function getReadableProvider(chainId) {
 	if (window.ethereum) {
 		return new ethers.providers.Web3Provider(window.ethereum, "any")
@@ -121,15 +134,3 @@ export const contractCall_safeTransferFrom = async (nft, from, to, contractAddre
 		return { error: errorMessage(e) };
 	}
 };
-
-export function chainSpec(chainId) {
-	const spec = {
-		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
-		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
-		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
-		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" }
-	}
-	return spec[chainId + ""];
-}

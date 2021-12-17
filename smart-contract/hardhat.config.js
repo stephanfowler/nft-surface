@@ -9,6 +9,7 @@ const {
 	SIGNER_PRIVATE_KEY,
 	RINKEBY_API_URL,
 	MUMBAI_API_URL,
+	ARB_RINKEBY_API_URL,
 	ETHERSCAN_API_KEY,
 	POLYGONSCAN_API_KEY,
 	PINATA_API_KEY,
@@ -29,6 +30,11 @@ module.exports = {
 		mumbai: {
 			chainId: 80001, 
 			url: MUMBAI_API_URL,
+			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
+		},
+		arbrinkeby: {
+			chainId: 421611,
+			url: ARB_RINKEBY_API_URL,
 			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
 		}
 	},

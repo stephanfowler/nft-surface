@@ -21,6 +21,11 @@ function explorerTemplates(chainId) {
 			address: 'https://mumbai.polygonscan.com/address/<address>',
 			token: 'https://mumbai.polygonscan.com/token/<address>?a=<tokenId>',
 			transaction: 'https://mumbai.polygonscan.com/tx/<hash>'
+		},
+		"421611": {
+			address: 'https://testnet.arbiscan.io/address/<address>',
+			token: 'https://testnet.arbiscan.io/token/<address>?a=<tokenId>',
+			transaction: 'https://testnet.arbiscan.io/tx/<hash>'
 		}
 	}
 	return links[chainId + ""] || {};
@@ -44,6 +49,19 @@ function marketplaceTemplates(chainId) {
 		}
 	}
 	return links[chainId + ""] || {};
+}
+
+export function marketplaces(chainId, contractAddress, tokenId, preamble) {
+	const markets = marketplaceTemplates(chainId);
+	return Object.keys(markets).map((market, index) =>
+		<>
+			{index === 0 && preamble}
+			{index > 0 && " / "}
+			<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
+				<a title={"go to " + market + " NFT marketplace"}>{market}</a>
+			</Link>
+		</>
+	);
 }
 
 function shortAddress(address) {
@@ -74,18 +92,6 @@ export function explorerTxLink(chainId, hash) {
 		<Link href={template.replace("<hash>", hash)}>
 			<a title="view transaction on a blockchain explorer" target="_blank">{shortAddress(hash)}</a>
 		</Link>)
-}
-
-export function marketplaces(chainId, contractAddress, tokenId) {
-	const markets = marketplaceTemplates(chainId);
-	return Object.keys(markets).map((market, index) =>
-		<>
-			{index > 0 && " / "}
-			<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
-				<a title={"go to " + market + " NFT marketplace"}>{market}</a>
-			</Link>
-		</>
-	);
 }
 
 export function ipfsLink(ipfsURI, linkText) {

@@ -79,6 +79,7 @@ export default function Nft({ nft, context }) {
 						<div>{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}</div>
 						<div>Token type : ERC-721</div>
 						<div>Blockchain : {chainSpec(chainId).blockchain}</div>
+						<div>Network : {chainSpec(chainId).network}</div>
 					</div>
 				</div>
 			</div>

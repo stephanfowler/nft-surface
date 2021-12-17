@@ -144,7 +144,7 @@ export default function Sell({
 
 			{!expanded &&
 				<div>
-					{"Sell on "}{marketplaces(chainId, contractAddress, nft.tokenId)}
+					{marketplaces(chainId, contractAddress, nft.tokenId, "Sell on ")}
 				</div>
 			}
 
