@@ -2,9 +2,9 @@ import Head from 'next/head'
 import Layout from '@components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
-import { explorerAddressLink } from "@utils/links.js";
-import { chainSpec } from "@utils/ethereum-interact.js";
 import styles from '@components/Layout.module.css'
+
+import { chainSpec, explorerAddressLink } from "@utils/chain-spec.js";
 
 import frontImage from '@public/frontpage-bg.jpg'
 

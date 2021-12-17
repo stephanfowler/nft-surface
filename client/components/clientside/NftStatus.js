@@ -9,16 +9,16 @@ import Transfer from '@components/clientside/Transfer'
 import styles from '@components/Nft.module.css'
 
 import {
-	chainSpec,
 	getWallet,
 	contractCall_ownerOf,
 	contractCall_mintable
 } from "@utils/ethereum-interact.js";
 
 import {
+	chainSpec,
 	explorerAddressLink,
 	explorerTxLink
-} from "@utils/links.js"
+} from "@utils/chain-spec.js";
 
 const NftStatus = ({ nft, context }) => {
 	const [status, setStatus] = useState(nft.status);
@@ -244,7 +244,7 @@ const NftStatus = ({ nft, context }) => {
 								<div>{"You are connected as "}{explorerAddressLink(chainId, walletAddress)}</div>
 
 								: window.ethereum ?
-									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{blockchainName}{" wallet"}</a></div>
+									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{coin}{" ("}{blockchainName}{") wallet"}</a></div>
 
 									: <></>}
 					</div>

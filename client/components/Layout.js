@@ -2,7 +2,8 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
-import { chainSpec } from "@utils/ethereum-interact.js";
+
+import { chainSpec } from "@utils/chain-spec.js";
 
 export default function Layout({ children, home, nft, context }) {
 	const router = useRouter()

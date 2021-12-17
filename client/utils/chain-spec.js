@@ -1,5 +1,18 @@
 import Link from 'next/link'
 
+export function chainSpec(chainId) {
+	const spec = {
+		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
+		"4": { network: "Rinkeby Test Network", blockchain: "Ethereum", coin: "ETH" },
+		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
+		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
+		"80001": { network: "Polygon Test Network", blockchain: "Polygon", coin: "MATIC" },
+		"421611": { network: "Arbitrum Test Network", blockchain: "Arbitrum", coin: "ETH" }
+	}
+	return spec[chainId + ""] || { network: "Unknown network", blockchain: "Unknown blockchain", coin: "Unknown coin" };
+}
+
 function explorerTemplates(chainId) {
 	const links = {
 		"1": {
@@ -46,7 +59,8 @@ function marketplaceTemplates(chainId) {
 		},
 		"80001": {
 			OpenSea: 'https://testnets.opensea.io/assets/mumbai/<address>/<tokenId>'
-		}
+		},
+		"421611": {}
 	}
 	return links[chainId + ""] || {};
 }

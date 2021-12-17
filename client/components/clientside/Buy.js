@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import { marketplaces } from "@utils/links.js";
+import { chainSpec, marketplaces } from "@utils/chain-spec.js";
 import {
-	chainSpec,
 	isTransactionMined,
 	contractCall_price,
 	contractCall_buy

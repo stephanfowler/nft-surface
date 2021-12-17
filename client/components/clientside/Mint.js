@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 
+import { chainSpec } from "@utils/chain-spec.js";
 import {
-	chainSpec,
 	isTransactionMined,
 	contractCall_mint
 } from "@utils/ethereum-interact.js";

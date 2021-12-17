@@ -1,8 +1,11 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import { explorerAddressLink, explorerTokenLink, ipfsLink } from "@utils/links.js";
 
-import { chainSpec } from "@utils/ethereum-interact.js";
+import { 
+	chainSpec,
+	explorerAddressLink,
+	explorerTokenLink,
+	ipfsLink } from "@utils/chain-spec.js";
 
 const NftStatus = dynamic(
 	() => import('../components/clientside/NftStatus'),
