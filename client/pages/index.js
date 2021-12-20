@@ -47,9 +47,9 @@ export default function Home(props) {
 				</a>
 			</Link>
 			<div className={styles.landingSpec}>
-				<div>{process.env.creatorName} address : {explorerAddressLink(chainId, creatorAddress)}</div>
-				<div>Smart Contract : {explorerAddressLink(chainId, contractAddress)}</div>
-				<div>NFT type : ERC721 on {chainParams(chainId).chainName}</div>
+				<div>Artist {chainParams(chainId).nativeCurrency.symbol} address : {explorerAddressLink(chainId, creatorAddress)}</div>
+				<div>Smart Contract address : {explorerAddressLink(chainId, contractAddress)}</div>
+				<div>NFT type : ERC721</div>
 			</div>
 		</Layout>
 	)
