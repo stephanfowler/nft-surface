@@ -72,7 +72,7 @@ export function marketplaces(chainId, contractAddress, tokenId, preamble) {
 			{index === 0 && preamble}
 			{index > 0 && " / "}
 			<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
-				<a title={"go to " + market + " NFT marketplace"}>{market}</a>
+				<a target="_blank" title={"go to " + market + " NFT marketplace"}>{market}</a>
 			</Link>
 		</>
 	);

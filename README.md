@@ -46,7 +46,7 @@ Deployment consists of the following:
 * Deploy a smart contract and create a catalog file using the [smart-contact](/smart-contract/) project.
 * Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
 
-It is highly reccomended to try this a few times first on a testnet! Mainnet deploymets are _expensive_.
+It is highly reccomended to try this a few times first on a testnet! Mainnet deployments are _expensive_.
 
 ## Chain support
 

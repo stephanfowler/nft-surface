@@ -14,7 +14,7 @@ npm run dev
 
 ## Configuration
 
-You will need to ammend `clien/.env`. Note that this file doe NOT contain secrets, unlike `smart-contract/.env`. 
+You will need to amend `clien/.env`. Note that this file doe NOT contain secrets, unlike `smart-contract/.env`. 
 
 ```
 #catalogFilename = 'catalog_chainid_31337.json'
