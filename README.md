@@ -1,6 +1,6 @@
 # NFT Surface
 
-An NFT platform for minting and selling NFTs with a sovereign ERC721 smart contract, for EVM blockchains (Ethereum, Polygon, ...) 
+An NFT platform for minting and selling NFTs with a sovereign ERC721 smart contract, for EVM blockchains (Ethereum, Polygon, Arbitrum, etc.) 
 
 ### Example front page:
 
@@ -50,17 +50,16 @@ It is highly reccomended to try this a few times first on a testnet! Mainnet dep
 
 ## Chain support
 
-The repo currently has support for these chainIDs:
-* 1 - Ethereum Mainnet
-* 4 - Rinkeby Testnet
-* 137 - Polygon Mainnet
-* 80001 - Polygon Testnet
-* 421611 - Arbitrum Testnet
+The repo currently has the details for these chains:
+* Ethereum Mainnet
+* Ethereum Rinkeby Testnet
+* Polygon Testnet
+* Arbitrum Rinkeby Testnet
 
-To add other chains, add their details in these files, following the pattern for the existing chains:
+To add other chains, add their details in the following files, following the pattern for the existing chains:
 ```
 smart-contract/.env
 smart-contract/hardhat.config.js
 client/utils/chain-spec.js
 ```
-Also add a `client/public/catalog/catalog_chainid_<your new chain id>.json` (see [smart-contact](/smart-contract/)).
+You'll also need a catalog file for that chain (see [smart-contact](/smart-contract/)).

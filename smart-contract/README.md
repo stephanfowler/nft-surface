@@ -86,7 +86,7 @@ The catalog is defined in a json file located by default in `client/public/catal
 
 Images are always expected to be in the `images` subdirectory of the catalog directory.
 
-In this json file, manually provide the basic data for each NFT; see an example catalog item below. These should be added in display order to the `NFTs` JSON array in the file. This is enhanced in-file by the `catalog` task, which automatically manages IPFS metadata/image uploads, image measurement, image optimisation for web display, lay-minting signatures, and adds the relevant properties to the manually-entered NFTs' initial properties.  
+In this json file, manually provide the basic data for each NFT; see an example catalog item below. These should be added in display order to the `NFTs` JSON array in the file. This is enhanced in-file by the `catalog` task, which automatically manages IPFS metadata/image uploads, image measurement, web image optimisation, signatures to enable lazy-minting - and adds these relevant properties to the NFTs' manually-entered properties.  
 
 Importantly, there is a specific catalog file _for each network_ that you choose to deploy to (ie. localhost, testnets such as Rinkeby, and Mainnet). The json file names are differentiated by the integer ["chainid"](https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/) of the network, according to this form:
 ```
@@ -144,7 +144,7 @@ Example NFT definition after script is run:
     "signature": "0x255ad96c61585acb950f9f5014d4c9cd236fcaa1a1bd1943a690966068743ca2286abc5ae ... "
 }
 ```
-The `deploy` task also appends the following context information to the catalog json file. This will acts as config to the `client` that consumes the catalog. For example:
+The `catalog` task also appends the following context information to the catalog json file. This acts as config to the `client` that consumes the catalog. For example:
 
 ```
 "context": {
