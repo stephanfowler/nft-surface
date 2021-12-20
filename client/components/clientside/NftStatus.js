@@ -15,7 +15,8 @@ import {
 } from "@utils/ethereum-interact.js";
 
 import {
-	chainSpec,
+	chainParams,
+	switchChain,
 	explorerAddressLink,
 	explorerTxLink
 } from "@utils/chain-spec.js";
@@ -32,8 +33,8 @@ const NftStatus = ({ nft, context }) => {
 
 	const contractAddress = context.contractAddress;
 	const chainId = context.chainId;
-	const blockchainName = chainSpec(chainId).blockchain;
-	const coin = chainSpec(chainId).coin;
+	const chainName = chainParams(chainId).chainName;
+	const coin = chainParams(chainId).nativeCurrency.symbol;
 
 	const userIsOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) === ethers.utils.getAddress(owner)));
 	const userIsNotOwner = (walletAddress && owner && (ethers.utils.getAddress(walletAddress) !== ethers.utils.getAddress(owner)));
@@ -64,7 +65,6 @@ const NftStatus = ({ nft, context }) => {
 		} else {
 			const mintableStatus = await contractCall_mintable(nft, contractAddress, chainId);
 			setStatus(mintableStatus);
-			console.log(mintableStatus)
 		}
 	}
 
@@ -108,7 +108,7 @@ const NftStatus = ({ nft, context }) => {
 				return <div>You have insufficient funds in your wallet</div>
 
 			case "tx_pending":
-				return <div>{"Be patient. Transaction "}{explorerTxLink(chainId, tx.hash)}{" is being mined on the "}{blockchainName}{" blockchain..."}</div>
+				return <div>{"Be patient. Transaction "}{explorerTxLink(chainId, tx.hash)}{" is being mined on the "}{chainName}{" blockchain..."}</div>
 
 			case "tx_succeded":
 				return <div>{"Done! Transaction "}{explorerTxLink(chainId, tx.hash)}{" was succesful"}</div>
@@ -123,7 +123,7 @@ const NftStatus = ({ nft, context }) => {
 				return <div>{"You are already the owner!"}</div>
 
 			case "invalid_address":
-				return <div>{"That is not a valid "}{blockchainName}{" address"}</div>
+				return <div>{"That is not a valid "}{chainName}{" address"}</div>
 
 			case "wallet_unavailable":
 				return (
@@ -147,7 +147,11 @@ const NftStatus = ({ nft, context }) => {
 	return (
 		chainIdMismatch ?
 			<div className={styles.notification}>
-				{"To establish the status of this NFT, please switch your wallet to network: "}{chainSpec(chainId).network}
+				{"To establish the status of this NFT, please "}
+				<a href="" onClick={async function () { await switchChain(chainId) }}>
+					{"switch your wallet's network to "}
+					{chainName}
+				</a>
 			</div>
 
 			: !status ?
@@ -238,7 +242,7 @@ const NftStatus = ({ nft, context }) => {
 					)}
 
 					{status === "noNetwork" && (
-						<div>Sorry, it wasn't possible to get this NFT's status. Couldn't connect to the {blockchainName} blockchain.</div>
+						<div>Sorry, it wasn't possible to get this NFT's status. Couldn't connect to the {chainName} blockchain.</div>
 					)}
 
 					<div className={`${styles.notification} ${(notify + "").includes("_pending") && styles.notificationPending}`}>
@@ -248,7 +252,7 @@ const NftStatus = ({ nft, context }) => {
 								<div>{"You are connected as "}{explorerAddressLink(chainId, walletAddress)}</div>
 
 								: window.ethereum ?
-									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{coin}{" ("}{blockchainName}{") wallet"}</a></div>
+									<div>{"Connect your "}<a href="" onClick={doConnectWallet}>{coin}{" ("}{chainName}{") wallet"}</a></div>
 
 									: <></>}
 					</div>

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import styles from '@components/Layout.module.css'
 import Link from 'next/link'
 
-import { chainSpec } from "@utils/chain-spec.js";
+import { chainParams } from "@utils/chain-spec.js";
 
 export default function Layout({ children, home, nft, context }) {
 	const router = useRouter()
@@ -47,7 +47,7 @@ export default function Layout({ children, home, nft, context }) {
 					<a>NFT Surface</a>
 				</Link>
 				{context.chainId > 1 &&
-					<div className={styles.alertIsTestnet}>{chainSpec(context.chainId).network}</div>
+					<div className={styles.alertIsTestnet}>{chainParams(context.chainId).chainName}</div>
 				}
 			</footer>
 		</div>

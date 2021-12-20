@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import { chainSpec, marketplaces } from "@utils/chain-spec.js";
+import { chainParams, marketplaces } from "@utils/chain-spec.js";
 import {
 	isTransactionMined,
 	contractCall_price,
@@ -108,7 +108,7 @@ export default function Sell({
 							value={displayPriceETH}
 							onChange={e => setDisplayPriceETH(e.target.value)}
 						/>
-						{" "}{chainSpec(chainId).coin}
+						{" "}{chainParams(chainId).nativeCurrency.symbol}
 					</div>
 					<div className={styles.formActions}>
 						<button onClick={submit} disabled={connecting || (parseFloat(priceETH) === parseFloat(displayPriceETH || "0"))}>OK</button>
@@ -132,7 +132,7 @@ export default function Sell({
 				<>
 					<div>Direct sale price :</div>
 					<span className={styles.nftPriceETH}>
-						{priceETH}{" "}{chainSpec(chainId).coin}
+						{priceETH}{" "}{chainParams(chainId).nativeCurrency.symbol}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<form>

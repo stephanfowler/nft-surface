@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 
-import { chainSpec } from "@utils/chain-spec.js";
+import { chainParams } from "@utils/chain-spec.js";
 import {
 	isTransactionMined,
 	contractCall_mint
@@ -56,7 +56,7 @@ export default function Minter({
 			<span className={styles.nftPriceETH}>
 				{nft.weiPrice === "0" ?
 					"FREE" :
-					`${ethers.utils.formatEther(nft.weiPrice)} ${chainSpec(chainId).coin}`
+					`${ethers.utils.formatEther(nft.weiPrice)} ${chainParams(chainId).nativeCurrency.symbol}`
 				}
 			</span>
 			<span className={styles.nftPriceGas}>{" + gas fee"}</span>

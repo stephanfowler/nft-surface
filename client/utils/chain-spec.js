@@ -1,16 +1,43 @@
 import Link from 'next/link'
 
-export function chainSpec(chainId) {
+export function chainParams(chainId) {
 	const spec = {
-		"1": { network: "Ethereum Mainnet", blockchain: "Ethereum", coin: "ETH" },
-		"4": { network: "Rinkeby Testnet", blockchain: "Ethereum", coin: "ETH" },
-		"137": { network: "Polygon Mainnet", blockchain: "Polygon", coin: "MATIC" },
-		"1337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"31337": { network: "Localhost 8545", blockchain: "Ethereum", coin: "ETH" },
-		"80001": { network: "Polygon Mumbai Testnet", blockchain: "Polygon", coin: "MATIC" },
-		"421611": { network: "Arbitrum Rinkeby Testnet", blockchain: "Arbitrum", coin: "ETH" }
+		"1": { chainName: "Ethereum Mainnet", nativeCurrency: { symbol: "ETH" }},
+		"4": { chainName: "Rinkeby Testnet", nativeCurrency: { symbol: "ETH" }},
+		"31337": {
+			chainId: "0x7a69",
+			chainName: "Localhost 8545",
+			nativeCurrency: {
+				name: "Ether",
+				symbol: "ETH",
+				decimals: 18
+			},
+			rpcUrls: ["http://localhost:8545"]
+		},
+		"80001": {
+			chainId: "0x13881",
+			chainName: "Polygon Testnet",
+			nativeCurrency: {
+				name: "Polygon",
+				symbol: "MATIC",
+				decimals: 18
+			},
+			rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+			blockExplorerUrls: ["https://polygonscan.com/"]
+		},
+		"421611": {
+			chainId: "0x66eeb",
+			chainName: "Arbitrum Testnet",
+			nativeCurrency: {
+				name: "Arbitrum Ether",
+				symbol: "ETH",
+				decimals: 18
+			},
+			rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
+			blockExplorerUrls: ["https://rinkeby-explorer.arbitrum.io/"]
+		}
 	}
-	return spec[chainId + ""] || { network: "Unknown network", blockchain: "Unknown blockchain", coin: "Unknown coin" };
+	return spec[chainId.toString()] || {chainName: "Unknown", nativeCurrency: {symbol: "Unknown"}};
 }
 
 function explorerTemplates(chainId) {
@@ -65,16 +92,42 @@ function marketplaceTemplates(chainId) {
 	return links[chainId + ""] || {};
 }
 
+export const switchChain = async (chainId) => {
+	const chainIdHex = "0x" + chainId.toString(16);
+	try {
+		await window.ethereum.request({
+			method: 'wallet_switchEthereumChain',
+			params: [{ chainId: chainIdHex }],
+		});
+	} catch (switchError) {
+		// This error code indicates that the chain has not been added to MetaMask.
+		if (switchError.code === 4902) {
+			const params = chainParams(chainId);
+			if (params) {
+				try {
+					await window.ethereum.request({
+						method: 'wallet_addEthereumChain',
+						params: [params],
+					});
+				} catch (addError) {
+					// handle "add" error
+				}
+			}
+		}
+		// handle other "switch" errors
+	}
+}
+
 export function marketplaces(chainId, contractAddress, tokenId, preamble) {
 	const markets = marketplaceTemplates(chainId);
 	return Object.keys(markets).map((market, index) =>
-		<>
-			{index === 0 && preamble}
-			{index > 0 && " / "}
-			<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
+		<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
+			<>
+				{index === 0 && preamble}
+				{index > 0 && " / "}
 				<a target="_blank" title={"go to " + market + " NFT marketplace"}>{market}</a>
-			</Link>
-		</>
+			</>
+		</Link>
 	);
 }
 

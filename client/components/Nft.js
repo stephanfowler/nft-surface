@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
 import { 
-	chainSpec,
+	chainParams,
 	explorerAddressLink,
 	explorerTokenLink,
 	ipfsLink } from "@utils/chain-spec.js";
@@ -81,8 +81,7 @@ export default function Nft({ nft, context }) {
 						</div>
 						<div>{"Secondary sale royalty : "}{context.royaltyBasisPoints / 100}{"%"}</div>
 						<div>Token type : ERC-721</div>
-						<div>Blockchain : {chainSpec(chainId).blockchain}</div>
-						<div>Network : {chainSpec(chainId).network}</div>
+						<div>Blockchain : {chainParams(chainId).chainName}</div>
 					</div>
 				</div>
 			</div>

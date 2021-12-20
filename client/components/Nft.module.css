@@ -103,7 +103,7 @@
 }
 
 .notification {
-		margin: 1rem 0 0 0;
+		margin: 1rem 0 !important;
     color: orange;
     font-size: smaller;
 }

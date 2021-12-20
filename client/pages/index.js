@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@components/Layout.module.css'
 
-import { chainSpec, explorerAddressLink } from "@utils/chain-spec.js";
+import { chainParams, explorerAddressLink } from "@utils/chain-spec.js";
 
 import frontImage from '@public/frontpage-bg.jpg'
 
@@ -49,7 +49,7 @@ export default function Home(props) {
 			<div className={styles.landingSpec}>
 				<div>{process.env.creatorName} address : {explorerAddressLink(chainId, creatorAddress)}</div>
 				<div>Smart Contract : {explorerAddressLink(chainId, contractAddress)}</div>
-				<div>NFT type : ERC721 on {chainSpec(chainId).blockchain}</div>
+				<div>NFT type : ERC721 on {chainParams(chainId).chainName}</div>
 			</div>
 		</Layout>
 	)

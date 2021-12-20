@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import { chainSpec, marketplaces } from "@utils/chain-spec.js";
+import { chainParams, marketplaces } from "@utils/chain-spec.js";
 import {
 	isTransactionMined,
 	contractCall_price,
@@ -74,7 +74,7 @@ export default function Buy({
 				<div>
 					{"Price : "}
 					<span className={styles.nftPriceETH}>
-						{priceETH}{" "}{chainSpec(chainId).coin}
+						{priceETH}{" "}{chainParams(chainId).nativeCurrency.symbol}
 					</span>
 					<span className={styles.nftPriceGas}>{" + gas fee"}</span>
 					<button onClick={contractBuy} disabled={connecting || !window.ethereum} >

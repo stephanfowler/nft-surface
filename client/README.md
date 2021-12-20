@@ -49,4 +49,4 @@ module.exports = {
 
 ## Status
 
-Client has been tested extensively against Rinkeby testnet.
+The client app has been tested against Ethereum testnet (Rinkeby), Polygn testnet (Mumbai), Arbitrum testnet (Rinkeby).
