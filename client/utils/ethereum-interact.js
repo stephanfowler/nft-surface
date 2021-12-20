@@ -70,10 +70,11 @@ export const contractCall_mintable = async (nft, contractAddress, chainId) => {
 	const contract = await getReadableContract(contractAddress, chainId);
 	try {
 		await contract.mintable(nft.weiPrice, nft.tokenId, nft.tokenURI, nft.signature);
-		return true;
+		return "mintable";
 	} catch (error) {
-		console.log(error); //
-		return false;
+		return error.event === "noNetwork" ? 
+			"noNetwork" : 
+			"burntOrRevoked"
 	}
 };
 

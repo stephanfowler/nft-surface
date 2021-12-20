@@ -62,9 +62,9 @@ const NftStatus = ({ nft, context }) => {
 		} else if (!nft.signature) {
 			setStatus("withheld");
 		} else {
-			await contractCall_mintable(nft, contractAddress, chainId) ?
-				setStatus("mintable") :
-				setStatus("burntOrRevoked")
+			const mintableStatus = await contractCall_mintable(nft, contractAddress, chainId);
+			setStatus(mintableStatus);
+			console.log(mintableStatus)
 		}
 	}
 
@@ -235,6 +235,10 @@ const NftStatus = ({ nft, context }) => {
 
 					{status === "burntOrRevoked" && (
 						<div>Sorry, this NFT has been burnt or revoked.</div>
+					)}
+
+					{status === "noNetwork" && (
+						<div>Sorry, it wasn't possible to get this NFT's status. Couldn't connect to the {blockchainName} blockchain.</div>
 					)}
 
 					<div className={`${styles.notification} ${(notify + "").includes("_pending") && styles.notificationPending}`}>
