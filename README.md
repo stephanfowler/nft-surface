@@ -21,27 +21,23 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 ## Description
 
 * Showcase, mint, sell, buy, and transfer NFTs
-* Custom smart contract, ERC-721 NFT standard
-* Adheres to strict NFT provenance best-practice
-* SEO-optimised responsive site
+* ERC-721 smart contract
+* Adheres to strict [NFT provenance best-practices](https://link.medium.com/LJjFKB999lb)
+* SEO optimised responsive site
 * Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
-* Provides links to NFT marketplaces for secondary sales (Opensea, Rarible, ...)
+* Shows links to Opensea & Rarible for secondary sales
 * Re-assignable role for catalog management
 * Configurable revenue shares
 * Configurable royalty
-* Connects to Metamask or compatible wallet (desktop)
-* Works within Metamask browser (mobile)
 
-See example deployments of NFT Surface on these testnets:
+See example deployments on these testnets:
 - [Ethereum (Rinkeby testnet)](https://nft-surface.vercel.app/)
 - [Polygon (Mumbai testnet)](https://nft-surface-polygon.vercel.app/)
 - [Arbitrum (Rinkeby testnet)](https://nft-surface-arbitrum.vercel.app/)
 
-To interact with these you'll need a [Metamask](https://metamask.io/) wallet (to which you may need to add the relevant [testnet details](https://chainlist.org/)) and some relevant test currency (eg. Google "Rinkeby faucet").
+To interact with these you'll need a [Metamask](https://metamask.io/) wallet and some relevant test currency (eg. Google "Rinkeby faucet").
 
 ## Deployment
-
-Deployment consists of the following:
 
 * Deploy a smart contract and create a catalog file using the [smart-contact](/smart-contract/) project.
 * Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
