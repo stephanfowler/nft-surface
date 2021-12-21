@@ -16,21 +16,21 @@ export function chainParams(chainId) {
 		},
 		"80001": {
 			chainId: "0x13881",
-			chainName: "Polygon Testnet",
+			chainName: "Polygon Testnet Mumbai",
 			nativeCurrency: {
 				name: "Polygon",
 				symbol: "MATIC",
 				decimals: 18
 			},
-			rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
-			blockExplorerUrls: ["https://polygonscan.com/"]
+			rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+			blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
 		},
 		"421611": {
 			chainId: "0x66eeb",
-			chainName: "Arbitrum Testnet",
+			chainName: "Arbitrum Testnet Rinkeby",
 			nativeCurrency: {
 				name: "Arbitrum Ether",
-				symbol: "ETH",
+				symbol: "ARETH",
 				decimals: 18
 			},
 			rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
