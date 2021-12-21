@@ -2,8 +2,8 @@ import Link from 'next/link'
 
 export function chainParams(chainId) {
 	const spec = {
-		"1": { chainName: "Ethereum Mainnet", nativeCurrency: { symbol: "ETH" }},
-		"4": { chainName: "Rinkeby Testnet", nativeCurrency: { symbol: "ETH" }},
+		"1": { chainName: "Ethereum Mainnet", nativeCurrency: { symbol: "ETH" } },
+		"4": { chainName: "Rinkeby Testnet", nativeCurrency: { symbol: "ETH" } },
 		"31337": {
 			chainId: "0x7a69",
 			chainName: "Localhost 8545",
@@ -37,7 +37,7 @@ export function chainParams(chainId) {
 			blockExplorerUrls: ["https://rinkeby-explorer.arbitrum.io/"]
 		}
 	}
-	return spec[chainId.toString()] || {chainName: "Unknown", nativeCurrency: {symbol: "Unknown"}};
+	return spec[chainId.toString()] || { chainName: "Unknown", nativeCurrency: { symbol: "Unknown" } };
 }
 
 function explorerTemplates(chainId) {
@@ -120,15 +120,15 @@ export const switchChain = async (chainId) => {
 
 export function marketplaces(chainId, contractAddress, tokenId, preamble) {
 	const markets = marketplaceTemplates(chainId);
-	return Object.keys(markets).map((market, index) =>
-		<Link key={index} href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
-			<>
-				{index === 0 && preamble}
-				{index > 0 && " / "}
+	return Object.keys(markets).map((market, index) => {
+		return <span key={index}>
+			{index === 0 && preamble}
+			{index > 0 && " or "}
+			<Link href={(markets[market]).replace("<address>", contractAddress).replace("<tokenId>", tokenId)}>
 				<a target="_blank" title={"go to " + market + " NFT marketplace"}>{market}</a>
-			</>
-		</Link>
-	);
+			</Link>
+		</span>
+	});
 }
 
 function shortAddress(address) {
