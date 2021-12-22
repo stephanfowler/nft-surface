@@ -102,6 +102,11 @@ const NftStatus = ({ nft, context }) => {
 		await fetchWallet(true)
 	};
 
+	async function doSwitchChain(e) {
+		e && e.preventDefault();
+		await switchChain(chainId);
+	}
+
 	function showNofity() {
 		switch (notify) {
 			case "insufficient_funds":
@@ -148,7 +153,7 @@ const NftStatus = ({ nft, context }) => {
 		chainIdMismatch ?
 			<div className={styles.notification}>
 				{"To establish the status of this NFT, please "}
-				<a href="" onClick={async function () { await switchChain(chainId) }}>
+				<a href="" onClick={doSwitchChain}>
 					{"switch your wallet's network to "}
 					{chainName}
 				</a>
