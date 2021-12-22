@@ -38,10 +38,10 @@ View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewo
 
 ## Deployment
 
-* Deploy a smart contract and create a catalog file using the [smart-contact](/smart-contract/) project.
-* Deploy the user-facing site to a suitable host (eg Vercel.com) using the [client](/client/) projects.
+* Deploy the smart contract and create a catalog file. [more...](/smart-contract/)
+* Deploy the user-facing client application to a suitable host (eg Vercel.com). [more...](/client/)
 
-It is highly reccomended to try this a few times first on a testnet! Mainnet deployments are _expensive_.
+Try this a few times first on a relevant testnet! Mainnet deployments are _expensive_.
 
 ## Chain support
 
@@ -51,10 +51,10 @@ The repo currently has the details for these chains:
 * Polygon Testnet
 * Arbitrum Rinkeby Testnet
 
-To add other chains, add their details in the following files, following the pattern for the existing chains:
+To add other chains, add their details in the following files, following the pattern for the already-implemented chains:
 ```
-smart-contract/.env
-smart-contract/hardhat.config.js
 client/utils/chain-spec.js
+smart-contract/hardhat.config.js
+smart-contract/.env
 ```
-You'll also need a catalog file for that chain (see [smart-contact](/smart-contract/)).
+You'll also need a chain-specific catalog file (see [smart-contact](/smart-contract/)).
