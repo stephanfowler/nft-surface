@@ -1,4 +1,4 @@
-# NFT Surface - client site
+# NFT Surface - client application
 
 The frontend is built with next.js and is deployable on [Vercel](https://vercel.com/) (recommended), [Netflify](https://www.netlify.com/), etc. 
 
