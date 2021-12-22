@@ -1,6 +1,24 @@
 # NFT Surface
 
-An NFT platform for minting and selling NFTs with a sovereign ERC721 smart contract, for EVM blockchains (Ethereum, Polygon, Arbitrum, etc.) 
+## White-label NFT gallery
+
+* Showcase, mint, sell, buy, and transfer NFTs
+* ERC-721 smart contract
+* Adheres to strict [NFT provenance best-practices](https://link.medium.com/LJjFKB999lb)
+* SEO optimised responsive site
+* Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
+* Shows links to Opensea & Rarible for secondary sales
+* Re-assignable role for catalog management
+* Configurable revenue shares
+* Configurable royalty
+* Deployable on any EVM blockchain (Ethereum, Polygon, Arbitrum, etc)
+
+See example deployments on these testnets:
+- [Ethereum (Rinkeby testnet)](https://nft-surface.vercel.app/)
+- [Polygon (Mumbai testnet)](https://nft-surface-polygon.vercel.app/)
+- [Arbitrum (Rinkeby testnet)](https://nft-surface-arbitrum.vercel.app/)
+
+To interact with these you'll need a [Metamask](https://metamask.io/) wallet and some relevant test currency (eg. Google "Rinkeby faucet").
 
 ### Example front page:
 
@@ -17,25 +35,6 @@ An NFT platform for minting and selling NFTs with a sovereign ERC721 smart contr
 ### Video
 
 View [a screen recording](https://photos.google.com/share/AF1QipOCXujeQ6RovqSewodsY6nSk4Sa46eViRzjjlekzoxDEMJ9-VZbCPjeBj7UFQnIvw/photo/AF1QipMyCD13dLabWzr23UmUROluZzrTa6Z16r3UB8si?key=YnJpTFJ4bThOVzVVOFd6aHplN1VHOXBlTVRfenhB) of NFT Surface [Music credits: Eric Le Lann & Stephan Fowler]
-
-## Description
-
-* Showcase, mint, sell, buy, and transfer NFTs
-* ERC-721 smart contract
-* Adheres to strict [NFT provenance best-practices](https://link.medium.com/LJjFKB999lb)
-* SEO optimised responsive site
-* Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
-* Shows links to Opensea & Rarible for secondary sales
-* Re-assignable role for catalog management
-* Configurable revenue shares
-* Configurable royalty
-
-See example deployments on these testnets:
-- [Ethereum (Rinkeby testnet)](https://nft-surface.vercel.app/)
-- [Polygon (Mumbai testnet)](https://nft-surface-polygon.vercel.app/)
-- [Arbitrum (Rinkeby testnet)](https://nft-surface-arbitrum.vercel.app/)
-
-To interact with these you'll need a [Metamask](https://metamask.io/) wallet and some relevant test currency (eg. Google "Rinkeby faucet").
 
 ## Deployment
 
