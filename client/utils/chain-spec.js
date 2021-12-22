@@ -101,7 +101,7 @@ export const switchChain = async (chainId) => {
 		});
 	} catch (switchError) {
 		// This error code indicates that the chain has not been added to MetaMask.
-		if (switchError.code === 4902) {
+		//if (switchError.code === 4902) {
 			const params = chainParams(chainId);
 			if (params) {
 				try {
@@ -113,7 +113,7 @@ export const switchChain = async (chainId) => {
 					// handle "add" error
 				}
 			}
-		}
+		//}
 		// handle other "switch" errors
 	}
 }
