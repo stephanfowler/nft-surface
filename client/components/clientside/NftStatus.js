@@ -242,11 +242,11 @@ const NftStatus = ({ nft, context }) => {
 						<div>This NFT is reserved. Please contact the artist.</div>
 					)}
 
-					{status === "burntOrRevoked" && (
-						<div>Sorry, this NFT has been burnt or revoked.</div>
+					{status === "unavailable" && (
+						<div>Sorry, this NFT has been withdrawn from sale or burnt by the owner.</div>
 					)}
 
-					{status === "noNetwork" && (
+					{status === "unknown" && (
 						<div>Sorry, it wasn't possible to get this NFT's status. Couldn't connect to the {chainName} blockchain.</div>
 					)}
 
