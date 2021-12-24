@@ -1,6 +1,8 @@
 import Link from 'next/link'
 
 export function chainParams(chainId) {
+	// Use exact parameters from https://chainlist.org/ or Metamask will show users a warning
+	// You only need full parameters for chains that are NOT already in Metamask by default (eg ETH mainnet/rinkeby/...)
 	const spec = {
 		"1": { chainName: "Ethereum Mainnet", nativeCurrency: { symbol: "ETH" } },
 		"4": { chainName: "Rinkeby Testnet", nativeCurrency: { symbol: "ETH" } },
