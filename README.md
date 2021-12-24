@@ -58,3 +58,6 @@ smart-contract/hardhat.config.js
 smart-contract/.env
 ```
 You'll also need a chain-specific catalog file (see [smart-contact](/smart-contract/)).
+
+## License
+NFT Surface is open source software licensed as [MIT](/LICENSE).
