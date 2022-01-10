@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
  *  @notice ERC721 contract for stand-alone NFT collections with lazy-minting capability
  *  @dev Enables lazy-minting by any user via precomputed signatures
  */
-contract NFTagent is ERC721, ERC721Burnable, EIP712 {
+contract NFTsurface is ERC721, ERC721Burnable, EIP712 {
     event IdRevoked(uint256 tokenId);
     event IdFloorSet(uint256 idFloor);
     event Receipt(uint256 value);
@@ -19,7 +19,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
     event Bought(uint256 id, address buyer);
 
     address public immutable owner;
-    uint16  public immutable royaltyBasisPoints;
+    uint16 public immutable royaltyBasisPoints;
 
     uint256 public totalSupply;
     uint256 public idFloor;
@@ -28,30 +28,34 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
     mapping(uint256 => uint256) private prices;
 
     /**
-     *  @dev Constructor immutably sets "owner" to the message sender; be sure to deploy contract using the account of the creator/artist/brand/etc. 
+     *  @dev Constructor immutably sets "owner" to the message sender; be sure to deploy contract using the account of the creator/artist/brand/etc.
      *  @param name ERC721 token name
      *  @param symbol ERC721 token symbol
+     *  @param royaltyBasisPoints_ Percentage basis-points for royalty on secondary sales, eg 495 == 4.95%
      */
     constructor(
         string memory name,
         string memory symbol,
         uint16 royaltyBasisPoints_
-    ) 
-        ERC721(name, symbol) 
-        EIP712("NFTsurface", "1.0.0")
-    {
+    ) ERC721(name, symbol) EIP712("NFTsurface", "1.0.0") {
         owner = _msgSender();
         royaltyBasisPoints = royaltyBasisPoints_;
     }
 
+    /**
+     *  @notice Receive ETH
+     */
     receive() external payable {
         emit Receipt(msg.value);
     }
 
+    /**
+     *  @notice Withdraw ETH balance
+     */
     function withdraw() external {
         require(_msgSender() == owner, "unauthorized to withdraw");
         uint256 balance = address(this).balance;
-        (bool success, ) = _msgSender().call{ value : balance }("");
+        (bool success, ) = _msgSender().call{value: balance}("");
         require(success, "transfer failed");
         emit Withdrawal(balance);
     }
@@ -62,7 +66,11 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      *  @param id The intended token Id
      *  @param uri The intended token URI
      */
-    function mintAuthorized(address recipient, uint256 id, string memory uri) external {
+    function mintAuthorized(
+        address recipient,
+        uint256 id,
+        string memory uri
+    ) external {
         require(_msgSender() == owner, "unauthorized to mint");
         require(vacant(id));
         _mint(recipient, id, uri);
@@ -75,7 +83,11 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      *  @param uri The intended token URI
      *  @param signature The ERC712 signature of the hash of message value, id, and uri
      */
-    function mint(uint256 id, string memory uri, bytes calldata signature) external payable {
+    function mint(
+        uint256 id,
+        string memory uri,
+        bytes calldata signature
+    ) external payable {
         require(mintable(msg.value, id, uri, signature));
         _mint(_msgSender(), id, uri);
     }
@@ -88,9 +100,17 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      *  @param uri The intended token URI
      *  @param signature The ERC712 signature of the hash of weiPrice, id, and uri
      */
-    function mintable(uint256 weiPrice, uint256 id, string memory uri, bytes calldata signature) public view returns (bool) {
+    function mintable(
+        uint256 weiPrice,
+        uint256 id,
+        string memory uri,
+        bytes calldata signature
+    ) public view returns (bool) {
         require(vacant(id));
-        require(owner == ECDSA.recover(_hash(weiPrice, id, uri), signature), 'signature invalid or signer unauthorized');
+        require(
+            owner == ECDSA.recover(_hash(weiPrice, id, uri), signature),
+            "signature invalid or signer unauthorized"
+        );
         return true;
     }
 
@@ -99,7 +119,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      *  @dev Reverts if the Id is previously minted, revoked, or burnt
      *  @param id The token Id
      */
-    function vacant(uint256 id) public view returns(bool) {
+    function vacant(uint256 id) public view returns (bool) {
         require(!_exists(id), "tokenId already minted");
         require(id >= idFloor, "tokenId below floor");
         require(!revokedIds[id], "tokenId revoked or burnt");
@@ -108,8 +128,8 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
 
     /**
      *  @notice Sets the price at which a token may be bought
-     *  @dev Setting a zero price cancels the sale (all prices are zero by default) 
-     *  @param id The token id 
+     *  @dev Setting a zero price cancels the sale (all prices are zero by default)
+     *  @param id The token id
      *  @param _price The token price in wei
      */
     function setPrice(uint256 id, uint256 _price) external {
@@ -120,17 +140,17 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
 
     /**
      *  @notice Returns the price at which a token may be bought
-     *  @dev A zero price means the token is not for sale 
-     *  @param id The token id 
+     *  @dev A zero price means the token is not for sale
+     *  @param id The token id
      */
-    function price(uint256 id) external view returns(uint256) {
+    function price(uint256 id) external view returns (uint256) {
         return prices[id];
     }
 
     /**
      *  @notice Transfers the token to the caller, transfers the paid ETH to its owner (minus any royalty)
-     *  @dev A zero price means the token is not for sale 
-     *  @param id The token id 
+     *  @dev A zero price means the token is not for sale
+     *  @param id The token id
      */
     function buy(uint256 id) external payable {
         require(_msgSender() != ownerOf(id), "caller is token owner");
@@ -139,7 +159,10 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
         address seller = ownerOf(id);
         delete prices[id];
         _safeTransfer(seller, _msgSender(), id, "");
-        Address.sendValue(payable(seller), (10000 - royaltyBasisPoints) * (msg.value / 10000));
+        Address.sendValue(
+            payable(seller),
+            (10000 - royaltyBasisPoints) * (msg.value / 10000)
+        );
         emit Bought(id, _msgSender());
     }
 
@@ -176,14 +199,23 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
     /**
      *  @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721) returns (bool) {
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId);
     }
 
     /**
      * @dev Minting also increments totalSupply
      */
-    function _mint(address recipient, uint256 id, string memory uri) internal {
+    function _mint(
+        address recipient,
+        uint256 id,
+        string memory uri
+    ) internal {
         _safeMint(recipient, id);
         _setTokenURI(id, uri);
         totalSupply += 1;
@@ -192,13 +224,24 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
     /**
      * @dev Recreates the hash that the signer (may have) signed
      */
-    function _hash(uint256 weiPrice, uint256 id, string memory uri) internal view returns (bytes32) {
-        return _hashTypedDataV4(keccak256(abi.encode(
-            keccak256("mint(uint256 weiPrice,uint256 tokenId,string tokenURI)"),
-            weiPrice,
-            id,
-            keccak256(bytes(uri))
-        )));
+    function _hash(
+        uint256 weiPrice,
+        uint256 id,
+        string memory uri
+    ) internal view returns (bytes32) {
+        return
+            _hashTypedDataV4(
+                keccak256(
+                    abi.encode(
+                        keccak256(
+                            "mint(uint256 weiPrice,uint256 tokenId,string tokenURI)"
+                        ),
+                        weiPrice,
+                        id,
+                        keccak256(bytes(uri))
+                    )
+                )
+            );
     }
 
     /**
@@ -209,7 +252,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
         tokenURIs[id] = uri;
     }
 
-     /**
+    /**
      * @dev burn a token and prevent the reuse of its Id
      */
     function _burn(uint256 id) internal override {
