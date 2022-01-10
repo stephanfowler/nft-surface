@@ -6,12 +6,12 @@
 * ERC-721 smart contract
 * Adheres to strict [NFT provenance best-practices](https://link.medium.com/LJjFKB999lb)
 * SEO optimised responsive site
-* Allows "lazy minting" (offer NFTs without pre-minting them; buyer pays gas to mint)
+* Allows "lazy minting" (offer NFTs without pre-minting, buyer pays gas)
 * Shows links to Opensea & Rarible for secondary sales
-* Re-assignable role for catalog management
+* Re-assignable role for catalog management / minting
 * Configurable revenue shares
-* Configurable royalty
-* Deployable on any EVM blockchain (Ethereum, Polygon, Arbitrum, etc)
+* Configurable royalty rate
+* Deployable on any EVM blockchain (Ethereum, Polygon, Arbitrum, ...)
 
 See example deployments on these testnets:
 - [Ethereum (Rinkeby testnet)](https://nft-surface.vercel.app/)
@@ -51,7 +51,7 @@ The repo currently has the details for these chains:
 * Polygon Testnet
 * Arbitrum Rinkeby Testnet
 
-To add other chains, add their details in the following files, following the pattern for the already-implemented chains:
+To support other chains, add their details in the following files, following the pattern for the already-implemented chains:
 ```
 client/utils/chain-spec.js
 smart-contract/hardhat.config.js
