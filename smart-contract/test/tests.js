@@ -2,47 +2,64 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai')
 const keccak256 = require('keccak256');
 
-const weiPrice = 1000;
-const tokenId = 123;
+const weiPrice = ethers.utils.parseEther("1");
+const tokenId = 12345;
 const tokenURI = "ipfs://123456789";
+const salePrice = ethers.utils.parseEther("2");
+const royaltyBasisPoints = 495; // = 4.95%
 
 const DEFAULT_ADMIN_ROLE = '0x0000000000000000000000000000000000000000000000000000000000000000';
 const AGENT_ROLE         = `0x${keccak256('AGENT_ROLE').toString('hex')}`
 
+let c; // the contract, for brevity
+let chainId;
+let provider;
+let sigDomain
+let sigTypes;
+
+// accounts
+let owner;
+let admin;
+let agent;
+let anonA;
+let anonB;
+let zero = ethers.constants.AddressZero;
+
 beforeEach(async function() {
-  /*
-  Deploy contract:
-  [0] owner (deployer)
-  [1] admin
-  [2] agent
-  */
- 
-  this.accounts = await ethers.getSigners();
-  ({ chainId: this.chainId } = await ethers.provider.getNetwork());
+  const accounts = await ethers.getSigners();
+  owner = accounts[0];
+  admin = accounts[1];
+  agent = accounts[2];
+  anonA = accounts[3];
+  anonB = accounts[4];
 
-  const NFTagent = await ethers.getContractFactory('NFTagent');
+  ({ chainId } = await ethers.provider.getNetwork());
 
-  this.contract = await NFTagent.deploy(
-    "Test",
-    "TST",
-    this.accounts[1].address,
-    this.accounts[2].address,
-    [this.accounts[0].address, this.accounts[1].address],
-    [85,15]
+  const NFTsurface = await ethers.getContractFactory('NFTsurface');
+
+  c = await NFTsurface.deploy( // c is the contract
+    "Testy McTestface",
+    "TEST",
+    admin.address,
+    agent.address,
+    [owner.address, admin.address],
+    [85,15],
+    royaltyBasisPoints
   );
 
-  await this.contract.deployed();
-  //console.log(this.contract.address);
+  await c.deployed();
 
-  this.sigDomain = {
-    name: 'NFTagent',
+  provider = ethers.provider;
+
+  sigDomain = {
+    name: 'NFTsurface',
     version: '1.0.0',
-    chainId: this.chainId,
-    verifyingContract: this.contract.address,
+    chainId: chainId,
+    verifyingContract: c.address,
   };
 
-  this.sigTypes = {
-    NFT: [
+  sigTypes = {
+    mint: [
       { name: 'weiPrice', type: 'uint256' },
       { name: 'tokenId',  type: 'uint256' },
       { name: 'tokenURI', type: 'string' }
@@ -55,491 +72,651 @@ beforeEach(async function() {
 // await expect( ... for read functions failing, and all write functions
 
 
+it('setPrice, buy', async function () {
+  const startingBalance4 = await anonB.getBalance();
 
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-it('role assignments', async function () {
-  // [0] owner
-  expect(await this.contract.connect(this.accounts[4]).owner())
-  .to.equal(this.accounts[0].address);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [4] hasRole [1]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(DEFAULT_ADMIN_ROLE, this.accounts[1].address))
+  // anonA attempt setPrice
+  await expect(c.connect(anonA).setPrice(tokenId, salePrice))
+  .to.be.revertedWith('caller is not token owner');
+
+  // anonA attempt buy
+  await expect(c.connect(anonA).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('token not for sale');
+
+  // anonB setPrice
+  await expect(c.connect(anonB).setPrice(tokenId, salePrice))
+  .to.emit(c, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // anonB attempt buy, is already owner
+  await expect(c.connect(anonB).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('caller is token owner');
+
+  // anonA attempt buy, insufficient value
+  await expect(c.connect(anonA).buy(tokenId, {value: ethers.BigNumber.from(salePrice).sub(1)}))
+  .to.be.revertedWith('insufficient ETH sent');
+
+  // anonA price
+  expect(await c.connect(anonA).price(tokenId))
+  .to.equal(salePrice);  
+
+  const startingBalance3 = await anonA.getBalance();
+
+  // anonA buy
+  await expect(c.connect(anonA).buy(tokenId, {value: salePrice}))
+  .to.emit(c, 'Bought')
+  .withArgs(tokenId, anonA.address);
+
+  const closingBalance3 = await anonA.getBalance()
+  const closingBalance4 = await anonB.getBalance();
+
+  // anonB price
+  expect(await c.connect(anonB).price(tokenId))
+  .to.equal(0);  
+
+  // anonB attempt setPrice
+  await expect(c.connect(anonB).setPrice(tokenId, salePrice))
+  .to.be.revertedWith('caller is not token owner');
+
+  // anonB ownerOf
+  expect(await c.connect(anonB).ownerOf(tokenId))
+  .to.equal(anonA.address);
+
+  // agent attempt buy
+  await expect(c.connect(anonB).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('token not for sale');
+
+  // gas fee make the closing balances inexact, so need to rely on gt/lt
+  expect(closingBalance3.lt(startingBalance3.sub(salePrice)))
   .to.equal(true);
 
-  // [4] hasRole [2]
-  expect(await this.contract.connect(this.accounts[4]).hasRole(AGENT_ROLE, this.accounts[2].address))
+  expect(closingBalance4.gt(startingBalance4)
+      && closingBalance4.lt(startingBalance4.add(salePrice)))
   .to.equal(true);
 });
 
+
+it('royalty', async function () {
+  // anonB royalty
+  expect(await c.connect(anonB).royaltyBasisPoints())
+  .to.equal(royaltyBasisPoints);
+
+  // agent mintAuthorized for anonB
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
+
+  // anonB setPrice
+  await expect(c.connect(anonB).setPrice(tokenId, salePrice))
+  .to.emit(c, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // anonA buy
+  await expect(c.connect(anonA).buy(tokenId, {value: salePrice}))
+  .to.emit(c, 'Bought')
+  .withArgs(tokenId, anonA.address);
+
+  const contractBalance = await provider.getBalance(c.address);
+  let contractEthBalance = ethers.utils.formatEther(contractBalance);
+  contractEthBalance = Math.round(contractEthBalance * 1e4) / 1e4;
+
+  let expectedEthRoyalty = ethers.utils.formatEther(salePrice);
+  expectedEthRoyalty = Math.round(expectedEthRoyalty * 1e6 * royaltyBasisPoints) / (1e10);
+
+  expect(contractEthBalance).to.equal(expectedEthRoyalty);
+});
+
+
+it('un-setPrice', async function () {
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
+
+  // anonB setPrice
+  await expect(c.connect(anonB).setPrice(tokenId, salePrice))
+  .to.emit(c, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // anonB setPrice to 0 (remove from sale)
+  await expect(c.connect(anonB).setPrice(tokenId, 0))
+  .to.emit(c, 'PriceSet')
+  .withArgs(tokenId, 0);
+
+  // anonA attempt buy
+  await expect(c.connect(anonA).buy(tokenId, {value: 123456}))
+  .to.be.revertedWith('token not for sale');
+});
+
+
+it('setPrice, transfer', async function () {
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
+
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
+
+  // anonB setPrice
+  await expect(c.connect(anonB).setPrice(tokenId, salePrice))
+  .to.emit(c, 'PriceSet')
+  .withArgs(tokenId, salePrice);
+
+  // admin price
+  expect(await c.connect(admin).price(tokenId))
+  .to.equal(salePrice);  
+
+  // anonB transferFrom to anonA
+  await expect(c.connect(anonB).transferFrom(anonB.address, anonA.address, tokenId))
+  .to.emit(c, 'Transfer')
+  .withArgs(anonB.address, anonA.address, tokenId);
+
+  // admin price
+  expect(await c.connect(admin).price(tokenId))
+  .to.equal(0);
+
+  // anonB attempt buy
+  await expect(c.connect(anonB).buy(tokenId, {value: salePrice}))
+  .to.be.revertedWith('token not for sale');
+});
+
+
+it('role assignments', async function () {
+  // anonB owner
+  expect(await c.connect(anonB).owner())
+  .to.equal(owner.address);
+
+  // anonB hasRole admin
+  expect(await c.connect(anonB).hasRole(DEFAULT_ADMIN_ROLE, admin.address))
+  .to.equal(true);
+
+  // anonB hasRole agent
+  expect(await c.connect(anonB).hasRole(AGENT_ROLE, agent.address))
+  .to.equal(true);
+});
+
+
 it('receiving and withdrawing', async function () {
-  const startingBalance0 = await this.accounts[0].getBalance();
-  const startingBalance1 = await this.accounts[1].getBalance();
+  const startingBalance0 = await owner.getBalance();
+  const startingBalance1 = await admin.getBalance();
 
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint for 1000
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [5] send 9000
-  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 9000}))
-  .to.emit(this.contract, 'PaymentReceived')
-  .withArgs(this.accounts[5].address, 9000);
+  // anonA send 9 ETH
+  await expect(anonA.sendTransaction({to: c.address, value: ethers.utils.parseEther("9")}))
+  .to.emit(c, 'PaymentReceived')
+  .withArgs(anonA.address, ethers.utils.parseEther("9"));
 
-  // totalReceived is now 10000 = 1000 + 9000 (ie from mint + send)
-  // [4] attempt release to [4]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[4].address))
+  // totalReceived is now 10 ETH (ie from mint + send)
+
+  // anonB attempt release to anonB
+  await expect(c.connect(anonB).release(anonB.address))
   .to.be.revertedWith('PaymentSplitter: account has no shares');
 
-  // [4] release to [0]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
-  .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[0].address, 8500); // 85/100 * 10000
+  // anonB release to owner
+  await expect(c.connect(anonB).release(owner.address))
+  .to.emit(c, 'PaymentReleased')
+  .withArgs(owner.address, ethers.utils.parseEther("8.5")); // 85/100 * 10 ETH
 
-  // [4] attempt repeat release to [0]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
+  // anonB attempt repeat release to owner
+  await expect(c.connect(anonB).release(owner.address))
   .to.be.revertedWith('PaymentSplitter: account is not due payment');
 
-  // [5] send 100 more
-  await expect(this.accounts[5].sendTransaction({to: this.contract.address, value: 100}))
-  .to.emit(this.contract, 'PaymentReceived')
-  .withArgs(this.accounts[5].address, 100);
+  // anonA send 1 ETH more
+  await expect(anonA.sendTransaction({to: c.address, value: ethers.utils.parseEther("1.0")}))
+  .to.emit(c, 'PaymentReceived')
+  .withArgs(anonA.address, ethers.utils.parseEther("1"));
 
-  // [4] release to [0]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[0].address))
-  .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[0].address, 85); // 85/100 * 100
+  // anonB release to owner
+  await expect(c.connect(anonB).release(owner.address))
+  .to.emit(c, 'PaymentReleased')
+  .withArgs(owner.address, ethers.utils.parseEther("0.85")); // 85/100 * 1 ETH
 
-  // [4] release to [1]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
-  .to.emit(this.contract, 'PaymentReleased')
-  .withArgs(this.accounts[1].address, 1515); // 15/100 * (10000 + 100)
+  // anonB release to admin
+  await expect(c.connect(anonB).release(admin.address))
+  .to.emit(c, 'PaymentReleased')
+  .withArgs(admin.address, ethers.utils.parseEther("1.65")); // 15/100 * 11 ETH
 
-  // [4] attempt repeat release to [1]
-  await expect(this.contract.connect(this.accounts[4]).release(this.accounts[1].address))
+  // anonB attempt repeat release to admin
+  await expect(c.connect(anonB).release(admin.address))
   .to.be.revertedWith('PaymentSplitter: account is not due payment');
 
-  // [4] released to [0]
-  expect(await this.contract.connect(this.accounts[4]).released(this.accounts[0].address))
-  .to.equal(8585);
+  // anonB released to owner
+  expect(await c.connect(anonB).released(owner.address))
+  .to.equal(ethers.utils.parseEther("9.35")); // 85/100 * 11 ETH
 
-  // [4] released to [1]
-  expect(await this.contract.connect(this.accounts[4]).released(this.accounts[1].address))
-  .to.equal(1515);
+  // anonB released to admin
+  expect(await c.connect(anonB).released(admin.address))
+  .to.equal(ethers.utils.parseEther("1.65"));
 
-  // [4] totalReleased
-  expect(await this.contract.connect(this.accounts[4]).totalReleased())
-  .to.equal(10100);
+  // anonB totalReleased
+  expect(await c.connect(anonB).totalReleased())
+  .to.equal(ethers.utils.parseEther("11"));
 
-  const closingBalance0 = await this.accounts[0].getBalance()
-  const closingBalance1 = await this.accounts[1].getBalance()
+  const closingBalance0 = await owner.getBalance()
+  const closingBalance1 = await admin.getBalance()
 
   expect(closingBalance0.sub(startingBalance0))
-  .to.equal(8585);
+  .to.equal(ethers.utils.parseEther("9.35"));
 
   expect(closingBalance1.sub(startingBalance1))
-  .to.equal(1515);
+  .to.equal(ethers.utils.parseEther("1.65"));
 });
 
 
 it('vacant, mintAuthorized & burning', async function () {
-  // [4] vacant
-  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB vacant
+  expect(await c.connect(anonB).vacant(tokenId))
   .to.equal(true);
 
-  // [2] mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[2].address, tokenId, tokenURI))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[2].address, tokenId);
+  // agent mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(agent.address, tokenId, tokenURI))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, agent.address, tokenId);
 
-  // [4] attempt vacant
-  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB attempt vacant
+  await expect(c.connect(anonB).vacant(tokenId))
   .to.be.revertedWith('tokenId already minted');
 
-  // [2] burn
-  await expect(this.contract.connect(this.accounts[2]).burn(tokenId))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(this.accounts[2].address, ethers.constants.AddressZero, tokenId);
+  // agent burn
+  await expect(c.connect(agent).burn(tokenId))
+  .to.emit(c, 'Transfer')
+  .withArgs(agent.address, zero, tokenId);
 
-  // [4] attempt vacant
-  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB attempt vacant
+  await expect(c.connect(anonB).vacant(tokenId))
   .to.be.revertedWith('tokenId revoked or burnt');
 });  
 
 
 it('vacant, floor', async function () {
-  // [4] vacant
-  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB vacant
+  expect(await c.connect(anonB).vacant(tokenId))
   .to.equal(true);
 
-  // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
-  .to.emit(this.contract, 'IdFloorSet')
-  .withArgs(1000);
+  // agent set floor
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
+  .to.emit(c, 'IdFloorSet')
+  .withArgs(tokenId + 1);
 
-  expect(await this.contract.connect(this.accounts[2]).idFloor())
-  .to.equal(1000)
+  expect(await c.connect(agent).idFloor())
+  .to.equal(tokenId + 1)
 
-  // [4] attempt vacant
-  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB attempt vacant
+  await expect(c.connect(anonB).vacant(tokenId))
   .to.be.revertedWith('tokenId below floor');
 });
 
 
 it('vacant, revokeId', async function () {
-  // [4] vacant
-  expect(await this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB vacant
+  expect(await c.connect(anonB).vacant(tokenId))
   .to.equal(true);
 
-  // [2] revokeId
-  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
-  .to.emit(this.contract, 'IdRevoked')
+  // agent revokeId
+  await expect(c.connect(agent).revokeId(tokenId))
+  .to.emit(c, 'IdRevoked')
   .withArgs(tokenId);
 
-  // [4] attempt vacant
-  await expect(this.contract.connect(this.accounts[4]).vacant(tokenId))
+  // anonB attempt vacant
+  await expect(c.connect(anonB).vacant(tokenId))
   .to.be.revertedWith('tokenId revoked or burnt');
 });
 
 
 it('mintAuthorized, burning', async function () {
-  // [4] attempt mintAuthorized
-  await expect(this.contract.connect(this.accounts[4]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
+  // anonB attempt mintAuthorized
+  await expect(c.connect(anonB).mintAuthorized(anonB.address, tokenId, tokenURI))
   .to.be.revertedWith('unauthorized to mint');
 
-  // [2] attempt mintAuthorized, no tokeURI
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, ""))
+  // agent attempt mintAuthorized, no tokeURI
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, ""))
   .to.be.revertedWith('tokenURI cannot be empty');
 
-  // [2] mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // agent mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [2] attempt another mintAuthorized, same tokenId 
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
+  // agent attempt another mintAuthorized, same tokenId 
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId already minted');
 
-  // [2] attempt burn
-  await expect(this.contract.connect(this.accounts[2]).burn(tokenId))
+  // agent attempt burn
+  await expect(c.connect(agent).burn(tokenId))
   .to.be.revertedWith('caller is not owner nor approved');
 
-  // [4] burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(this.accounts[4].address, ethers.constants.AddressZero, tokenId);
+  // anonB burn
+  await expect(c.connect(anonB).burn(tokenId))
+  .to.emit(c, 'Transfer')
+  .withArgs(anonB.address, zero, tokenId);
 
-  // [4] attempt second burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
+  // anonB attempt second burn
+  await expect(c.connect(anonB).burn(tokenId))
   .to.be.revertedWith('ERC721: operator query for nonexistent token');
 
-  // [2] attempt another mintAuthorized for [4]
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
+  // agent attempt another mintAuthorized for anonB
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId revoked or burnt');
 });
 
 
 it('total supply', async function () {
-  expect(await this.contract.connect(this.accounts[4]).totalSupply())
+  expect(await c.connect(anonB).totalSupply())
   .to.equal(0);
 
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [2] mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId + 1, tokenURI))
-  .to.emit(this.contract, 'Transfer')
+  // agent mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId + 1, tokenURI))
+  .to.emit(c, 'Transfer')
 
-  expect(await this.contract.connect(this.accounts[4]).totalSupply())
+  expect(await c.connect(anonB).totalSupply())
   .to.equal(2);
 
-  // [4] burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
-  .to.emit(this.contract, 'Transfer')
+  // anonB burn
+  await expect(c.connect(anonB).burn(tokenId))
+  .to.emit(c, 'Transfer')
 
-  expect(await this.contract.connect(this.accounts[4]).totalSupply())
+  expect(await c.connect(anonB).totalSupply())
   .to.equal(1);
 
-  // [4] burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId + 1))
-  .to.emit(this.contract, 'Transfer')
+  // anonB burn
+  await expect(c.connect(anonB).burn(tokenId + 1))
+  .to.emit(c, 'Transfer')
 
-  expect(await this.contract.connect(this.accounts[4]).totalSupply())
+  expect(await c.connect(anonB).totalSupply())
   .to.equal(0);
 });
 
 
 it('signers, authorised and not', async function () {
-  // [0] sign
-  const sig0 = await this.accounts[0]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // owner sign (signature will be invalid)
+  const sig0 = await owner._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [5] attempt mintable
-  await expect(this.contract.connect(this.accounts[5]).mintable(weiPrice, tokenId, tokenURI, sig0))
+  // anonA attempt mintable
+  await expect(c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, sig0))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
-  // [2] sign
-  const sig1 = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const sig1 = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [5] mintable
-  expect(await this.contract.connect(this.accounts[5]).mintable(weiPrice, tokenId, tokenURI, sig1))
+  // anonA mintable
+  expect(await c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, sig1))
   .to.equal(true);
 
-  // [4] sign
-  const sig2 = await this.accounts[4]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // anonB sign (signature will be invalid)
+  const sig2 = await anonB._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [5] attempt mintable
-  await expect(this.contract.connect(this.accounts[5]).mintable(weiPrice, tokenId, tokenURI, sig2))
+  // anonA attempt mintable
+  await expect(c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, sig2))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 });  
 
 
 it('signature verification, good and bad inputs', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mintable
-  expect(await this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB mintable
+  expect(await c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.equal(true);
 
-  // [4] attempt mintable, with incorreet weiPrice
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice + 1, tokenId , tokenURI, signature))
+  // anonB attempt mintable, with incorreet weiPrice
+  await expect(c.connect(anonB).mintable(ethers.BigNumber.from(weiPrice).add(1), tokenId , tokenURI, signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
   
-  // [4] attempt mintable, with incorreet tokenId
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId + 1, tokenURI, signature))
+  // anonB attempt mintable, with incorreet tokenId
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId + 1, tokenURI, signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
   
-  // [4] attempt mintable, with incorreet tokenURI
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI + "#", signature))
+  // anonB attempt mintable, with incorreet tokenURI
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI + "#", signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 });  
 
 
 it('mint, burning', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mintable
-  expect(await this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB mintable
+  expect(await c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.equal(true);
 
-  // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [4] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB attempt mintable
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('tokenId already minted');
 
-  // [5] attempt mint
-  await expect(this.contract.connect(this.accounts[5]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  // anonA attempt mint
+  await expect(c.connect(anonA).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.be.revertedWith('tokenId already minted');
 
-  // [5] attempt burn
-  await expect(this.contract.connect(this.accounts[5]).burn(tokenId))
+  // anonA attempt burn
+  await expect(c.connect(anonA).burn(tokenId))
   .to.be.revertedWith('caller is not owner nor approved');
 
-  // [4] burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(this.accounts[4].address, ethers.constants.AddressZero, tokenId);
+  // anonB burn
+  await expect(c.connect(anonB).burn(tokenId))
+  .to.emit(c, 'Transfer')
+  .withArgs(anonB.address, zero, tokenId);
 
-  // [4] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB attempt mintable
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('tokenId revoked or burnt');
 
-  // [4] attempt mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  // anonB attempt mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.be.revertedWith('tokenId revoked or burnt');
 });
 
 
 it('mint, various ETH values', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] attempt mint, insufficient ETH
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice - 1}))
+  // anonB attempt mint, insufficient ETH
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: ethers.BigNumber.from(weiPrice).sub(1)}))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
-  // [4] attempt mint, excessive ETH
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice + 1}))
+  // anonB attempt mint, excessive ETH
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: ethers.BigNumber.from(weiPrice).add(1)}))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
-  // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 });
 
 
 it('revokeId an existing Id', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [5] attempt revokeId
-  await expect(this.contract.connect(this.accounts[5]).revokeId(tokenId))
+  // anonA attempt revokeId
+  await expect(c.connect(anonA).revokeId(tokenId))
   .to.be.revertedWith('unauthorized to revoke id');  
 
-  // [2] attempt revokeId
-  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
+  // agent attempt revokeId
+  await expect(c.connect(agent).revokeId(tokenId))
   .to.be.revertedWith('tokenId already minted');  
 });
 
 
 it('revokeId an non-existant Id', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] mintable
-  expect(await this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB mintable
+  expect(await c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.equal(true);
 
-  // [5] attempt revokeId
-  await expect(this.contract.connect(this.accounts[5]).revokeId(tokenId))
+  // anonA attempt revokeId
+  await expect(c.connect(anonA).revokeId(tokenId))
   .to.be.revertedWith('unauthorized to revoke id');  
 
-  // [2] revokeId
-  await expect(this.contract.connect(this.accounts[2]).revokeId(tokenId))
-  .to.emit(this.contract, 'IdRevoked')
+  // agent revokeId
+  await expect(c.connect(agent).revokeId(tokenId))
+  .to.emit(c, 'IdRevoked')
   .withArgs(tokenId);
 
-  // [4] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB attempt mintable
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('tokenId revoked or burnt');  
 });
 
 
 it('setIdFloor', async function () {
-  // [5] attempt set floor
-  await expect(this.contract.connect(this.accounts[5]).setIdFloor(1000))
+  // anonA attempt set floor
+  await expect(c.connect(anonA).setIdFloor(tokenId + 1))
   .to.be.revertedWith('unauthorized to set idFloor');
 
-  // [2] set floor
-  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
-  .to.emit(this.contract, 'IdFloorSet')
-  .withArgs(1000);
+  // agent set floor
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
+  .to.emit(c, 'IdFloorSet')
+  .withArgs(tokenId + 1);
 
-  // [4] floor
-  expect(await this.contract.connect(this.accounts[4]).idFloor())
-  .to.equal(1000);
+  // anonB floor
+  expect(await c.connect(anonB).idFloor())
+  .to.equal(tokenId + 1);
 
-  // [2] attempt set floor, lower
-  await expect(this.contract.connect(this.accounts[2]).setIdFloor(999))
+  // agent attempt set floor, lower
+  await expect(c.connect(agent).setIdFloor(tokenId))
   .to.be.revertedWith('must exceed current floor');
 
-  // [2] attempt set floor, identical
-  await expect(this.contract.connect(this.accounts[2]).setIdFloor(1000))
+  // agent attempt set floor, identical
+  await expect(c.connect(agent).setIdFloor(tokenId + 1))
   .to.be.revertedWith('must exceed current floor');
 
-  // [2] attempt mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[2].address, tokenId, tokenURI))
+  // agent attempt mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(agent.address, tokenId, tokenURI))
   .to.be.revertedWith('tokenId below floor');
 
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [4] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonB attempt mintable
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('tokenId below floor');
 
-  // [4] attempt mint
-  await expect(this.contract.connect(this.accounts[4]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  // anonB attempt mint
+  await expect(c.connect(anonB).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.be.revertedWith('tokenId below floor');  
 });
 
 
 it('agent role, revoked', async function () {
-  // [2] sign
-  const signature = await this.accounts[2]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // agent sign
+  const signature = await agent._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [2] renounceRole own agent role
-  await expect(this.contract.connect(this.accounts[2]).renounceRole(AGENT_ROLE, this.accounts[2].address))
-  .to.emit(this.contract, 'RoleRevoked')
-  .withArgs(AGENT_ROLE, this.accounts[2].address, this.accounts[2].address);
+  // agent renounceRole own agent role
+  await expect(c.connect(agent).renounceRole(AGENT_ROLE, agent.address))
+  .to.emit(c, 'RoleRevoked')
+  .withArgs(AGENT_ROLE, agent.address, agent.address);
 
-  // [2] attempt mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
+  // agent attempt mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
   .to.be.revertedWith('unauthorized to mint');
   
-  // [5] attempt mintable
-  await expect(this.contract.connect(this.accounts[4]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonA attempt mintable
+  await expect(c.connect(anonB).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
-  // [1] grant AGENT_ROLE to [4]
-  await expect(this.contract.connect(this.accounts[1]).grantRole(AGENT_ROLE, this.accounts[4].address))
-  .to.emit(this.contract, 'RoleGranted')
-  .withArgs(AGENT_ROLE, this.accounts[4].address, this.accounts[1].address);
+  // admin grant AGENT_ROLE to anonB
+  await expect(c.connect(admin).grantRole(AGENT_ROLE, anonB.address))
+  .to.emit(c, 'RoleGranted')
+  .withArgs(AGENT_ROLE, anonB.address, admin.address);
 
-  // [4] mintAuthorized
-  await expect(this.contract.connect(this.accounts[4]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // anonB mintAuthorized
+  await expect(c.connect(anonB).mintAuthorized(anonB.address, tokenId, tokenURI))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 });
 
 
 it('agent role, granted', async function () {
-  // [4] sign
-  const signature = await this.accounts[4]._signTypedData(this.sigDomain, this.sigTypes, {tokenId, weiPrice, tokenURI});
+  // anonB sign
+  const signature = await anonB._signTypedData(sigDomain, sigTypes, {tokenId, weiPrice, tokenURI});
 
-  // [5] attempt mintable
-  await expect(this.contract.connect(this.accounts[5]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonA attempt mintable
+  await expect(c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.be.revertedWith('signature invalid or signer unauthorized');
 
-  // [5] attempt mint
-  await expect(this.contract.connect(this.accounts[5]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  // anonA attempt mint
+  await expect(c.connect(anonA).mint(tokenId, tokenURI, signature, {value: weiPrice}))
   .to.be.revertedWith('signature invalid or signer unauthorized');  
 
-  // [2] grant AGENT_ROLE to [4]
-  await expect(this.contract.connect(this.accounts[1]).grantRole(AGENT_ROLE, this.accounts[4].address))
-  .to.emit(this.contract, 'RoleGranted')
-  .withArgs(AGENT_ROLE, this.accounts[4].address, this.accounts[1].address);
+  // agent grant AGENT_ROLE to anonB
+  await expect(c.connect(admin).grantRole(AGENT_ROLE, anonB.address))
+  .to.emit(c, 'RoleGranted')
+  .withArgs(AGENT_ROLE, anonB.address, admin.address);
 
-  // [5] mintable
-  expect(await this.contract.connect(this.accounts[5]).mintable(weiPrice, tokenId, tokenURI, signature))
+  // anonA mintable
+  expect(await c.connect(anonA).mintable(weiPrice, tokenId, tokenURI, signature))
   .to.equal(true);
 
-  // [5] mint
-  await expect(this.contract.connect(this.accounts[5]).mint(tokenId, tokenURI, signature, {value: weiPrice}))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[5].address, tokenId);
+  // anonA mint
+  await expect(c.connect(anonA).mint(tokenId, tokenURI, signature, {value: weiPrice}))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonA.address, tokenId);
 });
 
 
 it('tokenURI', async function () {
-  // [4] tokenUri
-  expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
+  // anonB tokenUri
+  expect(await c.connect(anonB).tokenURI(tokenId))
   .to.equal("");
 
-  // [2] mintAuthorized
-  await expect(this.contract.connect(this.accounts[2]).mintAuthorized(this.accounts[4].address, tokenId, tokenURI))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(ethers.constants.AddressZero, this.accounts[4].address, tokenId);
+  // agent mintAuthorized
+  await expect(c.connect(agent).mintAuthorized(anonB.address, tokenId, tokenURI))
+  .to.emit(c, 'Transfer')
+  .withArgs(zero, anonB.address, tokenId);
 
-  // [4] tokenUri
-  expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
+  // anonB tokenUri
+  expect(await c.connect(anonB).tokenURI(tokenId))
   .to.equal(tokenURI);
 
-  // [4] burn
-  await expect(this.contract.connect(this.accounts[4]).burn(tokenId))
-  .to.emit(this.contract, 'Transfer')
-  .withArgs(this.accounts[4].address, ethers.constants.AddressZero, tokenId);
+  // anonB burn
+  await expect(c.connect(anonB).burn(tokenId))
+  .to.emit(c, 'Transfer')
+  .withArgs(anonB.address, zero, tokenId);
 
-  // [4] tokenUri
-  expect(await this.contract.connect(this.accounts[4]).tokenURI(tokenId))
+  // anonB tokenUri
+  expect(await c.connect(anonB).tokenURI(tokenId))
   .to.equal("");
-
 });

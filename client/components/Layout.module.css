@@ -14,31 +14,39 @@
   color: black;
 }
 
-.header a {
-  color: orange;
-  text-decoration: none;
-}
-
 .header a:hover {
   color: black;
 }
 
 .alertIsTestnet {
-  margin-top: 1rem;
+  margin-top: 0.25rem;
   color:orange;
+	font-weight: bold;
 }
 
 .pageContainer {
+	font-size: smaller;
   padding: 1rem;
   margin: 0 auto;
   max-width: 800px;
 }
 
-.footer {
+.footer, 
+.footerHome {
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 1rem;
   font-size: smaller;
+}
+
+.footerHome {
+  background: rgb(256 256 256 / 80%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
 }
 
 .landingHeroImage {
@@ -72,4 +80,16 @@
 .landingHeroTextB:hover {
   color: white;
   text-decoration: none;
+}
+
+.landingSpec {
+  z-index: 1;
+  margin: 3rem 2rem;
+  padding: 0.5rem;
+  color: white;
+  background: rgb(255,140,0, 95%);
+  font-size: smaller;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
 }

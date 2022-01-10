@@ -1,0 +1,160 @@
+{
+    "NFTs": [
+        {
+            "tokenId": 8,
+            "weiPrice": "0",
+            "sourceImage": "images/tooth_and_claw.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Tooth and Claw",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 7,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/chin_zan_bee.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Chin Zan Bee",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 6,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/disco_at_gloop_island.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Disco at Gloop Island",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 5,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/endangered_species.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Endangered Species",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 4,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/jungian_archetypes.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Jungian Archetypes",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 3,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/land_of_wonder.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Land of Wonder",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 2,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/sir_gawain.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Sir Gawain",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 0,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/tin_lion_duel.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Tin Lion Duel",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 12,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/fossil_panoply.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "New Fossil Panoply",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 11,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/cake_acid_afternoon.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Cake Acid Afternoon",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 10,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/street_of_delusion.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Street of Delusion.jpg",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        },
+        {
+            "tokenId": 9,
+            "weiPrice": "100000000000000000",
+            "sourceImage": "images/street_of_dreams.jpg",
+            "metadata": {
+                "creator": "FLOX",
+                "date": "2021",
+                "name": "Street of Dreams",
+                "description": "FLOX is a multi-generational crypto art collective based in London UK",
+                "external_url": "https://nft-agent.vercel.app/",
+                "collection": "Gloop Dreams"
+            }
+        }
+    ]
+}

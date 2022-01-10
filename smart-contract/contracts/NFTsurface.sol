@@ -11,18 +11,21 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
  *  @dev Enables lazy-minting by any user via precomputed signatures
  */
 contract NFTagent is ERC721, ERC721Burnable, EIP712 {
-
     event IdRevoked(uint256 tokenId);
     event IdFloorSet(uint256 idFloor);
     event Receipt(uint256 value);
     event Withdrawal(uint256 value);
+    event PriceSet(uint256 id, uint256 price);
+    event Bought(uint256 id, address buyer);
 
     address public immutable owner;
-    uint256 public totalSupply = 0;
-    uint256 public idFloor = 0;
-    
+    uint16  public immutable royaltyBasisPoints;
+
+    uint256 public totalSupply;
+    uint256 public idFloor;
     mapping(uint256 => string) private tokenURIs;
     mapping(uint256 => bool) private revokedIds;
+    mapping(uint256 => uint256) private prices;
 
     /**
      *  @dev Constructor immutably sets "owner" to the message sender; be sure to deploy contract using the account of the creator/artist/brand/etc. 
@@ -31,12 +34,14 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      */
     constructor(
         string memory name,
-        string memory symbol
+        string memory symbol,
+        uint16 royaltyBasisPoints_
     ) 
         ERC721(name, symbol) 
-        EIP712("NFTagent", "1.0.0")
+        EIP712("NFTsurface", "1.0.0")
     {
         owner = _msgSender();
+        royaltyBasisPoints = royaltyBasisPoints_;
     }
 
     receive() external payable {
@@ -102,6 +107,43 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
     }
 
     /**
+     *  @notice Sets the price at which a token may be bought
+     *  @dev Setting a zero price cancels the sale (all prices are zero by default) 
+     *  @param id The token id 
+     *  @param _price The token price in wei
+     */
+    function setPrice(uint256 id, uint256 _price) external {
+        require(_msgSender() == ownerOf(id), "caller is not token owner");
+        prices[id] = _price;
+        emit PriceSet(id, _price);
+    }
+
+    /**
+     *  @notice Returns the price at which a token may be bought
+     *  @dev A zero price means the token is not for sale 
+     *  @param id The token id 
+     */
+    function price(uint256 id) external view returns(uint256) {
+        return prices[id];
+    }
+
+    /**
+     *  @notice Transfers the token to the caller, transfers the paid ETH to its owner (minus any royalty)
+     *  @dev A zero price means the token is not for sale 
+     *  @param id The token id 
+     */
+    function buy(uint256 id) external payable {
+        require(_msgSender() != ownerOf(id), "caller is token owner");
+        require(prices[id] > 0, "token not for sale");
+        require(msg.value >= prices[id], "insufficient ETH sent");
+        address seller = ownerOf(id);
+        delete prices[id];
+        _safeTransfer(seller, _msgSender(), id, "");
+        Address.sendValue(payable(seller), (10000 - royaltyBasisPoints) * (msg.value / 10000));
+        emit Bought(id, _msgSender());
+    }
+
+    /**
      *  @notice Revokes a specified token Id, to disable any signatures that include it
      *  @param id The token Id that can no longer be minted
      */
@@ -152,7 +194,7 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
      */
     function _hash(uint256 weiPrice, uint256 id, string memory uri) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
-            keccak256("NFT(uint256 weiPrice,uint256 tokenId,string tokenURI)"),
+            keccak256("mint(uint256 weiPrice,uint256 tokenId,string tokenURI)"),
             weiPrice,
             id,
             keccak256(bytes(uri))
@@ -175,5 +217,14 @@ contract NFTagent is ERC721, ERC721Burnable, EIP712 {
         delete tokenURIs[id];
         revokedIds[id] = true;
         totalSupply -= 1;
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721) {
+        super._beforeTokenTransfer(from, to, tokenId);
+        delete prices[tokenId];
     }
 }

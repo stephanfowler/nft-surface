@@ -27,11 +27,11 @@ main {
 
 a {
   color: black;
-  text-decoration-color: grey;
   text-decoration-thickness: 0.05em;
   text-underline-offset: 1.5px;
   text-decoration-skip-ink: auto;
   text-decoration-style: dotted;
+  cursor: pointer;
 }
 
 a:hover {
@@ -49,24 +49,52 @@ h1 {
   font-size: 1.5rem;
 }
 
+li {
+  padding: 0 0 1rem 0;
+}
+
 button {
-  margin: 0.5rem 0;
+  display: block;
+  margin: 1rem 0;
   padding: 0.6rem 1rem 0.5rem 1rem;
   border: 0px;
-  border-radius: 8px;
+  border-radius: 4px;
   color: white;
-  background-color: orange;
+  background-color: black;
   font-size: large;
   text-align: center;
   font-weight: bold;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: black;
-}
-
 button:disabled {
-  background-color: lightgray;
+  background-color: #666;
+  cursor:inherit;
 }
 
+form {
+	margin: 0 0 0.5rem 0;
+}
+
+form > div {
+	margin: 0 0 0.5rem 0;
+}
+
+input {
+  border-color: black;
+  border-width: 1px;
+  border-style: dotted;
+  border-radius: 4px;
+  padding: .3rem;
+  font-size: medium;
+  width: 4rem;
+  font-weight: bold;
+}
+
+form button {
+  display: inline-block;
+  margin: 0.25rem 0.5rem 0.25rem 0 ;
+  padding: 0.3rem 0.6rem;
+  font-size: smaller;
+  font-weight: normal !important;
+}

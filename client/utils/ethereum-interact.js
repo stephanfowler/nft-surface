@@ -1,102 +1,125 @@
 import { ethers } from "ethers";
 
-const alchemyKey = "https://eth-rinkeby.alchemyapi.io/v2/JZzxLi6MDK2NoxcNmEC7DNDdwICaMxkf";
 const contractABI = require("./abi.json");
 
-async function checkChainId(provider, chainIdCheck) {
-  const {chainId} = await provider.getNetwork();
-  if (chainId === chainIdCheck) {
-    return provider;
-  } else {
-    throw 'Provider chainId does not match catalog chainId';
-  }
-} 
-
-function getReadableProvider() {
-  return window.ethereum ?
-    new ethers.providers.Web3Provider(window.ethereum, "any") :
-    new ethers.providers.JsonRpcProvider(alchemyKey);
+async function getReadableProvider(chainId) {
+	if (window.ethereum) {
+		return new ethers.providers.Web3Provider(window.ethereum, "any")
+	} else if (chainId === 31337) {
+		return new ethers.providers.JsonRpcProvider();
+	} else {
+		return new ethers.providers.JsonRpcProvider(process.env.networkKey);
+	}
 }
 
 async function getReadableContract(contractAddress, chainId) {
-  const provider = await checkChainId(getReadableProvider(), chainId);
-  return new ethers.Contract(contractAddress, contractABI, provider)
+	const provider = await getReadableProvider(chainId);
+	return new ethers.Contract(contractAddress, contractABI, provider)
 }
 
 async function getWriteableContract(contractAddress, chainId) {
-  const provider = await checkChainId(new ethers.providers.Web3Provider(window.ethereum, "any"), chainId);
-  return new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());  
+	if (window.ethereum) {
+		const provider = await new ethers.providers.Web3Provider(window.ethereum, "any");
+		const contract = new ethers.Contract(contractAddress, contractABI, provider).connect(provider.getSigner());
+		return contract;
+	}
 }
 
-export function networkName(chainId) {
-  const names = {
-    "1":     "Ethereum Mainnet",
-    "3":     "Ropsten Test Network",
-    "4":     "Rinkeby Test Network",
-    "5":     "Goerli Test Network",
-    "1337":  "Localhost 8545",
-    "31337": "Localhost 8545"
-  }
-  return names[chainId + ""];
+function errorMessage(error) {
+	const e = error || "Error";
+	return (e.data && e.data.message) || e.message || e;
 }
 
-export const isTransactionMined = async(txHash) => {
-  const provider = getReadableProvider();
-  const txReceipt = await provider.waitForTransaction(txHash);
-  if (txReceipt && txReceipt.blockNumber) {
-      return txReceipt;
-  }
-;}
-
-export const connectWallet = async () => {
-  return await getWallet(true);
+export const isTransactionMined = async (txHash, chainId) => {
+	const provider = await getReadableProvider(chainId);
+	const txReceipt = await provider.waitForTransaction(txHash);
+	if (txReceipt && txReceipt.blockNumber) {
+		return txReceipt;
+	}
+	;
 }
 
 export const getWallet = async (isConnect) => {
-  if (window.ethereum) {
-    try {
-      const accounts = await window.ethereum.request({ method: isConnect ? 'eth_requestAccounts' : 'eth_accounts' });
-      const network = await new ethers.providers.Web3Provider(window.ethereum).getNetwork();
-      return {
-        address: accounts[0],
-        chainId: network.chainId
-      };
-    } catch (error) {
-      return { error: error.message };
-    }
-  } else {
-    return {};
-  }
+	if (window.ethereum) {
+		try {
+			const accounts = await window.ethereum.request({ method: isConnect ? 'eth_requestAccounts' : 'eth_accounts' });
+			const network = await new ethers.providers.Web3Provider(window.ethereum).getNetwork();
+			return {
+				address: accounts[0],
+				walletChainId: network.chainId
+			};
+		} catch (error) {
+			return { error: error.message };
+		}
+	} else {
+		return { error: "wallet_unavailable" };
+	}
 };
 
-export const ownerOf = async (tokenId, contractAddress, chainId) => {
-  tokenId = parseInt(tokenId);
-  const contract = await getReadableContract(contractAddress, chainId);
-  try {
-    const owner = await contract.ownerOf(tokenId);
-    return owner;
-  } catch (error) {
-    return;
-  }
+export const contractCall_ownerOf = async (nft, contractAddress, chainId) => {
+	const contract = await getReadableContract(contractAddress, chainId);
+	try {
+		const owner = await contract.ownerOf(nft.tokenId);
+		return owner;
+	} catch (error) {
+		return null;
+	}
 };
 
-export const mintable = async (art, contractAddress, chainId) => {
-  const contract = await getReadableContract(contractAddress, chainId);
-  try {
-    await contract.mintable(art.weiPrice, art.tokenId, art.tokenURI, art.signature);
-    return true;
-  } catch (error) {
-    console.log(error); //
-    return false;
-  }
+export const contractCall_mintable = async (nft, contractAddress, chainId) => {
+	const contract = await getReadableContract(contractAddress, chainId);
+	try {
+		await contract.mintable(nft.weiPrice, nft.tokenId, nft.tokenURI, nft.signature);
+		return "mintable";
+	} catch (error) {
+		if (error.message && error.message.includes("execution reverted:")) {
+			return "unavailable";
+		}
+		return "unknown";
+	}
 };
 
-export const mint = async (art, contractAddress, chainId) => {
-  const contract = await getWriteableContract(contractAddress, chainId);
-  try {
-    const tx = await contract.mint(art.tokenId, art.tokenURI, art.signature, {value: art.weiPrice});
-    return { tx };
-  } catch (error) {
-    return { error: error.message };
-  }
+export const contractCall_mint = async (nft, contractAddress, chainId) => {
+	const contract = await getWriteableContract(contractAddress, chainId);
+	try {
+		const tx = await contract.mint(nft.tokenId, nft.tokenURI, nft.signature, { value: nft.weiPrice });
+		return { tx };
+	} catch (e) {
+		return { error: errorMessage(e) };
+	}
+};
+
+export const contractCall_price = async (nft, contractAddress, chainId) => {
+	const contract = await getReadableContract(contractAddress, chainId);
+	return await contract.price(nft.tokenId);
+};
+
+export const contractCall_setPrice = async (nft, salePrice, contractAddress, chainId) => {
+	const contract = await getWriteableContract(contractAddress, chainId);
+	try {
+		const tx = await contract.setPrice(nft.tokenId, salePrice);;
+		return { tx };
+	} catch (e) {
+		return { error: errorMessage(e) };
+	}
+};
+
+export const contractCall_buy = async (nft, salePrice, contractAddress, chainId) => {
+	const contract = await getWriteableContract(contractAddress, chainId);
+	try {
+		const tx = await contract.buy(nft.tokenId, { value: salePrice });
+		return { tx };
+	} catch (e) {
+		return { error: errorMessage(e) };
+	}
+};
+
+export const contractCall_safeTransferFrom = async (nft, from, to, contractAddress, chainId) => {
+	const contract = await getWriteableContract(contractAddress, chainId);
+	try {
+		const tx = await contract.safeTransferFrom(from, to, nft.tokenId);
+		return { tx };
+	} catch (e) {
+		return { error: errorMessage(e) };
+	}
 };
