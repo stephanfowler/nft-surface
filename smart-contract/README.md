@@ -27,18 +27,19 @@ Expects the below `.env` file in the directory `smart-contract`. IMPORTANT: this
 SIGNER_PRIVATE_KEY = "..."
 
 # The address of the creator/artist/maker/brand. This is added to the catalog and the metadata files on IPFS. 
-CREATOR_ADDRESS    = "..."
+CREATOR_ADDRESS = "..."
 
-# Rinkeby network deployments 
-RINKEBY_API_URL    = "..."
-
-# Mumbai network deployments 
-MUMBAI_API_URL    = "..."
-
-# Rinkeby network deployments 
-ARB_RINKEBY_API_URL    = "..."
-
-# OTHER deployments: add variables here and modify hardhat.config.js to pick them up.
+# NETWORKS 
+# Be sure to uncomment (or add) relevant lines in hardhat.config.js 
+# depending on which network you are deploying to. 
+# Rinkeby deployments 
+RINKEBY_API_URL = "..."
+# Mumbai deployments 
+MUMBAI_API_URL = "..."
+# Rinkeby deployments 
+ARB_RINKEBY_API_URL = "..."
+# OTHER deployments: 
+# add variables here and modify hardhat.config.js to pick them up.
 
 # For verifying contracts on Etherscan (mainnets and testnets on Etherem/Polygon/...) 
 ETHERSCAN_API_KEY  = "..."
