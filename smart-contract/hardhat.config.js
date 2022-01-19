@@ -7,9 +7,9 @@ require('@openzeppelin/hardhat-upgrades');
 const {
 	CREATOR_ADDRESS,
 	SIGNER_PRIVATE_KEY,
-	RINKEBY_API_URL,
-	MUMBAI_API_URL,
-	ARB_RINKEBY_API_URL,
+	//RINKEBY_API_URL,
+	//MUMBAI_API_URL,
+	//ARB_RINKEBY_API_URL,
 	ETHERSCAN_API_KEY,
 	POLYGONSCAN_API_KEY,
 	PINATA_API_KEY,
@@ -23,6 +23,7 @@ module.exports = {
 	defaultNetwork: "hardhat",
 	networks: {
 		hardhat: {},
+		/*
 		rinkeby: {
 			url: RINKEBY_API_URL,
 			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
@@ -37,6 +38,7 @@ module.exports = {
 			url: ARB_RINKEBY_API_URL,
 			accounts: [`0x${SIGNER_PRIVATE_KEY}`]
 		}
+		*/
 	},
 	etherscan: {
 		apiKey: ETHERSCAN_API_KEY
